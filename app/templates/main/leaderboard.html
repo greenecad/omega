@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Leaderboard{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <table>
+    <tr>
+      <th>Rank</th>
+      <th>Username</th>
+      <th>Score</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+      <td>{{ loop.index}}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.points }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

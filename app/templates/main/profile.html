@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <p>Username: {{ user.username }}</p>
+  {% if user.points %}
+  <p>Score: {{ user.points }}</p>
+  {% else %}
+    <p>Score: 0</p>
+  {% endif %}
+  <p>Email: {{ user.email }}</p>
+  <p>Grade: {{ user.grade }}</p>
+  <p>Gift: {{ user.gift }}</p>
+  {% if user.participating == 0%}
+    <p>You are currently not eligible for the competition.</p>
+  {% endif %}
+
+  {% if user.admin == 1 %}
+    <p>Admin panel:</p>
+  {% endif %}
+
+  <form method="post">
+    <label for="code">Submit code:</label>
+    <input name="code" placeholder="Enter code here">
+    <input type="submit" value="Submit code">
+  </form>
+
+  <h2>Challenge list:</h2>
+  <ul>
+    {% for challenge in challenges %}
+    {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
+      {% if challenge.type == "code" %}
+      <li class="challenge-code">
+      {% elif challenge.type == "live" %}
+      <li class="challenge-live">
+      {% else %}
+      <li class="challenge-other">
+      {% endif %}
+        {{ challenge.name }} - {{ challenge.points }} points
+        <p>{{ challenge.description }}</p>
+      </li>
+    {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days > 1%}
+      <li class="challenge-locked">
+        
+        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).days }} days
+      </li>
+    {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days == 1%}
+      <li class="challenge-locked">
+        {{if }}
+        {{ challenge.name }} - Locked for 1 day
+      </li>
+    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).hours > 1%}
+      <li class="challenge-locked">
+        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).hours }} hours
+      </li>
+    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).hours == 1%}
+      <li class="challenge-locked">
+        {{ challenge.name }} - Locked for 1 hour
+      </li>
+     {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).minutes > 1%}
+      <li class="challenge-locked">
+        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).minutes }} minutes
+      </li>
+    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).minutes == 1%}
+      <li class="challenge-locked">
+        {{ challenge.name }} - Locked for 1 minute
+      </li>
+     {% else %}
+      <li class="challenge-locked">
+        {{ challenge.name }} - Locked for less than a minute
+      </li>
+    {% endif %}
+    {% endfor %}
+
+{% endblock %}

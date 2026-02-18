@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block js %}
+<script defer src="{{ url_for('static', filename='js/register.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  
+  <form id="regForm" method="post" enctype="multipart/form-data">
+  <h1>Register:</h1>
+  <!-- One "tab" for each step in the form: -->
+  <div class="tab">First, who are you?:
+    <p><input placeholder="First name..." oninput="this.className = ''" name="fname"></p>
+    <p><input placeholder="Last name..." oninput="this.className = ''" name="lname"></p>
+  </div>
+  <div class="tab">What grade are you in?:
+    <p><input type="radio" id="9" name="grade" value="9">
+        <label for="9">Freshman</label><br>
+        <input type="radio" id="10" name="grade" value="10">
+        <label for="10">Sophomore</label><br>
+        <input type="radio" id="11" name="grade" value="11">
+        <label for="11">Junior</label><br>
+        <input type="radio" id="12" name="grade" value="12">
+        <label for="12">Senior</label></p>
+  </div>
+  <div class="tab">Now, choose one "gift":
+    <p><input type="radio" id="knowledge" name="gift" value="knowledge">
+        <label for="knowledge">knowledge</label><br>
+        <input type="radio" id="determination" name="gift" value="determination">
+        <label for="determination">determination</label><br>
+        <input type="radio" id="vigilence" name="gift" value="vigilence">
+        <label for="vigilence">vigilence</label><br>
+        <input type="radio" id="foresight" name="gift" value="foresight">
+        <label for="foresight">foresight</label><br>
+        <input type="radio" id="patience" name="gift" value="patience">
+        <label for="patience">patience</label><br>
+        <input type="radio" id="competitiveness" name="gift" value="competitiveness">
+        <label for="competitiveness">competitiveness</label></p>
+  </div>
+  <div class="tab">Next, a picture of your student ID. Yes, this is needed.:
+    <label id="drop-zone">
+      Drop image here, or click to upload.
+      <input type="file" id="file-input" name="id_image" accept="image/*" />
+    </label>
+    <ul id="preview"></ul>
+    <button id="clear-btn" type="button">Clear</button>
+  </div>
+  <div class="tab">your email (must be a school email address):
+    <p><input placeholder="Email address..." oninput="this.className = ''" name="email"></p>
+  </div>
+  <div class="tab">and finally, login details:
+    <p><input placeholder="Username..." oninput="this.className = ''" name="username"></p>
+    <p><input placeholder="Password..." oninput="this.className = ''" name="password" type="password"></p>
+  </div>
+  <div style="overflow:auto;">
+    <div style="float:right;">
+      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+      <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+    </div>
+  </div>
+  <!-- Circles which indicates the steps of the form: -->
+  <div style="text-align:center;margin-top:40px;">
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+  </div>
+</form>
+{% endblock %}

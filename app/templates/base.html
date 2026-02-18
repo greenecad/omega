@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}{% endblock %} - The Omega Games</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block js %}{% endblock %}
+</head>
+
+<body>
+    <nav id="navbar">
+    <h1>The Omega Games</h1>
+    <ul id="nav-links">
+        {% if g.user %}
+        <li><span>{{ g.user['username'] }}</span>
+        <li><a href="{{ url_for('main.profile') }}">Profile</a>
+        <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+        {% else %}
+        <li><a href="{{ url_for('auth.register') }}">Register</a>
+        <li><a href="{{ url_for('auth.login') }}">Log In</a>
+        {% endif %}
+        <li><a href="{{ url_for('main.index') }}">Home</a>
+        <li><a href="{{ url_for('main.leaderboard') }}">Leaderboard</a>
+    </ul>
+    </nav>
+    <section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+    </section>
+</body>
+
+</html>

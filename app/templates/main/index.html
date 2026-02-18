@@ -1,1 +1,9 @@
-Welcome to flask-quickstart!
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <p>The Omega Games</p>
+{% endblock %}
