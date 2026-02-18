@@ -131,4 +131,4 @@ dmypy.json
 # PyCharm
 .idea
 
-app/static/img/users/
+app/static/img/users
