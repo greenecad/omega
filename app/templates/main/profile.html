@@ -42,7 +42,7 @@
         {{ challenge.name }} - {{ challenge.points }} points
         <p>{{ challenge.description }}</p>
         {% if challenge.type == "submission" %}
-          <a href="{{ url_for('main.submission', challenge_id=challenge['id']) }}">Submit here</a>
+          <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
         {% endif %}
 
         {% if challenge.html %}
