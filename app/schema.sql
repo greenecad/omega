@@ -11,5 +11,6 @@ CREATE TABLE user (
   admin INTEGER DEFAULT 0,
   participating INTEGER DEFAULT 1,
   points INTEGER DEFAULT 0,
-  id_image TEXT
+  id_image TEXT, 
+  completed TEXT DEFAULT '{"codes": [], "challenges": []}'
 );

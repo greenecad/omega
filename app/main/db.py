@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from flask.cli import with_appcontext
 
 import click
 from flask import current_app, g
@@ -30,6 +31,7 @@ def init_db():
 
 
 @click.command('init-db')
+@with_appcontext
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
@@ -39,6 +41,7 @@ def init_db_command():
 @click.argument('username')
 @click.argument('column')
 @click.argument('value')
+@with_appcontext
 def manual_edit_command(username, column, value):
     """manually edit a user's data."""
     db = get_db()

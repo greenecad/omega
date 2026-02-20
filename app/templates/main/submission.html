@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block js %}
+<script defer src="{{ url_for('static', filename='js/submission.js') }}"></script>
+{% endblock %}
+{% block header %}
+  <h1>{% block title %}Submission{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <p>Enter your submission for {{ challenge.name }} here:</p>
+  <form method="post" enctype="multipart/form-data">
+    <label id="drop-zone">
+      Drop image here, or click to upload.
+      <input type="file" id="file-input" name="id_image" accept="image/*" />
+    </label>
+    <ul id="preview"></ul>
+    <button id="clear-btn" type="button">Clear</button>
+    <input type="submit" value="Submit solution">
+  </form>
+{% endblock %}

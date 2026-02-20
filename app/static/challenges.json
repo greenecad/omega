@@ -5,21 +5,23 @@
             "points": 100,
             "description": "This is the first challenge.",
             "type": "code",
-            "release": "2026-01-01T00:00:00"
+            "release": "2026-01-01T00:00:00",
+            "code": "test"
         },
         {
             "name": "challenge 2",
             "points": 200,
             "description": "This is the second challenge.",
             "type": "live",
-            "release": "2026-02-17T00:00:00"
+            "release": "2026-02-17T00:00:00",
+            "html": "<h3>test heading</h3><p>test paragraph</p>"
         },
         {
             "name": "challenge 3",
             "points": 300,
             "description": "This is the third challenge.",
             "type": "submission",
-            "release": "2026-02-19T00:00:00"
+            "release": "2026-02-18T00:00:00"
         }
     ]
 }
