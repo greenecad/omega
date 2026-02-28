@@ -48,21 +48,130 @@ def profile():
         else:
             flash('Code already submitted!')
         return redirect(url_for('main.profile'))
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    notifications = json.loads(user['notifications'])
+    popups=[]
+
+    ## todo: fix modal popups not appearing at all
+    for notification in notifications["list"]:
+        if notification[1] == 0:
+            flash(notification[0])
+        elif notification[1] == 1:
+            popups.append(notification[0])
+    notifications["list"] = []
+    db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(notifications), session['user_id']))
+    db.commit()
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
         challenges = json.load(f)
-
     
-    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
-    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json )
+    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups) 
 
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required
 def submission(challenge_id):
-    if request.method == 'POST':
-        submission = request.files['submission']
-        if submission:
-            pass #temp
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
         challenge = json.load(f)['list'][challenge_id-1]
+    if challenge['type'] != 'submission':
+        flash('This challenge does not require a submission.')
+        return redirect(url_for('main.profile'))
+    if request.method == 'POST':
+        submission = request.files['submission']
+        db=get_db()
+        username = db.execute('SELECT username FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0]
+        if submission:
+            completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
+            key = str(challenge_id)
+            if key in completed['challenges'] and (completed['challenges'][key][0] == 'completed' or completed['challenges'][key][0] == 'pending') and ("repeats" not in challenge or not challenge["repeats"] == True):
+                flash('Challenge already completed!')
+                return redirect(url_for('main.profile'))
+            try:
+                upload_dir = os.path.join(current_app.root_path, "static", "img", "users", username, "submissions")
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, "challenge_" + str(challenge_id) + "_" + username + "." + submission.filename.split('.')[-1])
+                submission.save(save_path)
+                completed['challenges'][key] = ['pending', "challenge_" + str(challenge_id) + "_" + username + "." + submission.filename.split('.')[-1]]
+                db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+                db.commit()
+                flash('Submission received! It will be reviewed by OMEGA soon.')
+                return redirect(url_for('main.profile'))
+            except Exception as e:
+                flash('Error saving submission: ' + str(e))
+                return redirect(url_for('main.profile'))
+    
 
     return render_template('main/submission.html', challenge=challenge)
+
+@main.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if not user or user['admin'] != 1:
+        flash('What are you doing? OMEGA would not be proud of you.')
+        return redirect(url_for('main.profile'))
+    
+    if request.method == 'POST':
+        action = request.form.get('admin_action')
+        if action == 'update_user':
+            try:
+                username = request.form.get('username')
+                column = request.form.get('column')
+                value = request.form.get('points')
+                db.execute(f'UPDATE user SET {column} = ? WHERE username = ?;', (value, username))
+                db.commit()
+                flash(f'Updated {column} for user {username} to {value}')
+            except Exception as e:
+                flash('Error updating user: ' + str(e))
+        elif action == 'reset_user':
+            username = request.form.get('username')
+            db.execute('UPDATE user SET points = 0, completed = ? WHERE username = ?;', (json.dumps({'challenges': {}, 'codes': []}), username))
+            db.commit()
+            flash(f'Reset user {username}')
+    return redirect(url_for('main.profile'))
+
+@main.route('/admin/pending', methods=['GET', 'POST'])
+@login_required
+def admin_pending():
+    
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if not user or user['admin'] != 1:
+        flash('What are you doing? OMEGA would not be proud of you.')
+        return redirect(url_for('main.profile'))
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        challenge_id = int(request.form.get('challenge_id'))
+        key = str(challenge_id)
+        action = request.form.get('action')
+        user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+        completed = json.loads(user['completed'])
+        notifications = json.loads(user['notifications'])
+
+        if action == 'approve':
+            with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                challenge = json.load(f)['list'][challenge_id-1]
+            completed['challenges'][key][0] = 'completed'
+            if isinstance(notifications, dict) and "list" in notifications:
+                notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 0])
+            else:
+                notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 0])
+            db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+            db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+            db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+            db.commit()
+            flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
+        elif action == 'reject':
+            if key in completed['challenges']:
+                del completed['challenges'][key]
+            if isinstance(notifications, dict) and "list" in notifications:
+                notifications["list"].append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
+            else:
+                notifications.append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
+            db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+            db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+            db.commit()
+            flash(f'Rejected submission for user {user["username"]} on challenge {challenge_id}')
+
+    users = db.execute('SELECT username, completed FROM user;').fetchall()
+    return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for)

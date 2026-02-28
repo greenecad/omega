@@ -1,3 +1,5 @@
+import os
+import shutil
 import sqlite3
 from datetime import datetime
 from flask.cli import with_appcontext
@@ -35,6 +37,7 @@ def init_db():
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
+    shutil.rmtree(os.path.join(current_app.root_path, "static", "img", "users"), ignore_errors=True)
     click.echo('Initialized the database.')
 
 @click.command('manual-edit')

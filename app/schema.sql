@@ -9,8 +9,10 @@ CREATE TABLE user (
   grade INTEGER NOT NULL,
   email TEXT NOT NULL UNIQUE,
   admin INTEGER DEFAULT 0,
-  participating INTEGER DEFAULT 1,
+  participating INTEGER DEFAULT 0,
   points INTEGER DEFAULT 0,
   id_image TEXT, 
-  completed TEXT DEFAULT '{"codes": [], "challenges": []}'
+  completed TEXT DEFAULT '{"codes": [], "challenges": {} }',
+  notifications TEXT DEFAULT '{"list": []}'
+
 );

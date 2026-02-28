@@ -4,7 +4,21 @@
   <h1>{% block title %}Profile{% endblock %}</h1>
 {% endblock %}
 
+{% block js %}
+  <script defer src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}
+
 {% block content %}
+  {% for popup in popups %}
+    <div class="modal" id ="modal-{{ loop.index }}">
+      <span class = "modal-content">
+        <span class="close">&times;</span>
+        <p>{{ popup }}</p>
+        <button class="close">Close</button>
+      </span>
+    </div>
+  {% endfor %}
+
   <p>Username: {{ user.username }}</p>
   {% if user.points %}
   <p>Score: {{ user.points }}</p>
@@ -15,11 +29,31 @@
   <p>Grade: {{ user.grade }}</p>
   <p>Gift: {{ user.gift }}</p>
   {% if user.participating == 0%}
-    <p>You are currently not eligible for the competition.</p>
+    <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
   {% endif %}
 
   {% if user.admin == 1 %}
+    <!-- dont worry about styling this Katie -->
     <p>Admin panel:</p>
+    <form method = "post" action="{{ url_for('main.admin') }}">
+      <label for="username">Username:</label>
+      <input name="username" placeholder="username">
+      <label for="column">Column: </label>
+      <input name="column" placeholder="column name">
+      <label for="points">Value:</label>
+      <input name="points" placeholder="column value">
+      <input type="hidden" name="admin_action" value="update_user">
+      <input type="submit" value="change data">
+    </form>
+    <form method = "post" action="{{ url_for('main.admin') }}">
+      <label for="username">Username:</label>
+      <input name="username" placeholder="username">
+      <input type="hidden" name="admin_action" value="reset_user">
+      <input type="submit" value="reset user">
+    </form>
+    <form action ="{{ url_for('main.admin_pending')}}">
+      <input type="submit" value="View pending submissions">
+    </form>
   {% endif %}
 
   <form method="post">
@@ -50,8 +84,11 @@
             {{ challenge.html|safe }}
           </div>
         {% endif %}
-        {% if challenge.id in json.loads(user.completed)['challenges'] or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
+        {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
           <p>Completed!</p>
+        {% endif %}
+        {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
+          <p>Submission pending review.</p>
         {% endif %}
       </li>
     {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days > 1%}
