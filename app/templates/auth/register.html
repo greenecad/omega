@@ -14,8 +14,8 @@
   <h1>Register:</h1>
   <!-- One "tab" for each step in the form: -->
   <div class="tab">First, who are you?:
-    <p><input placeholder="First name..." oninput="this.className = ''" name="fname"></p>
-    <p><input placeholder="Last name..." oninput="this.className = ''" name="lname"></p>
+    <p><input class="reg" placeholder="First name..." oninput="this.className = 'reg'" name="fname"></p>
+    <p><input class="reg" placeholder="Last name..." oninput="this.className = 'reg'" name="lname"></p>
   </div>
   <div class="tab">What grade are you in?:
     <p><input type="radio" id="9" name="grade" value="9">
@@ -27,34 +27,48 @@
         <input type="radio" id="12" name="grade" value="12">
         <label for="12">Senior</label></p>
   </div>
-  <div class="tab">Now, choose one "gift":
-    <p><input type="radio" id="knowledge" name="gift" value="knowledge">
-        <label for="knowledge">knowledge</label><br>
+
+  <div class="tab">Now, choose one "gift": <br>
+      <input type="radio" id="knowledge" name="gift" value="knowledge">
+        <label for="knowledge">knowledge  </label><div class='info popup' onclick="popUpToggle(1)">
+          <span class="popuptext" id="popup1">Grants you more insight into the secrets hidden. (More hints are given for puzzles.)</span>
+        </div><br>
         <input type="radio" id="determination" name="gift" value="determination">
-        <label for="determination">determination</label><br>
+        <label for="determination">determination  </label><div class='info popup' onclick="popUpToggle(2)">
+          <span class="popuptext" id="popup2">Empowers you to persevere on certain skill-based challenges. (various skill based challenges are easier.) </span>
+        </div><br>
         <input type="radio" id="vigilence" name="gift" value="vigilence">
-        <label for="vigilence">vigilence</label><br>
+        <label for="vigilence">vigilence  </label><div class='info popup' onclick="popUpToggle(3)">
+          <span class="popuptext" id="popup3">Shields you from attacks by opponents. (protects you from attacks by others.)</span>
+        </div><br>
         <input type="radio" id="foresight" name="gift" value="foresight">
-        <label for="foresight">foresight</label><br>
+        <label for="foresight">foresight  </label><div class='info popup' onclick="popUpToggle(4)">
+          <span class="popuptext" id="popup4">Allows you to see what challenges lie ahead. (you get more information on challenges before they open.)</span>
+        </div><br>
         <input type="radio" id="patience" name="gift" value="patience">
-        <label for="patience">patience</label><br>
+        <label for="patience">patience  </label><div class='info popup' onclick="popUpToggle(5)">
+          <span class="popuptext" id="popup5">Good things to those who wait. (Allows you to skip a challenge in round 2, if you make it that far...)</span>
+        </div><br>
         <input type="radio" id="competitiveness" name="gift" value="competitiveness">
-        <label for="competitiveness">competitiveness</label></p>
+        <label for="competitiveness">competitiveness  </label><div class='info popup' onclick="popUpToggle(6)">
+          <span class="popuptext" id="popup6">Strengthens your hand to strike others. (Makes you more powerful when attacking others and during live events.)</span>
+        </div>
   </div>
+
   <div class="tab">Next, a picture of your student ID. Yes, this is needed.:
     <label id="drop-zone">
       Drop image here, or click to upload.
-      <input type="file" id="file-input" name="id_image" accept="image/*" />
+      <input class="reg" type="file" id="file-input" name="id_image" accept="image/*" />
     </label>
     <ul id="preview"></ul>
     <button id="clear-btn" type="button">Clear</button>
   </div>
   <div class="tab">your email (must be a school email address):
-    <p><input placeholder="Email address..." oninput="this.className = ''" name="email"></p>
+    <p><input class="reg" placeholder="Email address..." oninput="this.className = 'reg'" name="email"></p>
   </div>
   <div class="tab">and finally, login details:
-    <p><input placeholder="Username..." oninput="this.className = ''" name="username"></p>
-    <p><input placeholder="Password..." oninput="this.className = ''" name="password" type="password"></p>
+    <p><input class="reg" placeholder="Username..." oninput="this.className = 'reg'" name="username"></p>
+    <p><input class="reg" placeholder="Password..." oninput="this.className = 'reg'" name="password" type="password"></p>
   </div>
   <div style="overflow:auto;">
     <div style="float:right;">

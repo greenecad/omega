@@ -12,7 +12,7 @@
 
 <body>
     <nav id="navbar">
-    <h1>The Omega Games</h1>
+    <h3>The Omega Games</h3>
     <ul id="nav-links">
         {% if g.user %}
         <li><span>{{ g.user['username'] }}</span>
@@ -35,6 +35,11 @@
     {% endfor %}
     {% block content %}{% endblock %}
     </section>
+    <container id="footer">
+        <p>&copy; 2026 The Omega Games. All rights reserved.</p>
+        <a href="placeholder">Follow us on Instagram</a>
+        <p>Created by Omega(Ω), Pi(Π), and Phi(Φ)</p>
+    </container>
 </body>
 
 </html>

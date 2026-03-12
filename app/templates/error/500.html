@@ -1,1 +1,19 @@
-500: Internal server error
+{% extends 'base.html' %}
+
+{% block header %}
+  <div class="text-container">
+    <h1>{% block title %}500 Internal Server Error{% endblock %}</h1>
+  </div>
+  <style>
+    body {
+        background-image: url('{{ url_for("static", filename="img/500.jpg") }}'); 
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="text-container">
+        <p>Oh dear! Something went wrong on our end.</p>
+        <p>Please email greenecad@studentmail.conroeisd.net for assistance.</p>
+        <p>As compensation, use code PROGRAMMINGISHARD for a few extra points.</p>
+    </div>
+{% endblock %}

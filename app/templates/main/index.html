@@ -1,9 +1,71 @@
 {% extends 'base.html' %}
 
+{% block js %}
+  <script defer src="{{ url_for('static', filename='js/homepage.js') }}"></script>
+{% endblock %}
+
 {% block header %}
-  <h1>{% block title %}Home{% endblock %}</h1>
+  <h1>{% block title %}THE OMEGA GAMES{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <p>The Omega Games</p>
+  <div class="cd-container">
+    <h2 class="cd-title">Until the Games begin</h2>
+    <h2 class="cd-end-time"></h2>
+    <div class="cd-wrapper">
+        <div class="time-block">
+            <input type="text" class="time-value" value="00" readonly>
+            <div class="time-label">Days</div>
+        </div>
+        <div class="time-block">
+            <input type="text" class="time-value" value="00" readonly>
+            <div class="time-label">Hours</div>
+        </div>
+        <div class="time-block">
+            <input type="text" class="time-value" value="00" readonly>
+            <div class="time-label">Minutes</div>
+        </div>
+        <div class="time-block">
+            <input type="text" class="time-value" value="00" readonly>
+            <div class="time-label">Seconds</div>
+        </div>
+    </div>
+   </div>
+   <button><a href="{{ url_for('auth.register') }}">Sign up</a></button>
+   <h3>The Omega Games is a competition open to all students in Conroe High School.</h3>
+    <ul>
+        <li>Complete challenges to earn points</li>
+        <li>Surpass your peers</li>
+        <li>Prove that you alone are the Omega Games champion.</li>
+    </ul>
+    <h3>The Omega Games are broken into two rounds.</h4>
+    <h4>Round 1</h4>
+    <ul>
+        <li>Virtual competition</li>
+        <li>Open to anyone</li>
+        <li>Complete challenges that open at regular intervals to earn points.</li>
+    </ul>
+    <h4>Round 2</h4>
+    <ul>
+        <li>In-person competition</li>
+        <li>Top 12 competitors from round 1 advance to round two</li>
+        <li>Various elimination rounds are held until only one person remains.</li>
+    </ul>
+
+    <h2>The grand prize? [placeholder] dollars</h2>
+
+    <h3>FAQ:</h3>
+    <h4>Who all can participate?</h4>
+    <ul>
+        <li>Any student currently enrolled at Conroe High School can play.</li>
+        <li>However, Freshmen students may find certain challenges very difficult unless they have classes at the main campus.</li>
+    </ul>
+    <h4>What types of challenges are there?</h4>
+    <ul>
+        <li>Challenges will be released at regular intervals throughout the competition.</li>
+        <li>Most challenges will require either submission of a code or photo proof of an action.</li>
+        <li>Other challenges may involve completion of an embedded task, or participation in a live event.</li>
+        <li>Photo submission challenges will require manual verification before the points are awarded.</li>
+        <li>Challenges will award different amounts of points based on the difficulty of the task.</li>
+    </ul>
 {% endblock %}

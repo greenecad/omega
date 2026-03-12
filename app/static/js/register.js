@@ -177,3 +177,8 @@ clearBtn.addEventListener("click", (e) => {
     }
   }
 });
+
+function popUpToggle(num) {
+  var popup = document.getElementById("popup" + num);
+  popup.classList.toggle("show");
+}

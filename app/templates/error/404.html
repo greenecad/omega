@@ -1,1 +1,18 @@
-404: Page not found
+{% extends 'base.html' %}
+
+{% block header %}
+  <div class="text-container">
+    <h1>{% block title %}404 Not Found{% endblock %}</h1>
+  </div>
+  <style>
+    body {
+        background-image: url('{{ url_for("static", filename="img/500.jpg") }}'); 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="text-container">
+    <p>The page you are looking for does not exist.</p>
+  </div>
+{% endblock %}

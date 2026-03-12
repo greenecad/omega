@@ -1,28 +1,62 @@
 {
     "list": [
         {
-            "name": "challenge 1",
+            "name": "A winner is you!",
             "id": 1,
             "points": 100,
-            "description": "This is the first challenge.",
+            "description": "Welcome to the Omega Games. This is your first challenge.<br>It's quite simple. But the later challenges will not be so easy.<br>Press the button to get your first 100 points.<br>",
+            "type": "challenge",
+            "release": "2026-01-01T00:00:00",
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><button type='submit'>Complete Challenge</button></form>"
+        },
+        {
+            "name": "Propaganda",
+            "id": 2,
+            "points": 300,
+            "description": "Time to prove your loyalty.<br>Follow the instagram account, put the newest post on your story, tag the account, and include your username.<br>The account must be able to see the post and your username for it to count. <br>Don't worry, about submissions, you'll get your points.",
+            "type": "manual",
+            "release": "2026-02-18T00:00:00"
+        },
+        {
+            "name": "Code tutorial",
+            "id": 3,
+            "points": 100,
+            "description": "You may have noticed a new addition to your profile page. You can take codes you find and put them into the code entry box to earn points. A lot of challenges will provide clues to some sort of code. They will always be in all uppercase with no spaces. You will have to PAYATTENTION to figure them all out.",
+            "type": "code",
+            "release": "2026-01-01T00:00:00",
+            "code": "PAYATTENTION"
+        },
+        {
+            "name": "Propaganda 2.0",
+            "id": 4,
+            "points": 200,
+            "description": "Some challenges will require an image submission. You will not receive the points until your submission has been approved.<br>Continue to prove your loyalty. Draw an omega symbol with the words 'THE OMEGA GAMES' underneath on the board in any of your classes. Take a picture, and submit it.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00"
+        },
+        {
+            "name": "code test",
+            "id": 997,
+            "points": 100,
+            "description": "Test code challenge.",
             "type": "code",
             "release": "2026-01-01T00:00:00",
             "code": "test"
         },
         {
-            "name": "challenge 2",
-            "id": 2,
+            "name": "live test",
+            "id": 998,
             "points": 200,
-            "description": "This is the second challenge.",
+            "description": "Test live challenge.",
             "type": "live",
             "release": "2026-02-17T00:00:00",
             "html": "<h3>test heading</h3><p>test paragraph</p>"
         },
         {
-            "name": "challenge 3",
-            "id": 3,
+            "name": "submission test",
+            "id": 999,
             "points": 300,
-            "description": "This is the third challenge.",
+            "description": "Test submission challenge.",
             "type": "submission",
             "release": "2026-02-18T00:00:00"
         }

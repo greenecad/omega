@@ -2,11 +2,28 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #f1f1f1;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
-#regForm {
+body {
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+}
+
+section.content{
+  flex: 1;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+}
+#regForm, #loginForm, #errorContainer {
   background-color: #ffffff;
   margin: 100px auto;
   font-family: Raleway;
@@ -14,17 +31,47 @@ body {
   width: 70%;
   min-width: 300px;
 }
+#regForm input{
+  justify-self: left;
+}
+
+.text-container{
+  background-color: #ffffff;
+  margin: 15px auto;
+  padding: 20px;
+  width: fit-content;
+  min-width: 300px;
+  font-family: Raleway;
+}
+
+.adminPanel{
+  background-color: #ffffff;
+  margin: 30px auto;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+}
 
 h1 {
   text-align: center;  
+  font-size: 40px;
 }
-
 input {
   padding: 10px;
+  font-size: 17px;
+  border: 1px solid #aaaaaa;
+}
+
+input.reg {
   width: 100%;
   font-size: 17px;
   font-family: Raleway;
   border: 1px solid #aaaaaa;
+}
+
+br.spacing{
+  clear: both;
+  padding: 20px;
 }
 
 /* Mark input boxes that gets an error on validation: */
@@ -45,6 +92,7 @@ button {
   font-size: 17px;
   font-family: Raleway;
   cursor: pointer;
+  width: min-content;
 }
 
 button:hover {
@@ -128,6 +176,19 @@ button:hover {
   justify-content: space-between;
 }
 
+#footer {
+  background-color: #333;
+  color: white;
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#footer a {
+  color: #04AA6D;
+}
+
 #nav-links {
   list-style: none;
   display: flex;
@@ -136,6 +197,7 @@ button:hover {
   padding: 0;
 }
 nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
+
 nav ul li a:hover, header .action:hover { background-color: #555; }
 nav ul li a { color: #04AA6D; }
 
@@ -154,11 +216,14 @@ nav ul li a { color: #04AA6D; }
 
 /* Modal Content */
 .modal-content {
+
   position: relative;
+  display: block;
   background-color: #fefefe;
   margin: auto;
   padding: 0;
   border: 1px solid #888;
+  top: 40%;
   width: 80%;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
   animation-name: animatetop;
@@ -168,7 +233,7 @@ nav ul li a { color: #04AA6D; }
 /* Add Animation */
 @keyframes animatetop {
   from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
+  to {top: 40%; opacity: 1}
 }
 
 /* The Close Button */
@@ -184,4 +249,148 @@ nav ul li a { color: #04AA6D; }
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+
+.cd-container {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    text-align: center;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    justify-self: center;
+}
+.cd-title {
+    font-size: 2.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #f74d4d, #f92b2e);
+    background-clip: text;
+    color: transparent;
+}
+.cd-end-time {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-bottom: 50px;
+}
+.cd-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+.time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.time-value {
+    width: 120px;
+    height: 120px;
+    text-align: center;
+    font-size: 3.5rem;
+    font-weight: 600;
+    background: rgba(30, 41, 59, .5);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .05);
+    margin-bottom: 15px;
+    color: #f8fafc;
+}
+.time-label {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.info:after
+{
+    content: '?';
+    display: inline-block;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    width: 1.8ex;
+    height: 1.8ex;
+    font-size: 1.4ex;
+    line-height: 1.8ex;
+    border-radius: 1.2ex;
+    margin-right: 4px;
+    padding: 1px;
+    color: rgb(0, 0, 0);
+    background: white;
+    border: 1px solid rgb(0, 0, 0);
+    text-decoration: none;
+}
+
+.info:hover:after
+{
+    color: white;
+    background: rgb(0, 0, 0);
+    border-color: white;
+    text-decoration: none;
+}
+
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+  display: inline;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
 }

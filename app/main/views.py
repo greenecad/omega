@@ -28,6 +28,26 @@ def leaderboard():
 def profile():
     db = get_db()
     if request.method == 'POST':
+        if 'challenge_id' in request.form:
+            challenge_id = int(request.form.get('challenge_id'))
+            with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                challenge = json.load(f)['list'][challenge_id-1]
+            if challenge['type'] != 'challenge':
+                flash('This challenge cannot be completed in this way.')
+                return redirect(url_for('main.profile'))
+            db = get_db()
+            user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+            completed = json.loads(user['completed'])
+            key = str(challenge_id)
+            if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
+                flash('Challenge already completed!')
+                return redirect(url_for('main.profile'))
+            completed['challenges'][key] = ['completed', '']
+            db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
+            db.commit()
+            flash('Challenge completed! Points awarded: ' + str(challenge['points']))
+            return redirect(url_for('main.profile'))
         code = request.form['code']
         completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
         with open(os.path.join(current_app.static_folder, 'codes.csv'), 'r') as file:
@@ -42,6 +62,8 @@ def profile():
                     db.commit()
                     flag=True
                     flash('Code accepted! Points awarded: ' + row[1])
+                    if len(row) > 2:
+                        flash(row[2])
                     break
             if not flag:
                 flash('Invalid code!')
@@ -52,7 +74,6 @@ def profile():
     notifications = json.loads(user['notifications'])
     popups=[]
 
-    ## todo: fix modal popups not appearing at all
     for notification in notifications["list"]:
         if notification[1] == 0:
             flash(notification[0])
@@ -101,6 +122,9 @@ def submission(challenge_id):
 
     return render_template('main/submission.html', challenge=challenge)
 
+
+
+
 @main.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
@@ -112,6 +136,8 @@ def admin():
     
     if request.method == 'POST':
         action = request.form.get('admin_action')
+        if action == "crash":
+            raise Exception('Intentional Crash Triggered by Admin')
         if action == 'update_user':
             try:
                 username = request.form.get('username')
@@ -127,6 +153,29 @@ def admin():
             db.execute('UPDATE user SET points = 0, completed = ? WHERE username = ?;', (json.dumps({'challenges': {}, 'codes': []}), username))
             db.commit()
             flash(f'Reset user {username}')
+        elif action == 'update_challenge':
+            try:
+                username = request.form.get('username')
+                edited_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+                notifications = json.loads(edited_user['notifications'])
+                challenge_id = int(request.form.get('challenge_id'))
+                completed = json.loads(db.execute('SELECT completed FROM user WHERE username = ?;', (username,)).fetchone()[0])
+                key = str(challenge_id)
+                completed['challenges'][key] = ['completed', completed['challenges'][key][1] if key in completed['challenges'] else '']
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                    challenge = json.load(f)['list'][challenge_id-1]
+                challenge_name = challenge['name'] if 'name' in challenge else f'ID {challenge_id}'
+                if isinstance(notifications, dict) and "list" in notifications:
+                    notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                else:
+                    notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+                db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+                db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+                db.commit()
+                flash(f'Updated challenge status for user {username}')
+            except Exception as e:
+                flash('Error updating challenge status: ' + str(e))
     return redirect(url_for('main.profile'))
 
 @main.route('/admin/pending', methods=['GET', 'POST'])
@@ -140,38 +189,63 @@ def admin_pending():
         return redirect(url_for('main.profile'))
     
     if request.method == 'POST':
-        username = request.form.get('username')
-        challenge_id = int(request.form.get('challenge_id'))
-        key = str(challenge_id)
-        action = request.form.get('action')
-        user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
-        completed = json.loads(user['completed'])
-        notifications = json.loads(user['notifications'])
+        if request.form.get('type') == 'challenge':
+            username = request.form.get('username')
+            challenge_id = int(request.form.get('challenge_id'))
+            key = str(challenge_id)
+            action = request.form.get('action')
+            user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+            completed = json.loads(user['completed'])
+            notifications = json.loads(user['notifications'])
 
-        if action == 'approve':
-            with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-                challenge = json.load(f)['list'][challenge_id-1]
-            completed['challenges'][key][0] = 'completed'
-            if isinstance(notifications, dict) and "list" in notifications:
-                notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 0])
-            else:
-                notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 0])
-            db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
-            db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
-            db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
-            db.commit()
-            flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
-        elif action == 'reject':
-            if key in completed['challenges']:
-                del completed['challenges'][key]
-            if isinstance(notifications, dict) and "list" in notifications:
-                notifications["list"].append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
-            else:
-                notifications.append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
-            db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
-            db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
-            db.commit()
-            flash(f'Rejected submission for user {user["username"]} on challenge {challenge_id}')
+            if action == 'approve':
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                    challenge = json.load(f)['list'][challenge_id-1]
+                completed['challenges'][key][0] = 'completed'
+                if isinstance(notifications, dict) and "list" in notifications:
+                    notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 1])
+                else:
+                    notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 1])
+                db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+                db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+                db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+                db.commit()
+                flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
+            elif action == 'reject':
+                if key in completed['challenges']:
+                    del completed['challenges'][key]
+                if isinstance(notifications, dict) and "list" in notifications:
+                    notifications["list"].append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
+                else:
+                    notifications.append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
+                db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+                db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+                db.commit()
+                flash(f'Rejected submission for user {user["username"]} on challenge {challenge_id}')
+                
+        elif request.form.get('type') == 'account':
+            username = request.form.get('username')
+            action = request.form.get('action')
+            user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+            notifications = json.loads(user['notifications'])
+            if action == 'approve':
+                db.execute('UPDATE user SET participating = 1 WHERE username = ?;', (username,))
+                if isinstance(notifications, dict) and "list" in notifications:
+                    notifications["list"].append([f'Your account has been approved! You can now participate in the Omega Games.', 1])
+                else:
+                    notifications.append([f'Your account has been approved! You can now participate in the Omega Games.', 0])
+                db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
+                db.commit()
+                flash(f'Approved account for user {user["username"]}')
+            elif action == 'reject':
+                db.execute('DELETE FROM user WHERE username = ?;', (username,))
+                if isinstance(notifications, dict) and "list" in notifications:
+                    notifications["list"].append([f'Your student ID verification has been rejected. You are not currently participating in the Omega Games. If you believe this is a mistake, please contact OMEGA.', 1])
+                else:
+                    notifications.append([f'Your student ID verification has been rejected. You are not currently participating in the Omega Games. If you believe this is a mistake, please contact OMEGA.', 1])
+                db.commit()
+                flash(f'Rejected account for user {user["username"]}')
 
-    users = db.execute('SELECT username, completed FROM user;').fetchall()
+    users = db.execute('SELECT * FROM user;').fetchall()
     return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for)
+

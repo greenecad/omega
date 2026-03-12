@@ -39,16 +39,16 @@ def register():
                 os.makedirs(upload_dir, exist_ok=True)
                 id_image = request.files.get('id_image')
                 if id_image and id_image.filename:
-                    save_path = os.path.join(upload_dir, id_image.filename)
+                    save_path = os.path.join(upload_dir, "id_" + username + "." + id_image.filename.split('.')[-1])
                     id_image.save(save_path)
                     db.execute(
                         "UPDATE user SET id_image = ? WHERE username = ?",
-                        (save_path, username),
+                        (id_image.filename, username),
                     )
                 db.commit()
 
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = f"Username or email is already registered."
             else:
                 return redirect(url_for("auth.login"))
 

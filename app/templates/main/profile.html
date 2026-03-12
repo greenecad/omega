@@ -34,26 +34,49 @@
 
   {% if user.admin == 1 %}
     <!-- dont worry about styling this Katie -->
-    <p>Admin panel:</p>
-    <form method = "post" action="{{ url_for('main.admin') }}">
-      <label for="username">Username:</label>
-      <input name="username" placeholder="username">
-      <label for="column">Column: </label>
-      <input name="column" placeholder="column name">
-      <label for="points">Value:</label>
-      <input name="points" placeholder="column value">
-      <input type="hidden" name="admin_action" value="update_user">
-      <input type="submit" value="change data">
-    </form>
-    <form method = "post" action="{{ url_for('main.admin') }}">
-      <label for="username">Username:</label>
-      <input name="username" placeholder="username">
-      <input type="hidden" name="admin_action" value="reset_user">
-      <input type="submit" value="reset user">
-    </form>
-    <form action ="{{ url_for('main.admin_pending')}}">
-      <input type="submit" value="View pending submissions">
-    </form>
+    <div class="adminPanel">
+      <h2>Admin Panel</h2>
+      <h3>Manual data editing</h3>
+      <form method = "post" action="{{ url_for('main.admin') }}">
+        <label for="username">Username:</label>
+        <input name="username" placeholder="username">
+        <label for="column">Column: </label>
+        <input name="column" placeholder="column name">
+        <label for="points">Value:</label>
+        <input name="points" placeholder="column value">
+        <input type="hidden" name="admin_action" value="update_user">
+        <input type="submit" value="change data">
+      </form>
+      <br class="spacing">
+      <h3>Reset User</h3>
+      <form method = "post" action="{{ url_for('main.admin') }}">
+        <label for="username">Username:</label>
+        <input name="username" placeholder="username">
+        <input type="hidden" name="admin_action" value="reset_user">
+        <input type="submit" value="reset user">
+      </form>
+      <br class="spacing">
+      <h3>Manually complete challenge</h3>
+      <form method = "post" action="{{ url_for('main.admin') }}">
+        <label for="username">Username:</label>
+        <input name="username" placeholder="username">
+        <label for="challenge_id">Challenge ID:</label>
+        <input name="challenge_id" placeholder="challenge id">
+        <input type="hidden" name="admin_action" value="update_challenge">
+        <input type="submit" value="update challenge status">
+      </form>
+      <br class="spacing">
+      <h3>Check pending submissions</h3>
+      <form action ="{{ url_for('main.admin_pending')}}">
+        <input type="submit" value="View pending submissions">
+      </form>
+      <br class="spacing">
+      <h3>Intentional Crash</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <input type="hidden" name="admin_action" value="crash">
+        <input type="submit" value="intentional crash">
+      </form>
+    </div>
   {% endif %}
 
   <form method="post">
@@ -74,12 +97,12 @@
       <li class="challenge-other">
       {% endif %}
         {{ challenge.name }} - {{ challenge.points }} points
-        <p>{{ challenge.description }}</p>
-        {% if challenge.type == "submission" %}
+        <p>{{ challenge.description|safe }}</p>
+        {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
           <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
         {% endif %}
 
-        {% if challenge.html %}
+        {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
           <div class="challenge-html">
             {{ challenge.html|safe }}
           </div>

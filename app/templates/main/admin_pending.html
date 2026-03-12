@@ -5,6 +5,39 @@
 {% endblock %}
 
 {% block content %}
+  <h2>Account verification</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      {% if user.participating == 0 %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>
+            <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username +'/'+ user.id_image )) }}" alt="Submission Image" width="200">
+          </td>
+          <td>
+          <form method="post" action="{{ url_for('main.admin_pending') }}">
+            <input type="hidden" name="type" value="account">
+            <input type="hidden" name="username" value="{{ user.username }}">
+            <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
+            <button type="submit" name="action" value="approve">Approve</button>
+            <button type="submit" name="action" value="reject">Reject</button>
+          </form>
+          </td>
+        </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Challenge submissions</h2>
   <table>
     <thead>
       <tr>
@@ -17,24 +50,24 @@
     </thead>
     <tbody>
       {% for user in users %}
-      {% for challenge_id, submission in json.loads(user[1])['challenges'].items() %}
+      {% for challenge_id, submission in json.loads(user.completed)['challenges'].items() %}
       {% if submission[0] == 'pending' %}
         <tr>
-          <td>{{ user[0] }}</td>
+          <td>{{ user.username }}</td>
           <td>{{ challenge_id }}</td>
           <td>
-            <img src="{{ url_for('static', filename=('img/' + 'users/' + user[0] + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
+            <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
           </td>
           <td>{{ submission[1] }}</td>
           <td>
           <form method="post" action="{{ url_for('main.admin_pending') }}">
-            <input type="hidden" name="username" value="{{ user[0] }}">
+            <input type="hidden" name="type" value="challenge">
+            <input type="hidden" name="username" value="{{ user.username }}">
             <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
             <button type="submit" name="action" value="approve">Approve</button>
             <button type="submit" name="action" value="reject">Reject</button>
           </form>
           </td>
-          <td>{{ submission[1] }}</td>
         </tr>
       {% endif %}
       {% endfor %}
