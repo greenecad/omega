@@ -78,73 +78,90 @@
       </form>
     </div>
   {% endif %}
-
+  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %}<!-- ensure this matches the first code challenge date -->
   <form method="post">
     <label for="code">Submit code:</label>
     <input name="code" placeholder="Enter code here">
-    <input type="submit" value="Submit code">
+    <button type="submit">Submit code</button>
   </form>
+  {% endif %}
+  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %} <!-- ensure this matches the friend challenge date -->
+    <br>
+    <button id="friend-button"><a href="{{ url_for('main.friends') }}">Manage friends</a></button>
+  {% endif %}
 
   <h2>Challenge list:</h2>
   <ul>
     {% for challenge in challenges %}
-    {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
-      {% if challenge.type == "code" %}
-      <li class="challenge-code">
-      {% elif challenge.type == "live" %}
-      <li class="challenge-live">
-      {% else %}
-      <li class="challenge-other">
-      {% endif %}
-        {{ challenge.name }} - {{ challenge.points }} points
-        <p>{{ challenge.description|safe }}</p>
-        {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
-          <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
+      {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
+        {% if challenge.type == "code" %}
+        <li class="challenge-code">
+        {% elif challenge.type == "live" %}
+        <li class="challenge-live">
+        {% else %}
+        <li class="challenge-other">
         {% endif %}
+          {{ challenge.name }} - {{ challenge.points }} points
+          <p>{{ challenge.description|safe }}</p>
+          {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+            <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
+          {% endif %}
 
-        {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
-          <div class="challenge-html">
-            {{ challenge.html|safe }}
-          </div>
-        {% endif %}
-        {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
-          <p>Completed!</p>
-        {% endif %}
-        {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
-          <p>Submission pending review.</p>
-        {% endif %}
-      </li>
-    {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days > 1%}
-      <li class="challenge-locked">
+          {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+            <div class="challenge-html">
+              {{ challenge.html|safe }}
+            </div>
+          {% endif %}
+          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
+            <p>Completed!</p>
+          {% endif %}
+          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
+            <p>Submission pending review.</p>
+          {% endif %}
+          {% if challenge.hint and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) and not (challenge.id in json.loads(user.hints_used)['list'])%}
+            <form method="post" action="{{ url_for('main.use_hint', challenge_id=challenge.id) }}">
+              <button type="submit">Use hint ({{ user.hint_count }} remaining)</button>
+            </form>
+          {% endif %}
+          {% if challenge.hint and (challenge.id in json.loads(user.hints_used)['list']) %}
+            <p>Hint: {{ challenge.hint }}</p>
+          {% endif %}
+        </li>
+
+
         
-        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).days }} days
-      </li>
-    {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days == 1%}
-      <li class="challenge-locked">
-        {{if }}
-        {{ challenge.name }} - Locked for 1 day
-      </li>
-    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1%}
-      <li class="challenge-locked">
-        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 }} hours
-      </li>
-    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 == 1%}
-      <li class="challenge-locked">
-        {{ challenge.name }} - Locked for 1 hour
-      </li>
-     {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 > 1%}
-      <li class="challenge-locked">
-        {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 }} minutes
-      </li>
-    {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 == 1%}
-      <li class="challenge-locked">
-        {{ challenge.name }} - Locked for 1 minute
-      </li>
-     {% else %}
-      <li class="challenge-locked">
-        {{ challenge.name }} - Locked for less than a minute
-      </li>
-    {% endif %}
+      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days > 1%}
+        <li class="challenge-locked">
+          
+          Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).days }} days
+        </li>
+      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days == 1%}
+        <li class="challenge-locked">
+          Locked for 1 day
+        </li>
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1%}
+        <li class="challenge-locked">
+          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 }} hours
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 == 1%}
+        <li class="challenge-locked">
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 > 1%}
+        <li class="challenge-locked">
+          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 }} minutes
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 == 1%}
+        <li class="challenge-locked">
+          {{ challenge.name }} - Locked for 1 minute
+      {% else %}
+        <li class="challenge-locked">
+          {{ challenge.name }} - Locked for less than a minute
+      {% endif %}
+      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) %}
+        <h3>FORESIGHT: </h3>
+        <p class="foresight">{{ challenge.description|safe }}</p>
+        <p class="warn">This challenge may not be fully set up yet. Do not search for any clues within the building until the challenge is fully released.</p>
+        </li>
+      {% else %}
+        </li>
+      {% endif %}
     {% endfor %}
 
 {% endblock %}

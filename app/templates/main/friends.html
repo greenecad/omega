@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Friends{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+  <h3>{{ user.username }}'s friends</h3>
+  <ul>
+  {% if (json.loads(user.friends)['list'] | length)==0 %}
+    <li>No friends to display. Go make some!</li>
+  {% else %}
+    {% for friend in json.loads(user.friends)['list'] %}
+      <li>{{ friend }}</li>
+    {% endfor %}
+  {% endif %}
+  </ul>
+  <form method="post" action="{{ url_for('main.submit_friend_request') }}">
+    <input type="text" name="friend" placeholder="Add a friend...">
+    <button type="submit">Submit friend request</button>
+  </form>
+  <h3>Friend Requests</h3>
+  <ul>
+  {% if (json.loads(user.friend_requests)['list'] | length )==0 %}
+    <li>No friend requests to display.</li>
+  {% else %}
+    {% for request in json.loads(user.friend_requests)['list'] %}
+      <li>
+        {{ request }}
+        <form style="display:inline;" method="post" action="{{ url_for('main.accept_friend_request') }}">
+          <input type="hidden" name="requester" value="{{ request }}">
+          <button type="submit">Accept</button>
+        </form>
+        <form style="display:inline;" method="post" action="{{ url_for('main.reject_friend_request') }}">
+          <input type="hidden" name="requester" value="{{ request }}">
+          <button type="submit">Reject</button>
+        </form>
+      </li>
+    {% endfor %}
+  {% endif %}
+{% endblock %}

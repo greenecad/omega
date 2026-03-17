@@ -45,6 +45,11 @@ def register():
                         "UPDATE user SET id_image = ? WHERE username = ?",
                         (id_image.filename, username),
                     )
+                if gift=="knowledge":
+                    db.execute(
+                        "UPDATE user SET hint_count = hint_count + 5 WHERE username = ?",
+                        (username,),
+                    )
                 db.commit()
 
             except db.IntegrityError:

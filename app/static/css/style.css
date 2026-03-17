@@ -18,24 +18,26 @@ section.content{
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+  display: inline-grid;
   gap: 1em;
 
 }
-#regForm, #loginForm, #errorContainer {
+#regForm, #loginForm {
   background-color: #ffffff;
   margin: 100px auto;
   font-family: Raleway;
   padding: 40px;
   width: 70%;
   min-width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 #regForm input{
   justify-self: left;
+  
 }
 
-.text-container{
+.text-container, #errorContainer{
   background-color: #ffffff;
   margin: 15px auto;
   padding: 20px;
@@ -50,6 +52,8 @@ form {
   padding: 40px;
   width: 70%;
   min-width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -85,7 +89,7 @@ input.invalid {
 }
 
 button {
-  background-color: #04AA6D;
+  background-color: #aa0404;
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -186,7 +190,7 @@ button:hover {
 }
 
 #footer a {
-  color: #04AA6D;
+  color: #000dff;
 }
 
 #nav-links {
@@ -199,7 +203,7 @@ button:hover {
 nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
 
 nav ul li a:hover, header .action:hover { background-color: #555; }
-nav ul li a { color: #04AA6D; }
+nav ul li a { color: #ff0404; }
 
 .modal {
   display: none; /* Hidden by default */
@@ -393,4 +397,12 @@ nav ul li a { color: #04AA6D; }
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity:1 ;}
+}
+
+.foresight {
+  opacity: .85;
+}
+.warn {
+  color: red;
+  font-weight: bold;
 }

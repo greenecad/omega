@@ -24,7 +24,8 @@
             "description": "You may have noticed a new addition to your profile page. You can take codes you find and put them into the code entry box to earn points. A lot of challenges will provide clues to some sort of code. They will always be in all uppercase with no spaces. You will have to PAYATTENTION to figure them all out.",
             "type": "code",
             "release": "2026-01-01T00:00:00",
-            "code": "PAYATTENTION"
+            "code": "PAYATTENTION",
+            "hint": "... really? You're probably overthinking it."
         },
         {
             "name": "Propaganda 2.0",
@@ -35,12 +36,20 @@
             "release": "2026-02-18T00:00:00"
         },
         {
+            "name": "Friendly",
+            "id": 5,
+            "points": 200,
+            "description": "You can't make it through life alone. You need people to stand beside you when times get tough. Just be sure to choose your friends wisely.<br>Make at least five friends, either by sending friend requests or accepting others' friend requests. There is a new button on your profile page to help with this.<br>You earn 40 points for each of the first five friends you make.",
+            "type": "manual",
+            "release": "2026-02-18T00:00:00"
+        },
+        {
             "name": "code test",
             "id": 997,
             "points": 100,
             "description": "Test code challenge.",
             "type": "code",
-            "release": "2026-01-01T00:00:00",
+            "release": "2026-03-14T20:00:00",
             "code": "test"
         },
         {

@@ -13,6 +13,9 @@ CREATE TABLE user (
   points INTEGER DEFAULT 0,
   id_image TEXT, 
   completed TEXT DEFAULT '{"codes": [], "challenges": {} }',
-  notifications TEXT DEFAULT '{"list": []}'
-
+  notifications TEXT DEFAULT '{"list": []}',
+  hint_count INTEGER DEFAULT 3,
+  hints_used TEXT DEFAULT '{"list": []}',
+  friends TEXT DEFAULT '{"list": []}',
+  friend_requests TEXT DEFAULT '{"list": []}'
 );
