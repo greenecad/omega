@@ -22,6 +22,7 @@ form {
   gap: 1em;
 
 }
+
 #regForm, #loginForm {
   background-color: #ffffff;
   margin: 100px auto;
