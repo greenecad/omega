@@ -61,7 +61,7 @@ def profile():
                     db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
                     db.commit()
                     flag=True
-                    if row[1]>0:
+                    if int(row[1])>0:
                         flash('Code accepted! Points awarded: ' + row[1])
                     if len(row) > 2:
                         flash(row[2])
@@ -186,14 +186,28 @@ def admin():
                 key = str(challenge_id)
                 completed['challenges'][key] = ['completed', completed['challenges'][key][1] if key in completed['challenges'] else '']
                 with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-                    challenge = json.load(f)['list'][challenge_id-1]
+                    challenges = json.load(f)['list']
+                    for i in range(len(challenges)):
+                        if challenges[i]['id']==challenge_id:
+                            challenge_id = i
+                            break
+
+                    challenge = challenges[challenge_id]
                 challenge_name = challenge['name'] if 'name' in challenge else f'ID {challenge_id}'
-                if isinstance(notifications, dict) and "list" in notifications:
-                    notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                if challenge['points'] == -1:
+                    points_awarded = request.form.get('points_awarded')
+                    if isinstance(notifications, dict) and "list" in notifications:
+                        notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {points_awarded} points.', 1])
+                    else:
+                        notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {points_awarded} points.', 1])
+                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (points_awarded, username))
                 else:
-                    notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                    if isinstance(notifications, dict) and "list" in notifications:
+                        notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                    else:
+                        notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
+                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
                 db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
-                db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
                 db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
                 db.commit()
                 flash(f'Updated challenge status for user {username}')
@@ -225,12 +239,21 @@ def admin_pending():
                 with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
                     challenge = json.load(f)['list'][challenge_id-1]
                 completed['challenges'][key][0] = 'completed'
-                if isinstance(notifications, dict) and "list" in notifications:
-                    notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 1])
+                if challenge['points']==-1:
+                    points_awarded = request.form.get('points_awarded')
+                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (points_awarded, username))
+                    if isinstance(notifications, dict) and "list" in notifications:
+                        notifications["list"].append([f'Your submission for challenge {challenge_id}: "{challenge["name"]}" has been approved! You have been awarded {points_awarded} points.', 1])
+                    else:
+                        notifications.append([f'Your submission for challenge {challenge_id}: "{challenge["name"]}" has been approved! You have been awarded {points_awarded} points.', 1])
                 else:
-                    notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge["points"]} points.', 1])
+                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+                    if isinstance(notifications, dict) and "list" in notifications:
+                        notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge['points']} points.', 1])
+                    else:
+                        notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge['points']} points.', 1])
+
                 db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
-                db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
                 db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
                 db.commit()
                 flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
@@ -271,7 +294,9 @@ def admin_pending():
 
     #image display is broken??
     users = db.execute('SELECT * FROM user;').fetchall()
-    return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for)
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+        challenges = json.load(f)['list']
+    return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for, challenges=challenges)
 
 
 

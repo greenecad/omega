@@ -62,6 +62,8 @@
         <input name="username" placeholder="username">
         <label for="challenge_id">Challenge ID:</label>
         <input name="challenge_id" placeholder="challenge id">
+        <label for="challenge_id">points awarded (if variable):</label>
+        <input name="points_awarded" placeholder="points awarded">
         <input type="hidden" name="admin_action" value="update_challenge">
         <input type="submit" value="update challenge status">
       </form>
@@ -101,7 +103,16 @@
         {% else %}
         <li class="challenge-other">
         {% endif %}
-          {{ challenge.name }} - {{ challenge.points }} points
+          <div class ="challenge-header">
+          {% if challenge.points != -1 %}
+            {{ challenge.name }} - {{ challenge.points }} points
+          {% else %}
+            {{ challenge.name }} - variable points
+          {% endif %}
+          {% if user.admin == 1 %}
+            challenge id: {{challenge.id}}
+          {% endif %}
+          </div>
           <p>{{ challenge.description|safe }}</p>
           {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>

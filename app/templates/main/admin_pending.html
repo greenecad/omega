@@ -64,6 +64,9 @@
             <input type="hidden" name="type" value="challenge">
             <input type="hidden" name="username" value="{{ user.username }}">
             <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
+            {% if challenges[(challenge_id | int) - 1].points == -1 %}
+              <input name = "points_awarded" required placeholder="points...">
+            {% endif %}
             <button type="submit" name="action" value="approve">Approve</button>
             <button type="submit" name="action" value="reject">Reject</button>
           </form>

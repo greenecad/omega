@@ -44,6 +44,15 @@
             "release": "2026-02-18T00:00:00"
         },
         {
+            "name": "GPA flex",
+            "id": 6,
+            "points": -1,
+            "description": "What has that pesky GPA ever gotten you, anyway? Well, it's getting you points, now, that's what!<br>Submit a photo of your weighted GPA. You earn GPA*100(rounded to 10s) points.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00"
+        },
+        
+        {
             "name": "code test",
             "id": 997,
             "points": 100,
@@ -55,7 +64,7 @@
         {
             "name": "live test",
             "id": 998,
-            "points": 200,
+            "points": -1,
             "description": "Test live challenge.",
             "type": "live",
             "release": "2026-02-17T00:00:00",
