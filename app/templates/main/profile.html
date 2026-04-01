@@ -31,6 +31,9 @@
   {% if user.participating == 0%}
     <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
   {% endif %}
+  {% if user.participating == -1%}
+    <p>You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
+  {% endif %}
 
   {% if user.admin == 1 %}
     <!-- dont worry about styling this Katie -->
@@ -78,24 +81,45 @@
         <input type="hidden" name="admin_action" value="crash">
         <input type="submit" value="intentional crash">
       </form>
+      <br class = "spacing">
+      <h3>Activate live event</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="challenge_id">Challenge ID:</label>
+        <input name="challenge_id" placeholder="challenge id">
+        <label for="event_code">Event Code:</label>
+        <input name="event_code" placeholder="event code">
+        <input type="hidden" name="admin_action" value="activate_live">
+        <input type="submit" value="activate live event">
+      </form>
+      <br class = "spacing">
+      <h3>Send global notification</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="message">Message:</label>
+        <input name="message" placeholder="message">
+        <input type="hidden" name="admin_action" value="global_notification">
+        <input type="submit" value="send notification">
     </div>
   {% endif %}
-  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %}<!-- ensure this matches the first code challenge date -->
+
+
+  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %}<!-- ensure this matches the first code challenge date -->
   <form method="post">
     <label for="code">Submit code:</label>
     <input name="code" placeholder="Enter code here">
     <button type="submit">Submit code</button>
   </form>
   {% endif %}
-  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %} <!-- ensure this matches the friend challenge date -->
+  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the friend challenge date -->
     <br>
     <button id="friend-button"><a href="{{ url_for('main.friends') }}">Manage friends</a></button>
   {% endif %}
 
   <h2>Challenge list:</h2>
   <ul>
+    {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the first challenge release date -->
+    
     {% for challenge in challenges %}
-      {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
+      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
         {% if challenge.type == "code" %}
         <li class="challenge-code">
         {% elif challenge.type == "live" %}
@@ -117,11 +141,22 @@
           {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
           {% endif %}
-
+          {% if challenge.type == "live" and challenge.event_code != null %}
+            <p>Event code: {{ challenge.event_code }}</p>
+          {% endif %}
           {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <div class="challenge-html">
               {{ challenge.html|safe }}
             </div>
+          {% endif %}
+          {% if challenge.competitiveness != null and user.gift == 'competitiveness' %}
+            <p>Competitiveness: {{ challenge.competitiveness }}</p>
+          {% endif %}
+          {% if challenge.vigilance != null and user.gift == 'vigilance' %}
+            <p>Vigilance: {{ challenge.vigilance }}</p>
+          {% endif %}
+          {% if challenge.determination != null and user.gift == 'determination' %}
+            <p>Determination: {{ challenge.determination }}</p>
           {% endif %}
           {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
             <p>Completed!</p>
@@ -165,8 +200,8 @@
         <li class="challenge-locked">
           {{ challenge.name }} - Locked for less than a minute
       {% endif %}
-      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) %}
-        <h3>FORESIGHT: </h3>
+      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) and not challenge.type == "live"%}
+        <h3>Foresight: </h3>
         <p class="foresight">{{ challenge.description|safe }}</p>
         <p class="warn">This challenge may not be fully set up yet. Do not search for any clues within the building until the challenge is fully released.</p>
         </li>
@@ -174,5 +209,10 @@
         </li>
       {% endif %}
     {% endfor %}
-
+  {% else %}
+    <div class = "text-container">
+      <img src = "{{ url_for('static', filename= 'img/icons8-lock-208.png') }}" alt = "locked" class="locked-img">
+      <p>Challenges will be released soon! see countdown on home page.</p>
+    </div>
+  {% endif %}
 {% endblock %}

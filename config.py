@@ -1,13 +1,15 @@
+from datetime import datetime
+
 from flask import render_template
 
 
 # Custom error pages
 def page_not_found(e):
-    return render_template('error/404.html'), 404
+    return render_template('error/404.html', datetime=datetime), 404
 
 
 def internal_server_error(e):
-    return render_template('error/500.html'), 500
+    return render_template('error/500.html', datetime=datetime), 500
 
 
 class Production:

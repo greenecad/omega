@@ -1,3 +1,4 @@
+from datetime import datetime
 import functools, os
 
 from flask import (
@@ -50,6 +51,11 @@ def register():
                         "UPDATE user SET hint_count = hint_count + 5 WHERE username = ?",
                         (username,),
                     )
+                if request.form['participate'] == "0":
+                    db.execute(
+                        "UPDATE user SET participate = -1 WHERE username = ?",
+                        (username,),
+                    )
                 db.commit()
 
             except db.IntegrityError:
@@ -59,7 +65,7 @@ def register():
 
         flash(error)
 
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', datetime=datetime)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
@@ -84,7 +90,7 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', datetime=datetime)
 
 @bp.before_app_request
 def load_logged_in_user():

@@ -7,7 +7,7 @@
             "description": "Welcome to the Omega Games. This is your first challenge.<br>It's quite simple. But the later challenges will not be so easy.<br>Press the button to get your first 100 points.<br>",
             "type": "challenge",
             "release": "2026-01-01T00:00:00",
-            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><button type='submit'>Complete Challenge</button></form>"
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><input type='hidden' name='completed' value='1'><button type='submit'>Complete Challenge</button></form>"
         },
         {
             "name": "Propaganda",
@@ -51,7 +51,106 @@
             "type": "submission",
             "release": "2026-02-18T00:00:00"
         },
-        
+        {
+            "name": "Cipher",
+            "id": 7,
+            "points": 200,
+            "description": "Don't want to alarm you, but this one isn't so easy: [[TBBQWBO]]",
+            "type": "code",
+            "release": "2026-01-01T00:00:00",
+            "code": "GOODJOB",
+            "hint": "Brackets indicate the code is not literal, but requires some decrypting. Now might be a good time to learn some basic encryption techniques. Have you tried rotating it?"
+        },
+        {
+            "name": "Monke Business",
+            "id": 8,
+            "points": 200,
+            "description": "Rumor has it Monke has something for you, but only if you can find him somewhere in Conroe High School. Try paying him court. <p class=\"warn\"> WARNING: do NOT remove any codes hidden within the school so others cannot find them. It's not good sportsmanship. Also, you'll be disqualified, so there's that. </p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "MONKEBUSINESS",
+            "hint": "(-yard). He might be in a less conspicuous corner."
+        },
+        {
+            "name": "Bad Time",
+            "id": 9,
+            "points": 300,
+            "description": "Bad time? Bad time. Beat Sans. Have fun.",
+            "type": "challenge",
+            "release": "2026-01-01T00:00:00",
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='9'><input type='hidden' name='completed' value='0'><button type='submit'>Go to fight</button></form>"
+        },
+        {
+            "name": "Gimkit",
+            "id": 10,
+            "points": -1,
+            "description": "Time for the first live event. Game will open at [time]. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each elimination you get.",
+            "type": "live",
+            "release": "2026-02-17T00:00:00",
+            "competitiveness": "You receive 100 more points for being on the winning team.",
+            "vigilance": "You receive 50 points for being on the LOSING team.",
+            "determination": "You receive 10 more points for each elimination you get.",
+            "event_code": null
+        },
+        {
+            "name": "The Great Search",
+            "id": 11,
+            "points": 200,
+            "description": "It's off to find some codes.<br>There's something of note in room (placeholder). Go find it.<br>Get used to visiting teachers' rooms, this won't be the last time. <p class='warn'>WARNING: Do NOT disturb teachers while they are teaching. Give this project a good name. Complaints from teachers will result in disqualification.</p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "PLACESLONGFORGOTTEN",
+            "hint": "Don't be shy. Just stop in before or after school, and {name} should direct you to what you need."
+        },
+        {
+            "name": "Cipher 2.0",
+            "id": 12,
+            "points": 300,
+            "description": "22 34 44 34 42 34 34 32 placeholder",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "CODEBREAKER",
+            "hint": "Polybius, both of them, even if it doesnt appear so."
+        },
+         {
+            "name": "Cipher 3.0",
+            "id": 13,
+            "points": 300,
+            "description": "If you have been paying attention, you probably noticed some encrypted text. You'll need this key to break it, though: [[HEYLOOKACODE]]",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "OMEGAPIPHI",
+            "hint": "Caesar, but more complicated because of that key. Misattributed to some French guy."
+        },
+        {
+            "name": "Shell shockers",
+            "id": 14,
+            "points": -1,
+            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at {{time}}. You get 10 points per kill. As before, you MUST set your shell shockers name to your Omega Games username and remain until the end of the 20 minute round to get your points.",
+            "type": "live",
+            "release": "2026-02-17T00:00:00",
+            "competitiveness": "You get an additional 2 points per kill. Go crazy.",
+            "determination": "You get an additional 2 points per kill. Go crazy.",
+            "event_code": null
+        },
+        {
+            "name": "I have a life",
+            "id": 15,
+            "points": 200,
+            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport). Activity must be plainly visible from photo. 200 points per photo.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00",
+            "submissions": 2
+        },
+        {
+            "name": "I might have a life",
+            "id": 16,
+            "points": 40,
+            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00",
+            "submissions": 5
+        },
         {
             "name": "code test",
             "id": 997,
@@ -59,7 +158,8 @@
             "description": "Test code challenge.",
             "type": "code",
             "release": "2026-03-14T20:00:00",
-            "code": "test"
+            "code": "test",
+            "hint": "a"
         },
         {
             "name": "live test",
@@ -68,7 +168,8 @@
             "description": "Test live challenge.",
             "type": "live",
             "release": "2026-02-17T00:00:00",
-            "html": "<h3>test heading</h3><p>test paragraph</p>"
+            "html": "<h3>test heading</h3><p>test paragraph</p>",
+            "event_code": null
         },
         {
             "name": "submission test",

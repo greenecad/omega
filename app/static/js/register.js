@@ -32,6 +32,19 @@ function nextPrev(n) {
   // if you have reached the end of the form...
   if (currentTab >= x.length) {
     // ... the form gets submitted:
+    if (!document.getElementsByName("terms")[0].checked) {
+      alert("You must agree to the terms and conditions! I'm trying to not get in trouble here...");
+      currentTab = 5;
+      showTab(currentTab);
+      return false;
+    }
+    if (document.getElementsByName("password")[0].value != document.getElementsByName("confirm_password")[0].value) {
+      alert("Passwords do not match!");
+      currentTab = 5;
+      showTab(currentTab);
+      return false;
+    }
+
     document.getElementById("regForm").submit();
     return false;
   }
@@ -181,4 +194,9 @@ clearBtn.addEventListener("click", (e) => {
 function popUpToggle(num) {
   var popup = document.getElementById("popup" + num);
   popup.classList.toggle("show");
+  for (let i = 1; i<=7; i++){
+    if (i != num && document.getElementById('popup'+i).classList.contains("show")) {
+      document.getElementById('popup'+i).classList.toggle("show")
+    }
+  }
 }
