@@ -20,7 +20,7 @@ def index():
 @main.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
     db = get_db()
-    users = db.execute('SELECT username, points FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
+    users = db.execute('SELECT username, points, pfp FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
     return render_template('main/leaderboard.html', users=users, datetime=datetime)
 
 @main.route('/profile', methods=['GET', 'POST'])
@@ -29,6 +29,18 @@ def profile():
     db = get_db()
     if request.method == 'POST':
         if 'challenge_id' in request.form:
+            if request.form.get('challenge_id') == '22':
+                user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+                click_points = user['click_points']
+                print(request.form.to_dict(flat=False))
+                new_click_points = request.form.get('clickPoints')
+                print(new_click_points)
+                if int(new_click_points) > click_points:
+                    db.execute('UPDATE user SET click_points = ? WHERE id = ?;', (new_click_points, session['user_id']))
+                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', ((int(new_click_points)-click_points) * 10, session['user_id']))
+                    db.commit()
+                    flash(f'You earned {(int(new_click_points)-click_points) * 10} points!')
+                return redirect(url_for('main.profile'))
             challenge_id = int(request.form.get('challenge_id'))
             completed = request.form.get('completed')
             with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
@@ -175,6 +187,17 @@ def admin():
                 flash(f'Updated {column} for user {username} to {value}')
             except Exception as e:
                 flash('Error updating user: ' + str(e))
+        elif action == 'add_column':
+            try:
+                column_name = request.form.get('column_name')
+                column_type = request.form.get('column_type')
+                db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type};')
+                if column_default := request.form.get('column_default'):
+                    db.execute(f'UPDATE user SET {column_name} = ?;', (column_default,))
+                db.commit()
+                flash(f'Added column {column_name} of type {column_type} to user table.')
+            except Exception as e:
+                flash('Error adding column: ' + str(e))
         elif action == 'reset_user':
             username = request.form.get('username')
             hint_count = 3
@@ -338,14 +361,35 @@ def admin_pending():
         challenges = json.load(f)['list']
     return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for, challenges=challenges, datetime=datetime)
 
+@main.route('/edit_pfp', methods=['GET', 'POST'])
+@login_required
+def edit_pfp():
+    user = get_db().execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if request.method == 'POST':
+        pfp= request.files.get('pfp')
+        if pfp and pfp.filename:
+            try:
+                upload_dir = os.path.join(current_app.root_path, "static", "img", "users", user['username'])
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, "pfp_" + user['username'] + "." + pfp.filename.split('.')[-1])
+                pfp.save(save_path)
+                db = get_db()
+                db.execute(
+                    "UPDATE user SET pfp = ? WHERE id = ?",
+                    ("img/users/" + user['username'] + "/pfp_" + user['username'] + "." + pfp.filename.split('.')[-1], session['user_id']),
+                )
+                db.commit()
+                flash('Profile picture updated successfully!')
+                return redirect(url_for('main.profile'))
+            except Exception as e:
+                flash('Error saving profile picture: ' + str(e))
+    return render_template('main/edit_pfp.html', user=user, datetime=datetime)
 
-
-
-@main.route('friends', methods=['GET', 'POST'])
+@main.route('/friends', methods=['GET', 'POST'])
 @login_required
 def friends():
     user=get_db().execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
-    return render_template('main/friends.html', user=user, json = json)
+    return render_template('main/friends.html', user=user, json = json, datetime=datetime)
 
 @main.route('/submit_friend_request', methods=['GET', 'POST'])
 @login_required

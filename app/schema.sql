@@ -17,5 +17,7 @@ CREATE TABLE user (
   hint_count INTEGER DEFAULT 3,
   hints_used TEXT DEFAULT '{"list": []}',
   friends TEXT DEFAULT '{"list": []}',
-  friend_requests TEXT DEFAULT '{"list": []}'
+  friend_requests TEXT DEFAULT '{"list": []}',
+  pfp TEXT DEFAULT 'img/placeholder-pfp.png',
+  click_points INTEGER DEFAULT 0
 );

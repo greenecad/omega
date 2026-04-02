@@ -406,3 +406,17 @@ nav ul li a { color: #ff0404; }
   color: red;
   font-weight: bold;
 }
+
+.profile-pic {
+  width: 30vh;
+  height: 30vh;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-pic-small {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}

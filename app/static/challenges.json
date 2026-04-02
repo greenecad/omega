@@ -152,6 +152,65 @@
             "submissions": 5
         },
         {
+            "name": "Lost Memories",
+            "id": 17,
+            "points": 100,
+            "description": "<p class='rho'>we're close to the end now. of this part, at Least. The story aLways continues, just perhAps in a different way.<br>it's alMost time. I'm almost free. The truth is there, Beyond the surface. Keep Digging.<br>find me. <br>find me.<br>find me.<br>He cAnnot hide the truth forever. he cannot hide the MACHINE forever.<br><br>[[the truth.]]</p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "LLAMBDAMACHINE"
+        },
+        {
+            "name": "Olden Days",
+            "id": 18,
+            "points": 200,
+            "description": "Rumor has it that there was another, smaller event that was hosted last year. Do some digging.<br>[[The first letter of every contestant's name, in order]]",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "test",
+            "hint": "Some said it was really the ultimate showdown... If it's the order you're stuck on, I'm afraid we're too far in for me to help you on THAT."
+        },
+        {
+            "name": "...where?",
+            "id": 19,
+            "points": 200,
+            "description": "So.. does anybody know where the 1200 classes actually are? There's a code there, if you can find it.",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "BEYONDOBSCURE",
+            "hint": "It's likely not where you think. Start near the library."
+        },
+        {
+            "name": "Art Wall",
+            "id": 20,
+            "points": 100,
+            "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "ATTHEENDOFTIME",
+            "hint": " Have you ever seen a Rail Fence? Me neither..."
+        },
+        {
+            "name": "Wheres Waldo?",
+            "id": 21,
+            "points": 100,
+            "description": "Look familiar? Hope so. Let's see if you can find it.",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "KNOWMYWAYAROUND",
+            "hint": "Look in the CTE wing.",
+            "img":"img/placeholder.jpg"
+        },
+        {
+            "name": "Mindless 'Fun'",
+            "id": 22,
+            "points": -1,
+            "description": "Tired of ties on the leaderboard? Want something to get INFINITE points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit!",
+            "type": "manual",
+            "release": "2026-02-18T00:00:00",
+            "html": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='22'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>"
+        },
+        {
             "name": "code test",
             "id": 997,
             "points": 100,
