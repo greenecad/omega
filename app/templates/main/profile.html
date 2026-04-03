@@ -6,6 +6,19 @@
 
 {% block js %}
   <script defer src="{{ url_for('static', filename='js/profile.js') }}"></script>
+  <script defer>
+  window.onload = function() {
+    if (document.getElementById('clicker') != null){
+      clickPoints = parseInt("{{ user.click_points if user.click_points else 0 }}");
+      nextThreshold = 2**clickPoints;
+      console.log(clickPoints);
+      let clicker = document.getElementById('clicker');
+      let clicksP = clicker.nextElementSibling;
+      let nextP = clicksP.nextElementSibling;
+      nextP.textContent = `clicks to next ten points: ${nextThreshold}`;
+    }
+  }
+  </script>
 {% endblock %}
 
 {% block content %}
@@ -20,6 +33,10 @@
   {% endfor %}
 
   <p>Username: {{ user.username }}</p>
+  {% if user.pfp %}
+    <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
+    <p><a href ="{{ url_for('main.edit_pfp') }}">edit profile picture</a></p>
+  {% endif %}
   {% if user.points %}
   <p>Score: {{ user.points }}</p>
   {% else %}
@@ -30,6 +47,9 @@
   <p>Gift: {{ user.gift }}</p>
   {% if user.participating == 0%}
     <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
+  {% endif %}
+  {% if user.participating == -1%}
+    <p>You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
   {% endif %}
 
   {% if user.admin == 1 %}
@@ -46,6 +66,18 @@
         <input name="points" placeholder="column value">
         <input type="hidden" name="admin_action" value="update_user">
         <input type="submit" value="change data">
+      </form>
+      <br class="spacing">
+      <h3>Add Column</h3>
+      <form method = "post" action="{{ url_for('main.admin') }}">
+        <label for="column_name">Column Name:</label>
+        <input name="column_name" placeholder="column name">
+        <label for="column_type">Column Type:</label>
+        <input name="column_type" placeholder="column type">
+        <label for="column_default">Column Default:</label>
+        <input name="column_default" placeholder="column default">
+        <input type="hidden" name="admin_action" value="add_column">
+        <input type="submit" value="add column">
       </form>
       <br class="spacing">
       <h3>Reset User</h3>
@@ -78,30 +110,52 @@
         <input type="hidden" name="admin_action" value="crash">
         <input type="submit" value="intentional crash">
       </form>
+      <br class = "spacing">
+      <h3>Activate live event</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="challenge_id">Challenge ID:</label>
+        <input name="challenge_id" placeholder="challenge id">
+        <label for="event_code">Event Code:</label>
+        <input name="event_code" placeholder="event code">
+        <input type="hidden" name="admin_action" value="activate_live">
+        <input type="submit" value="activate live event">
+      </form>
+      <br class = "spacing">
+      <h3>Send global notification</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="message">Message:</label>
+        <input name="message" placeholder="message">
+        <input type="hidden" name="admin_action" value="global_notification">
+        <input type="submit" value="send notification">
     </div>
   {% endif %}
-  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %}<!-- ensure this matches the first code challenge date -->
+
+
+  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %}<!-- ensure this matches the first code challenge date -->
   <form method="post">
     <label for="code">Submit code:</label>
     <input name="code" placeholder="Enter code here">
     <button type="submit">Submit code</button>
   </form>
   {% endif %}
-  {% if datetime.fromisoformat("2026-01-01T00:00:00") < datetime.now()  %} <!-- ensure this matches the friend challenge date -->
+  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the friend challenge date -->
     <br>
     <button id="friend-button"><a href="{{ url_for('main.friends') }}">Manage friends</a></button>
   {% endif %}
-
-  <h2>Challenge list:</h2>
-  <ul>
+  <div class = "challenges-box">
+  <h2 class ="omega-header">Challenge list:</h2>
+  <ul class="challenge-list">
+    {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the first challenge release date -->
+    
     {% for challenge in challenges %}
-      {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
+      <div class="challenge-container">
+      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
         {% if challenge.type == "code" %}
-        <li class="challenge-code">
+        <li class="challenge challenge-code">
         {% elif challenge.type == "live" %}
-        <li class="challenge-live">
+        <li class="challenge challenge-live">
         {% else %}
-        <li class="challenge-other">
+        <li class="challenge challenge-other">
         {% endif %}
           <div class ="challenge-header">
           {% if challenge.points != -1 %}
@@ -113,15 +167,34 @@
             challenge id: {{challenge.id}}
           {% endif %}
           </div>
+          {% if challenge.repeats %}
+            <p>Allows multiple submissions</p>
+          {% endif %}
           <p>{{ challenge.description|safe }}</p>
           {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
           {% endif %}
-
-          {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+          {% if challenge.type == "live" and challenge.event_code != null %}
+            <p>Event code: {{ challenge.event_code }}</p>
+          {% endif %}
+          {% if challenge.img and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+            <div class="challenge-html">
+              <img src="{{ url_for('static', filename=challenge.img) }}" alt="Challenge Image">
+            </div>
+          {% endif %}
+          {% if challenge.html and (challenge.keepHTML and challenge.keepHTML==1) or not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <div class="challenge-html">
               {{ challenge.html|safe }}
             </div>
+          {% endif %}
+          {% if challenge.competitiveness != null and user.gift == 'competitiveness' %}
+            <p>Competitiveness: {{ challenge.competitiveness }}</p>
+          {% endif %}
+          {% if challenge.vigilance != null and user.gift == 'vigilance' %}
+            <p>Vigilance: {{ challenge.vigilance }}</p>
+          {% endif %}
+          {% if challenge.determination != null and user.gift == 'determination' %}
+            <p>Determination: {{ challenge.determination }}</p>
           {% endif %}
           {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
             <p>Completed!</p>
@@ -165,14 +238,23 @@
         <li class="challenge-locked">
           {{ challenge.name }} - Locked for less than a minute
       {% endif %}
-      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) %}
-        <h3>FORESIGHT: </h3>
+      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) and not challenge.type == "live"%}
+        <h3>Foresight: </h3>
         <p class="foresight">{{ challenge.description|safe }}</p>
         <p class="warn">This challenge may not be fully set up yet. Do not search for any clues within the building until the challenge is fully released.</p>
         </li>
       {% else %}
         </li>
       {% endif %}
+      </div>
     {% endfor %}
-
+    
+  {% else %}
+    <div class = "text-container">
+      <img src = "{{ url_for('static', filename= 'img/icons8-lock-208.png') }}" alt = "locked" class="locked-img">
+      <p>Challenges will be released soon! see countdown on home page.</p>
+      <p>Remember: EARLYBIRD</p>
+    </div>
+  {% endif %}
+  </div>
 {% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+    {% if not user.umessage %}
+        <form method="post">
+            <label for="message">type your message:</label>
+            <input type="text" id="message" name="message" placeholder="leave your mark..." required><br>
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+    <h2>Messages</h2>
+    <ul>
+        {% for user_l in users %}
+            {% if user_l.umessage %}
+                <li>{{ user_l.umessage }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

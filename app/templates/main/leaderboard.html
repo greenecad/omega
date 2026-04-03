@@ -8,13 +8,13 @@
   <table>
     <tr>
       <th>Rank</th>
-      <th>Username</th>
+      <th>User</th>
       <th>Score</th>
     </tr>
     {% for user in users %}
     <tr>
       <td>{{ loop.index}}</td>
-      <td>{{ user.username }}</td>
+      <td><img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic-small"><p style="vertical-align: top; display: inline-block;">{{ user.username }}</p></td>
       <td>{{ user.points }}</td>
     </tr>
     {% endfor %}

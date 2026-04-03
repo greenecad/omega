@@ -15,13 +15,13 @@ main = Blueprint(
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('main/index.html')
+    return render_template('main/index.html', datetime=datetime)
 
 @main.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
     db = get_db()
-    users = db.execute('SELECT username, points FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
-    return render_template('main/leaderboard.html', users=users)
+    users = db.execute('SELECT username, points, pfp FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
+    return render_template('main/leaderboard.html', users=users, datetime=datetime)
 
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -29,7 +29,65 @@ def profile():
     db = get_db()
     if request.method == 'POST':
         if 'challenge_id' in request.form:
+            #remember to change these when challenges are reordered
+            if request.form.get('challenge_id') == '22':
+                user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+                click_points = user['click_points']
+                print(request.form.to_dict(flat=False))
+                new_click_points = request.form.get('clickPoints')
+                print(new_click_points)
+                if int(new_click_points) > click_points:
+                    db.execute('UPDATE user SET click_points = ? WHERE id = ?;', (new_click_points, session['user_id']))
+                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', ((int(new_click_points)-click_points) * 10, session['user_id']))
+                    db.commit()
+                    flash(f'You earned {(int(new_click_points)-click_points) * 10} points!')
+                return redirect(url_for('main.profile'))
+            if request.form.get('challenge_id')=='24':
+                username = request.form.get('username')
+                send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+                if send_user:
+                    if send_user['id'] == session['user_id']:
+                        flash('You cannot give points to yourself!')
+                        return redirect(url_for('main.profile'))
+                    if send_user['participating'] != 1:
+                        flash('You cannot give points to a user who is not participating!')
+                        return redirect(url_for('main.profile'))
+                    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+                    db.execute('UPDATE user SET points = points + 150 WHERE id = ?;', (send_user['id'],))
+                    db.commit()
+                    flash(f'Sent 150 points to {username}!')
+                else:
+                    flash('User not found.')
+                    return redirect(url_for('main.profile'))
+            if request.form.get('challenge_id')=='25':
+                username = request.form.get('username')
+                send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+                if send_user:
+                    if send_user['id'] == session['user_id']:
+                        flash('You cannot take points from yourself!')
+                        return redirect(url_for('main.profile'))
+                    if send_user['participating'] != 1:
+                        flash('You cannot take points from a user who is not participating!')
+                        return redirect(url_for('main.profile'))
+                    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+                    friends = json.loads(send_user['friends'])['list']
+                    if user['username'] not in friends:
+                        flash('You can only take points from your friends! Sorry, it has to be done...')
+                        return redirect(url_for('main.profile'))
+                    taken_points = 100
+                    if send_user['gift'] == 'vigilance':
+                        taken_points -= 50
+                    if user['gift'] == 'competitiveness':
+                        taken_points += 50
+                    taken_points = min(taken_points, send_user['points'])
+                    db.execute('UPDATE user SET points = points - ? WHERE id = ?;', (taken_points, send_user['id']))
+                    db.commit()
+                    flash(f'Took {taken_points} points from {username}!')
+                else:
+                    flash('User not found.')
+                    return redirect(url_for('main.profile'))
             challenge_id = int(request.form.get('challenge_id'))
+            task_completed = request.form.get('completed')
             with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
                 challenge = json.load(f)['list'][challenge_id-1]
             if challenge['type'] != 'challenge':
@@ -39,14 +97,27 @@ def profile():
             user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
             completed = json.loads(user['completed'])
             key = str(challenge_id)
+            if challenge_id == 9 and task_completed == '0':
+                return redirect(url_for('main.sans'))
+            if challenge_id == 26 and task_completed == '0':
+                return redirect(url_for('main.messages'))
             if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
-            completed['challenges'][key] = ['completed', '']
-            db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
-            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
-            db.commit()
-            flash('Challenge completed! Points awarded: ' + str(challenge['points']))
+            if task_completed == '1':
+                completed['challenges'][key] = ['completed', '']
+                db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+                if taken_points:
+                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (taken_points, session['user_id']))
+                    flash('Challenge completed! Points awarded: ' + str(taken_points))
+                else:
+                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
+                    flash('Challenge completed! Points awarded: ' + str(challenge['points']))
+                db.commit()
+            
+            if task_completed == '0':
+                flash('Challenge not completed. Try again!')
+
             return redirect(url_for('main.profile'))
         code = request.form['code']
         completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
@@ -71,6 +142,7 @@ def profile():
         else:
             flash('Code already submitted!')
         return redirect(url_for('main.profile'))
+    
     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
     notifications = json.loads(user['notifications'])
     popups=[]
@@ -121,7 +193,7 @@ def submission(challenge_id):
                 return redirect(url_for('main.profile'))
     
 
-    return render_template('main/submission.html', challenge=challenge)
+    return render_template('main/submission.html', challenge=challenge, datetime=datetime)
 
 @main.route('/use_hint/<int:challenge_id>', methods=['POST'])
 @login_required
@@ -144,6 +216,8 @@ def use_hint(challenge_id):
     return redirect(url_for('main.profile'))
 
 
+#admin routes
+#probably shouldve put these in a separate blueprint but oh well
 
 @main.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -158,7 +232,7 @@ def admin():
         action = request.form.get('admin_action')
         if action == "crash":
             raise Exception('Intentional Crash Triggered by Admin')
-        if action == 'update_user':
+        elif action == 'update_user':
             try:
                 username = request.form.get('username')
                 column = request.form.get('column')
@@ -168,6 +242,17 @@ def admin():
                 flash(f'Updated {column} for user {username} to {value}')
             except Exception as e:
                 flash('Error updating user: ' + str(e))
+        elif action == 'add_column':
+            try:
+                column_name = request.form.get('column_name')
+                column_type = request.form.get('column_type')
+                db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type};')
+                if column_default := request.form.get('column_default'):
+                    db.execute(f'UPDATE user SET {column_name} = ?;', (column_default,))
+                db.commit()
+                flash(f'Added column {column_name} of type {column_type} to user table.')
+            except Exception as e:
+                flash('Error adding column: ' + str(e))
         elif action == 'reset_user':
             username = request.form.get('username')
             hint_count = 3
@@ -176,6 +261,39 @@ def admin():
             db.execute('UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ? WHERE username = ?;', (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username))
             db.commit()
             flash(f'Reset user {username}')
+        elif action == 'activate_live':
+            try:
+                challenge_id = int(request.form.get('challenge_id'))
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                    challenge_json = json.load(f)
+                    challenges = challenge_json['list']
+                    for i in range(len(challenges)):
+                        if challenges[i]['id']==challenge_id:
+                            challenge_id = i
+                            break
+
+                    challenge = challenges[challenge_id]
+                if challenge['type'] != 'live':
+                    flash('Challenge is not a live event!')
+                    return redirect(url_for('main.admin'))
+                challenge_json['list'][challenge_id]['event_code'] = request.form.get('event_code')
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'w') as f:
+                    f.write(json.dumps(challenge_json, indent=4))
+                flash(f'Activated live event for challenge {challenge["name"]} (ID {challenge["id"]}) with code: {challenge_json["list"][challenge_id]["event_code"]}')
+            except Exception as e:
+                flash('Error activating live event: ' + str(e))
+        elif action == 'global_notification':
+            try:
+                message = request.form.get('message')
+                users = db.execute('SELECT * FROM user;').fetchall()
+                for user in users:
+                    notifications = json.loads(user['notifications'])
+                    notifications["list"].append([message, 1])
+                    db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(notifications), user['id']))
+                db.commit()
+                flash('Sent global notification: ' + message)
+            except Exception as e:
+                flash('Error sending global notification: ' + str(e))
         elif action == 'update_challenge':
             try:
                 username = request.form.get('username')
@@ -296,16 +414,41 @@ def admin_pending():
     users = db.execute('SELECT * FROM user;').fetchall()
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
         challenges = json.load(f)['list']
-    return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for, challenges=challenges)
+    return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for, challenges=challenges, datetime=datetime)
+
+@main.route('/edit_pfp', methods=['GET', 'POST'])
+@login_required
+def edit_pfp():
+    user = get_db().execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if request.method == 'POST':
+        pfp= request.files.get('pfp')
+        if pfp and pfp.filename:
+            try:
+                upload_dir = os.path.join(current_app.root_path, "static", "img", "users", user['username'])
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, "pfp_" + user['username'] + "." + pfp.filename.split('.')[-1])
+                pfp.save(save_path)
+                db = get_db()
+                db.execute(
+                    "UPDATE user SET pfp = ? WHERE id = ?",
+                    ("img/users/" + user['username'] + "/pfp_" + user['username'] + "." + pfp.filename.split('.')[-1], session['user_id']),
+                )
+                db.commit()
+                flash('Profile picture updated successfully!')
+                return redirect(url_for('main.profile'))
+            except Exception as e:
+                flash('Error saving profile picture: ' + str(e))
+    return render_template('main/edit_pfp.html', user=user, datetime=datetime)
 
 
 
+#friend routes
 
-@main.route('friends', methods=['GET', 'POST'])
+@main.route('/friends', methods=['GET', 'POST'])
 @login_required
 def friends():
     user=get_db().execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
-    return render_template('main/friends.html', user=user, json = json)
+    return render_template('main/friends.html', user=user, json = json, datetime=datetime)
 
 @main.route('/submit_friend_request', methods=['GET', 'POST'])
 @login_required
@@ -390,3 +533,36 @@ def reject_friend_request():
         db.execute('UPDATE user SET friend_requests = ? where id = ?', (json.dumps(user_requests), id))
         flash("Rejected friend request from "+requester_username+".")
     return redirect(url_for('main.friends'))
+
+
+
+#misc routes
+
+@main.route('/sans', methods=['GET', 'POST'])
+@login_required
+def sans():
+    return render_template('main/bts/1/index.html')
+
+@main.route('/messages', methods=['GET', 'POST'])
+@login_required
+def messages():
+    db= get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            db.execute('UPDATE user SET umessage = ? WHERE id = ?;', (message, session['user_id']))
+            completed = json.loads(user['completed'])
+            completed['challenges']['26'] = ['completed', ''] #change id when challenges are reordered
+            db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (100, session['user_id']))
+            flash('Challenge completed! Points awarded: ' + str(100))
+                
+            db.commit()
+            flash('Message posted!')
+        else:
+            flash('Message cannot be empty!')
+        return redirect(url_for('main.messages'))
+    users = db.execute('SELECT umessage FROM user;').fetchall()
+
+    return render_template('main/messages.html', datetime=datetime, users=users, user=user)

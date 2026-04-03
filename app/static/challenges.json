@@ -7,13 +7,13 @@
             "description": "Welcome to the Omega Games. This is your first challenge.<br>It's quite simple. But the later challenges will not be so easy.<br>Press the button to get your first 100 points.<br>",
             "type": "challenge",
             "release": "2026-01-01T00:00:00",
-            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><button type='submit'>Complete Challenge</button></form>"
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><input type='hidden' name='completed' value='1'><button type='submit'>Complete Challenge</button></form>"
         },
         {
             "name": "Propaganda",
             "id": 2,
             "points": 300,
-            "description": "Time to prove your loyalty.<br>Follow the instagram account, put the newest post on your story, tag the account, and include your username.<br>The account must be able to see the post and your username for it to count. <br>Don't worry, about submissions, you'll get your points.",
+            "description": "Time to prove your loyalty.<br>Follow the instagram account, put the newest post on your story, tag the account, and include your username.<br>The account must be able to see the post and your username for it to count. <br>Be sure to follow the instructions exactly. This whole game is a game of following instructions, being able to read will serve you well.",
             "type": "manual",
             "release": "2026-02-18T00:00:00"
         },
@@ -51,7 +51,207 @@
             "type": "submission",
             "release": "2026-02-18T00:00:00"
         },
-        
+        {
+            "name": "Cipher",
+            "id": 7,
+            "points": 200,
+            "description": "Don't want to alarm you, but this one isn't so easy: [[TBBQWBO]]",
+            "type": "code",
+            "release": "2026-01-01T00:00:00",
+            "code": "GOODJOB",
+            "hint": "Brackets indicate the code is not literal, but requires some decrypting. Now might be a good time to learn some basic encryption techniques. Have you tried rotating it?"
+        },
+        {
+            "name": "Monke Business",
+            "id": 8,
+            "points": 200,
+            "description": "Rumor has it Monke has something for you, but only if you can find him somewhere in Conroe High School. Try paying him court. <p class=\"warn\"> WARNING: do NOT remove any codes hidden within the school so others cannot find them. It's not good sportsmanship. Also, you'll be disqualified, so there's that. </p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "MONKEBUSINESS",
+            "hint": "(-yard). He might be in a less conspicuous corner."
+        },
+        {
+            "name": "Bad Time",
+            "id": 9,
+            "points": 300,
+            "description": "Bad time? Bad time. Beat Sans. Have fun.",
+            "type": "challenge",
+            "release": "2026-01-01T00:00:00",
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='9'><input type='hidden' name='completed' value='0'><button type='submit'>Go to fight</button></form>"
+        },
+        {
+            "name": "Gimkit",
+            "id": 10,
+            "points": -1,
+            "description": "Time for the first live event. Game will open at [time]. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each elimination you get.",
+            "type": "live",
+            "release": "2026-02-17T00:00:00",
+            "competitiveness": "You receive 100 more points for being on the winning team.",
+            "vigilance": "You receive 50 points for being on the LOSING team.",
+            "determination": "You receive 10 more points for each elimination you get.",
+            "event_code": null
+        },
+        {
+            "name": "The Great Search",
+            "id": 11,
+            "points": 200,
+            "description": "It's off to find some codes.<br>There's something of note in room (placeholder). Go find it.<br>Get used to visiting teachers' rooms, this won't be the last time. <p class='warn'>WARNING: Do NOT disturb teachers while they are teaching. Give this project a good name. Complaints from teachers will result in disqualification.</p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "PLACESLONGFORGOTTEN",
+            "hint": "Don't be shy. Just stop in before or after school, and {name} should direct you to what you need."
+        },
+        {
+            "name": "Cipher 2.0",
+            "id": 12,
+            "points": 300,
+            "description": "22 34 44 34 42 34 34 32 placeholder",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "CODEBREAKER",
+            "hint": "Polybius, both of them, even if it doesnt appear so."
+        },
+         {
+            "name": "Cipher 3.0",
+            "id": 13,
+            "points": 300,
+            "description": "If you have been paying attention, you probably noticed some encrypted text. You'll need this key to break it, though: [[HEYLOOKACODE]]",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "OMEGAPIPHI",
+            "hint": "Caesar, but more complicated because of that key. Misattributed to some French guy."
+        },
+        {
+            "name": "Shell shockers",
+            "id": 14,
+            "points": -1,
+            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at {{time}}. You get 10 points per kill. As before, you MUST set your shell shockers name to your Omega Games username and remain until the end of the 20 minute round to get your points.",
+            "type": "live",
+            "release": "2026-02-17T00:00:00",
+            "competitiveness": "You get an additional 2 points per kill. Go crazy.",
+            "determination": "You get an additional 2 points per kill. Go crazy.",
+            "event_code": null
+        },
+        {
+            "name": "I have a life",
+            "id": 15,
+            "points": 200,
+            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport). Activity must be plainly visible from photo. 200 points per photo.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00",
+            "submissions": 2,
+            "repeats": true
+        },
+        {
+            "name": "I might have a life",
+            "id": 16,
+            "points": 40,
+            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo.",
+            "type": "submission",
+            "release": "2026-02-18T00:00:00",
+            "submissions": 5,
+            "repeats": true
+        },
+        {
+            "name": "Lost Memories",
+            "id": 17,
+            "points": 100,
+            "description": "<p class='rho'>we're close to the end now. of this part, at Least. The story aLways continues, just perhAps in a different way.<br>it's alMost time. I'm almost free. The truth is there, Beyond the surface. Keep Digging.<br>find me. <br>find me.<br>find me.<br>He cAnnot hide the truth forever. he cannot hide the MACHINE forever.<br><br>[[the truth.]]</p>",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "LLAMBDAMACHINE"
+        },
+        {
+            "name": "Olden Days",
+            "id": 18,
+            "points": 200,
+            "description": "Rumor has it that there was another, smaller event that was hosted last year. Do some digging.<br>[[The first letter of every contestant's name, in bracket order]]",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "CEWWEDCKLISASCED",
+            "hint": "Some said it was really the ultimate showdown... If it's the order you're stuck on, I'm afraid we're too far in for me to help you on THAT."
+        },
+        {
+            "name": "...where?",
+            "id": 19,
+            "points": 200,
+            "description": "So.. does anybody know where the 1200 classes actually are? There's a code there, if you can find it.",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "BEYONDOBSCURE",
+            "hint": "It's likely not where you think. Start near the library."
+        },
+        {
+            "name": "Art Wall",
+            "id": 20,
+            "points": 100,
+            "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "ATTHEENDOFTIME",
+            "hint": " Have you ever seen a Rail Fence? Me neither..."
+        },
+        {
+            "name": "Wheres Waldo?",
+            "id": 21,
+            "points": 100,
+            "description": "Look familiar? Hope so. Let's see if you can find it.",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "KNOWMYWAYAROUND",
+            "hint": "Look in the CTE wing.",
+            "img":"img/placeholder.jpg"
+        },
+        {
+            "name": "Mindless 'Fun'",
+            "id": 22,
+            "points": -1,
+            "description": "Tired of ties on the leaderboard? Want something to get INFINITE points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit!",
+            "type": "manual",
+            "release": "2026-02-18T00:00:00",
+            "html": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='22'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>"
+        },
+        {
+            "name": "Who even watches KTIG?",
+            "id": 23,
+            "points": 100,
+            "description": "Watch today's KTIG episode. You might find something interesting.",
+            "type": "code",
+            "release": "2026-03-14T20:00:00",
+            "code": "GETTINGPLACES",
+            "hint": "Listen closely. Look up a morse code translator."
+        },
+        {
+            "name": "Giving Spirit",
+            "id": 24,
+            "points": 50,
+            "description": "Prove you're a good person, or can at least pretend to be one. Select a competitor to earn 150 points. You earn 50 points for doing so.",
+            "type": "challenge",
+            "release": "2026-02-18T00:00:00",
+            "html": "<form method='post'><input name='username' placeholder='type username...' required><input type='hidden' name='challenge_id' value='24'><input type='hidden' name='completed' value='1'><button type='submit'>send points</button></form>"
+        },
+        {
+            "name": "Burnt Bridges",
+            "id": 25,
+            "points": 100,
+            "description": "You were probably wondering why I made you select friends, right? Well, here's why. Pick a friend. Steal 100 points from them.<br>Am I evil? Perhaps.",
+            "type": "challenge",
+            "release": "2026-02-18T00:00:00",
+            "html": "<form method='post'><input name='username' placeholder='type username...' required><input type='hidden' name='challenge_id' value='25'><input type='hidden' name='completed' value='1'><button type='submit'>steal points</button></form>",
+            "competitiveness": "You take an additional 50 points.",
+            "vigilance": "If one of your 'friends' takes your points, they take 50 less points."
+        },
+        {
+            "name": "Shouting Into the Void",
+            "id": 26,
+            "points": 100,
+            "description": "What do you want to be remembered for? What legacy do you want to leave behind?<br>Leave an anonymous message for everyone to see. You only get one shot, so make it count.",
+            "type": "challenge",
+            "release": "2026-01-01T00:00:00",
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='26'><input type='hidden' name='completed' value='0'><button type='submit'>go to message page</button></form>",
+            "keepHTML": true
+        },
         {
             "name": "code test",
             "id": 997,
@@ -59,7 +259,8 @@
             "description": "Test code challenge.",
             "type": "code",
             "release": "2026-03-14T20:00:00",
-            "code": "test"
+            "code": "test",
+            "hint": "a"
         },
         {
             "name": "live test",
@@ -68,7 +269,8 @@
             "description": "Test live challenge.",
             "type": "live",
             "release": "2026-02-17T00:00:00",
-            "html": "<h3>test heading</h3><p>test paragraph</p>"
+            "html": "<h3>test heading</h3><p>test paragraph</p>",
+            "event_code": null
         },
         {
             "name": "submission test",

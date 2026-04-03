@@ -14,11 +14,11 @@
   <h1>Register:</h1>
   <!-- One "tab" for each step in the form: -->
   <div class="tab">First, who are you?:
-    <p><input class="reg" placeholder="First name..." oninput="this.className = 'reg'" name="fname"></p>
-    <p><input class="reg" placeholder="Last name..." oninput="this.className = 'reg'" name="lname"></p>
+    <p><input class="reg" placeholder="First name..." oninput="this.className = 'reg'" name="fname" required></p>
+    <p><input class="reg" placeholder="Last name..." oninput="this.className = 'reg'" name="lname" required></p>
   </div>
   <div class="tab">What grade are you in?:
-    <p><input type="radio" id="9" name="grade" value="9">
+    <p><input type="radio" required id="9" name="grade" value="9">
         <label for="9">Freshman</label><br>
         <input type="radio" id="10" name="grade" value="10">
         <label for="10">Sophomore</label><br>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="tab">Now, choose one "gift": <br>
-      <input type="radio" id="knowledge" name="gift" value="knowledge">
+      <input type="radio" required id="knowledge" name="gift" value="knowledge">
         <label for="knowledge">knowledge  </label><div class='info popup' onclick="popUpToggle(1)">
           <span class="popuptext" id="popup1">Grants you more insight into the secrets hidden. (More hints are given for puzzles.)</span>
         </div><br>
@@ -55,7 +55,9 @@
         </div>
   </div>
 
-  <div class="tab">Next, a picture of your student ID. Yes, this is needed.:
+  <div class="tab">Next, a picture of your student ID. Yes, this is needed, and you will not be allowed to participate without it:<div class='info popup' onclick="popUpToggle(7)">
+          <span class="popuptext" id="popup7">This is to verify that you are who you say you are, and that you currently attend Conroe High School.</span>
+        </div><br>
     <label id="drop-zone">
       Drop image here, or click to upload.
       <input class="reg" type="file" id="file-input" name="id_image" accept="image/*" />
@@ -69,6 +71,15 @@
   <div class="tab">and finally, login details:
     <p><input class="reg" placeholder="Username..." oninput="this.className = 'reg'" name="username"></p>
     <p><input class="reg" placeholder="Password..." oninput="this.className = 'reg'" name="password" type="password"></p>
+    <p><input class="reg" placeholder="Confirm Password..." oninput="this.className = 'reg'" name="confirm_password" type="password"></p>
+    <p><input type="checkbox" name="terms" required> I agree to play fair, respect school rules, and follow the code of conduct.</p>
+    <p><input type="radio" name="participate" id="agree" value="1" required>
+      <label for="agree">I wish to participate in the competition. I understand that if I am within the top 12 students by the end of round 1, I will stay after school up to four times between the weeks of April 27 - May 8 to participate in round 2.</label>
+    </p>
+    <p>OR</p>
+    <p><input type="radio" name="participate" id="disagree" value="0" required>
+      <label for="disagree">I do NOT wish to participate in the competition. I understand that my account will not be visible on the leaderboard.</label>
+    </p>
   </div>
   <div style="overflow:auto;">
     <div style="float:right;">

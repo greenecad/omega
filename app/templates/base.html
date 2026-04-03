@@ -18,15 +18,22 @@
     <h3 class="play-regular">The Omega Games </h3>
     <ul id="nav-links" style="color:aliceblue">
         {% if g.user %}
-        <li><span>{{ g.user['username'] }}</span>
-        <li><a href="{{ url_for('main.profile') }}" style="color:aliceblue">Profile</a>
-        <li><a href="{{ url_for('auth.logout') }}" style="color:aliceblue">Log Out</a>
+        <li><span>{{ g.user['username'] }}</span></li> 
+        <li><a href="{{ url_for('main.profile') }}" style="color:aliceblue">Profile</a></li>
+        <li><a href="{{ url_for('auth.logout') }}" style="color:aliceblue">Log Out</a></li>
         {% else %}
-        <li><a href="{{ url_for('auth.register') }}" style="color:aliceblue">Register</a>
-        <li><a href="{{ url_for('auth.login') }}" style="color:aliceblue">Log In</a>
+        <li><a href="{{ url_for('auth.register') }}" style="color:aliceblue">Register</a></li>
+        <li><a href="{{ url_for('auth.login') }}" style="color:aliceblue">Log In</a></li>
         {% endif %}
-        <li><a href="{{ url_for('main.index') }}" style="color:aliceblue">Home</a>
-        <li><a href="{{ url_for('main.leaderboard') }}" style="color:aliceblue">Leaderboard</a>
+        <li><a href="{{ url_for('main.index') }}" style="color:aliceblue">Home</a></li>
+        {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() %} <!-- update -->
+        <li><a href="{{ url_for('main.leaderboard') }}" style="color:aliceblue">Leaderboard</a></li>
+        {% else %}
+        <li>
+            <img style="scale: 0.8; margin: 0; padding: 0; vertical-align: bottom" src="{{ url_for('static', filename='img/icons8-lock-26.png') }}">
+            <a style="pointer-events: none; color: gray; vertical-align: middle; display: inline; padding-left: 0;">Leaderboard</a>
+        </li>
+        {% endif %}
     </ul>
     </nav>
     <section class="content">
@@ -40,7 +47,7 @@
     </section>
     <container id="footer">
         <p>&copy; 2026 The Omega Games. All rights reserved.</p>
-        <a href="placeholder" style="color:aliceblue">Follow us on Instagram</a>
+        <a href="https://instagram.com/chsomegagames/" style="color:aliceblue">Follow us on Instagram</a>
         <p>Created by Omega(Ω), Pi(Π), and Phi(Φ)</p>
     </container>
 </body>
