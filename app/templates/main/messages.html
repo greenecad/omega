@@ -3,7 +3,7 @@
 {% block title %}Messages{% endblock %}
 
 {% block content %}
-    {% if not user.message %}
+    {% if not user.umessage %}
         <form method="post">
             <label for="message">type your message:</label>
             <input type="text" id="message" name="message" placeholder="leave your mark..." required><br>

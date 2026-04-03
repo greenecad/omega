@@ -182,7 +182,7 @@
               <img src="{{ url_for('static', filename=challenge.img) }}" alt="Challenge Image">
             </div>
           {% endif %}
-          {% if challenge.html and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+          {% if challenge.html and (challenge.keepHTML and challenge.keepHTML==1) or not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <div class="challenge-html">
               {{ challenge.html|safe }}
             </div>

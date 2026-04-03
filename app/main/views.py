@@ -97,6 +97,10 @@ def profile():
             user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
             completed = json.loads(user['completed'])
             key = str(challenge_id)
+            if challenge_id == 9 and task_completed == '0':
+                return redirect(url_for('main.sans'))
+            if challenge_id == 26 and task_completed == '0':
+                return redirect(url_for('main.messages'))
             if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
@@ -110,10 +114,7 @@ def profile():
                     db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
                     flash('Challenge completed! Points awarded: ' + str(challenge['points']))
                 db.commit()
-            if challenge_id == 9 and task_completed == '0':
-                return redirect(url_for('main.sans'))
-            if challenge_id == 26 and task_completed == '0':
-                return redirect(url_for('main.messages'))
+            
             if task_completed == '0':
                 flash('Challenge not completed. Try again!')
 
@@ -551,6 +552,12 @@ def messages():
         message = request.form.get('message')
         if message:
             db.execute('UPDATE user SET umessage = ? WHERE id = ?;', (message, session['user_id']))
+            completed = json.loads(user['completed'])
+            completed['challenges']['26'] = ['completed', ''] #change id when challenges are reordered
+            db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (100, session['user_id']))
+            flash('Challenge completed! Points awarded: ' + str(100))
+                
             db.commit()
             flash('Message posted!')
         else:
