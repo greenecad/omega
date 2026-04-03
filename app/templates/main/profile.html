@@ -142,19 +142,20 @@
     <br>
     <button id="friend-button"><a href="{{ url_for('main.friends') }}">Manage friends</a></button>
   {% endif %}
-
-  <h2>Challenge list:</h2>
-  <ul>
+  <div class = "challenges-box">
+  <h2 class ="omega-header">Challenge list:</h2>
+  <ul class="challenge-list">
     {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the first challenge release date -->
     
     {% for challenge in challenges %}
+      <div class="challenge-container">
       {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
         {% if challenge.type == "code" %}
-        <li class="challenge-code">
+        <li class="challenge challenge-code">
         {% elif challenge.type == "live" %}
-        <li class="challenge-live">
+        <li class="challenge challenge-live">
         {% else %}
-        <li class="challenge-other">
+        <li class="challenge challenge-other">
         {% endif %}
           <div class ="challenge-header">
           {% if challenge.points != -1 %}
@@ -166,6 +167,9 @@
             challenge id: {{challenge.id}}
           {% endif %}
           </div>
+          {% if challenge.repeats %}
+            <p>Allows multiple submissions</p>
+          {% endif %}
           <p>{{ challenge.description|safe }}</p>
           {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
@@ -242,7 +246,9 @@
       {% else %}
         </li>
       {% endif %}
+      </div>
     {% endfor %}
+    
   {% else %}
     <div class = "text-container">
       <img src = "{{ url_for('static', filename= 'img/icons8-lock-208.png') }}" alt = "locked" class="locked-img">
@@ -250,4 +256,5 @@
       <p>Remember: EARLYBIRD</p>
     </div>
   {% endif %}
+  </div>
 {% endblock %}
