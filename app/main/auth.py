@@ -46,7 +46,7 @@ def register():
                     id_image.save(save_path)
                     db.execute(
                         "UPDATE user SET id_image = ? WHERE username = ?",
-                        (id_image.filename, username),
+                        ("id_" + username + "." + id_image.filename.split('.')[-1], username),
                     )
                 if gift=="knowledge":
                     db.execute(
@@ -121,3 +121,32 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+@login_required
+@bp.route('/upload_id', methods=('POST',))
+def upload_id():
+    if request.method=="POST":
+        db=get_db()
+        username = db.execute(
+            "SELECT username FROM user WHERE id = ?", (session['user_id'],)
+        ).fetchone()[0]
+        
+        
+        id_image = request.files.get('id_image')
+        if id_image and id_image.filename:
+            try:
+                upload_dir = os.path.join(current_app.root_path, "static", "img", "users", username)
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, "id_" + username + "." + id_image.filename.split('.')[-1])
+                id_image.save(save_path)
+                db.execute(
+                    "UPDATE user SET id_image = ? WHERE username = ?",
+                    ("id_" + username + "." + id_image.filename.split('.')[-1], username),
+                )
+                db.commit()
+                flash('ID image uploaded successfully! Please wait while it is verified.')
+            except Exception as e:
+                flash('error uploading image. Please try again, or contact Omega if the problem persists: ')
+                flash(e)
+    return redirect(url_for('main.profile'))
+    

@@ -38,13 +38,24 @@ function nextPrev(n) {
       showTab(currentTab);
       return false;
     }
+    if(document.getElementsByName("id_image")[0].value == "" && !document.getElementsByName("id_later")[0].checked) {
+      alert("You must upload a student ID or select that you will upload it later!");
+      currentTab = 3;
+      showTab(currentTab);
+      return false;
+    }
     if (document.getElementsByName("password")[0].value != document.getElementsByName("confirm_password")[0].value) {
       alert("Passwords do not match!");
       currentTab = 5;
       showTab(currentTab);
       return false;
     }
-
+    if(!document.getElementsByName("email")[0].value.endsWith("@studentmail.conroeisd.net")) {
+      alert("please enter a valid school email address!");
+      currentTab = 4;
+      showTab(currentTab);
+      return false;
+    }
     document.getElementById("regForm").submit();
     return false;
   }
@@ -60,18 +71,29 @@ function validateForm() {
   // A loop that checks every input field in the current tab:
   for (i = 0; i < y.length; i++) {
     // If a field is empty...
-    if (y[i].value == "") {
+    if (y[i].value == "" && y[i].name != "id_image" && y[i].name != "id_later") {
       // add an "invalid" class to the field:
       y[i].className += " invalid";
       // and set the current valid status to false
       valid = false;
     }
   }
+  var contains_radio= false;
+  var radio_valid = true;
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].type == "radio") {
+      contains_radio= true;
+    }
+  }
+  if (contains_radio){
+    radio_valid = [...y].some((input) => input.type === "radio" && input.checked);
+  }
   // If the valid status is true, mark the step as finished and valid:
-  if (valid) {
+  if (valid && radio_valid) {
     document.getElementsByClassName("step")[currentTab].className += " finish";
   }
-  return valid; // return the valid status
+  return valid && radio_valid; // return the valid status
 }
 
 function fixStepIndicator(n) {

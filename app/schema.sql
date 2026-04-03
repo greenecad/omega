@@ -14,7 +14,7 @@ CREATE TABLE user (
   id_image TEXT, 
   completed TEXT DEFAULT '{"codes": [], "challenges": {} }',
   notifications TEXT DEFAULT '{"list": []}',
-  hint_count INTEGER DEFAULT 3,
+  hint_count INTEGER DEFAULT 5,
   hints_used TEXT DEFAULT '{"list": []}',
   friends TEXT DEFAULT '{"list": []}',
   friend_requests TEXT DEFAULT '{"list": []}',

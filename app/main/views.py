@@ -255,12 +255,20 @@ def admin():
                 flash('Error adding column: ' + str(e))
         elif action == 'reset_user':
             username = request.form.get('username')
-            hint_count = 3
+            hint_count = 5
             if db.execute('SELECT gift FROM user WHERE username = ?;', (username,)).fetchone()[0] == 'knowledge':
-                hint_count = 8
+                hint_count = 10
             db.execute('UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ? WHERE username = ?;', (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username))
             db.commit()
             flash(f'Reset user {username}')
+        elif action == 'delete_user':
+            username = request.form.get('username')
+            if(db.execute('SELECT username FROM user WHERE username = ?;', (username,)).fetchone() is None):
+                flash('User not found!')
+                return redirect(url_for('main.admin'))
+            db.execute('DELETE FROM user WHERE username = ?;', (username,))
+            db.commit()
+            flash(f'Deleted user {username}')
         elif action == 'activate_live':
             try:
                 challenge_id = int(request.form.get('challenge_id'))
@@ -402,15 +410,14 @@ def admin_pending():
                 db.commit()
                 flash(f'Approved account for user {user["username"]}')
             elif action == 'reject':
-                db.execute('DELETE FROM user WHERE username = ?;', (username,))
                 if isinstance(notifications, dict) and "list" in notifications:
                     notifications["list"].append([f'Your student ID verification has been rejected. You are not currently participating in the Omega Games. If you believe this is a mistake, please contact OMEGA.', 1])
                 else:
                     notifications.append([f'Your student ID verification has been rejected. You are not currently participating in the Omega Games. If you believe this is a mistake, please contact OMEGA.', 1])
+                db.execute("UPDATE user SET notifications = ?, participating = 0, id_image = NULL WHERE username = ?;", (json.dumps(notifications), username))
                 db.commit()
-                flash(f'Rejected account for user {user["username"]}')
+                flash(f'Rejected id for user {user["username"]}')
 
-    #image display is broken??
     users = db.execute('SELECT * FROM user;').fetchall()
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
         challenges = json.load(f)['list']

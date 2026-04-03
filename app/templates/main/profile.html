@@ -25,33 +25,61 @@
   {% for popup in popups %}
     <div class="modal" id ="modal-{{ loop.index }}">
       <span class = "modal-content">
-        <span class="close">&times;</span>
-        <p>{{ popup }}</p>
-        <button class="close">Close</button>
+        <div class="modal-header">
+          <h2 style="margin: 0;">Notification:</h2>
+          <span class="close">&times;</span>
+        </div>
+        <p style="margin-top: 30px; margin-bottom: 30px;">{{ popup }}</p>
+        <div class="modal-footer">
+          <button class="close">Close</button>
+        </div>
       </span>
     </div>
   {% endfor %}
   <div class="profile-banner">
-    <p>Username: {{ user.username }}</p>
-    {% if user.pfp %}
-      <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
-      <p><a href ="{{ url_for('main.edit_pfp') }}">edit profile picture</a></p>
-    {% endif %}
-    {% if user.points %}
-    <p>Score: {{ user.points }}</p>
-    {% else %}
-      <p>Score: 0</p>
-    {% endif %}
-    <p>Email: {{ user.email }}</p>
-    <p>Grade: {{ user.grade }}</p>
-    <p>Gift: {{ user.gift }}</p>
-    {% if user.participating == 0%}
-      <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
-    {% endif %}
-    {% if user.participating == -1%}
-      <p>You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
-    {% endif %}
+    <h2 class="play-regular" style="text-align: left; margin-top: 10px; margin-bottom: 40px">Welcome, {{ user.username }}!</h2>
+    <div class = "banner-div">
+      <div class="pfp-div">
+        {% if user.pfp %}
+          <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
+        {% else %}
+        <img src="{{ url_for('static', filename='img/placeholder-pfp.jpg') }}" alt="Profile Picture" class="profile-pic">
+        {% endif %}
+        <p><a href ="{{ url_for('main.edit_pfp') }}" style = "color: #00b7c4;">edit profile picture</a></p>
+      </div>
+        <div class="profile-info">
+        {% if user.points %}
+        <p class="play-regular" style="font-size:1.2em">Score: {{ user.points }}</p>
+        {% else %}
+          <p class="play-regular" style="font-size:1.2em">Score: 0</p>
+        {% endif %}
+        <p class="play-regular" style="font-size:1.2em">Gift: {{ user.gift }}</p>
+        <p class="play-regular" style="font-size:1.2em">Hints remaining: {{ user.hint_count }}</p>
+        {% if user.participating == 0%}
+          <p class="play-regular" style="font-size:1.2em">You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
+        {% endif %}
+        {% if user.participating == -1%}
+          <p class="play-regular" style="font-size:1.2em">You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
+        {% endif %}
+      </div>
+    </div>
   </div>
+  {% if not user.id_image and user.participating == 0%}
+  <div class = 'text-container'>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('auth.upload_id') }}">
+      <label for="file-input">Please upload a picture of your student ID to verify your account and participate in the competition:</label><br>
+      <label id="drop-zone">
+      Drop image here, or click to upload.
+      <input class="reg" type="file" id="file-input" name="id_image" accept="image/*" />
+      </label>
+      <ul id="preview"></ul>
+      <button id="clear-btn" type="button">Clear</button>
+      <button type="submit">Submit ID</button>
+    </form>
+  </div>
+  {% endif %}
+
+
   {% if user.admin == 1 %}
     <!-- dont worry about styling this Katie -->
     <div class="adminPanel">
@@ -86,6 +114,14 @@
         <input name="username" placeholder="username">
         <input type="hidden" name="admin_action" value="reset_user">
         <input type="submit" value="reset user">
+      </form>
+      <br class="spacing">
+      <h3>Delete User</h3>
+      <form method = "post" action="{{ url_for('main.admin') }}">
+        <label for="username" class="play-regular">Username:</label>
+        <input name="username" placeholder="username">
+        <input type="hidden" name="admin_action" value="delete_user">
+        <input type="submit" value="DELETE USER">
       </form>
       <br class="spacing">
       <h3>Manually complete challenge</h3>

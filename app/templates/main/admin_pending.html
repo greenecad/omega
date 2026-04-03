@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Pending Submissions{% endblock %}</h1>
+  <h1 class="omega-header">{% block title %}Pending Submissions{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <h2>Account verification</h2>
-  <table>
+  <h2 class="omega-header">Account verification</h2>
+  <table style="color: white; width: 80vw;">
     <thead>
       <tr>
         <th>Username</th>
@@ -16,7 +16,7 @@
     </thead>
     <tbody>
       {% for user in users %}
-      {% if user.participating == 0 %}
+      {% if user.participating == 0 and user.id_image %}
         <tr>
           <td>{{ user.username }}</td>
           <td>
@@ -37,8 +37,8 @@
     </tbody>
   </table>
 
-  <h2>Challenge submissions</h2>
-  <table>
+  <h2 class="omega-header">Challenge submissions</h2>
+  <table style="color: white; width: 80vw;">
     <thead>
       <tr>
         <th>Username</th>
