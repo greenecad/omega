@@ -2,6 +2,12 @@
   box-sizing: border-box;
 }
 
+.play-regular {
+  font-family: "Play", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -90,7 +96,7 @@ input.invalid {
 }
 
 button {
-  background-color: #aa0404;
+  background-color: #750000;
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -173,7 +179,7 @@ button:hover {
 }
 
 #navbar {
-  background-color: #333;
+  background-color: #740000;
   color: white;
   padding: 1em;
   display: flex;
@@ -182,7 +188,7 @@ button:hover {
 }
 
 #footer {
-  background-color: #333;
+  background-color: #740000;
   color: white;
   padding: 1em;
   display: flex;
@@ -191,7 +197,7 @@ button:hover {
 }
 
 #footer a {
-  color: #000dff;
+  color: #ffffff;
 }
 
 #nav-links {
@@ -406,4 +412,25 @@ nav ul li a { color: #ff0404; }
 .warn {
   color: red;
   font-weight: bold;
+}
+
+
+h3{ 
+  text-align: center;
+  font-family: "Play";
+
+}
+
+h4{ 
+  text-align: center;
+
+}
+
+ul{ 
+  text-align: center;
+
+}
+
+h2{ text-align: center;
+
 }
