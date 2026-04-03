@@ -4,17 +4,17 @@
 <script defer src="{{ url_for('static', filename='js/submission.js') }}"></script>
 {% endblock %}
 {% block header %}
-  <h1>{% block title %}change profile picture{% endblock %}</h1>
+  <h1 class="play-regular omega-header">{% block title %}change profile picture{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <p>Submit profile photo:</p>
+  <p style="color: white">Submit profile photo:</p>
   <form method="post" enctype="multipart/form-data" >
     <label id="drop-zone">
       Drop image here, or click to upload.
       <input type="file" id="file-input" name="pfp" accept="image/*" />
     </label>
-    <ul id="preview"></ul>
+    <ul id="preview" style="color: white"></ul>
     <button id="clear-btn" type="button">Clear</button>
     <input type="submit" value="Submit profile picture">
   </form>

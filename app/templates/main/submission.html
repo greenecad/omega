@@ -8,13 +8,13 @@
 {% endblock %}
 
 {% block content %}
-  <p>Enter your submission for {{ challenge.name }} here:</p>
+  <p style="color: white">Enter your submission for {{ challenge.name }} here:</p>
   <form method="post" enctype="multipart/form-data" >
     <label id="drop-zone">
       Drop image here, or click to upload.
       <input type="file" id="file-input" name="submission" accept="image/*" />
     </label>
-    <ul id="preview"></ul>
+    <ul id="preview" style="color: white"></ul>
     <button id="clear-btn" type="button">Clear</button>
     <input type="submit" value="Submit solution">
   </form>
