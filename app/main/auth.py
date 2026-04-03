@@ -55,7 +55,7 @@ def register():
                     )
                 if request.form['participate'] == "0":
                     db.execute(
-                        "UPDATE user SET participate = -1 WHERE username = ?",
+                        "UPDATE user SET participating = -1 WHERE username = ?",
                         (username,),
                     )
                 db.commit()
