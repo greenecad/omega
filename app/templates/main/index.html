@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block header %}
-  <h1 style="color:crimson">{% block title %}THE OMEGA GAMES{% endblock %}</h1>
+  <h1 class="play-regular omega-header">{% block title %}THE OMEGA GAMES{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   <div class="cd-container" list-style: none >
-    <h2 class="cd-title">Until the Games begin</h2>
+    <h2 class="cd-title play-regular">Until the Games begin</h2>
     <h2 class="cd-end-time"></h2>
     <div class="cd-wrapper">
         <div class="time-block">
@@ -31,45 +31,46 @@
         </div>
     </div>
    </div>
-   <button><a href="{{ url_for('auth.register') }}" style="color:aliceblue">Sign up</a></button>
-   <h3 style="color:crimson;" class="play-regular">
+   <div style="height: 10vh; text-align: center; margin-top:50px; size: 2em;">
+   <button><a href="{{ url_for('auth.register') }}" style="color:aliceblue;" class="cool-button">Sign up</a></button>
+   </div>
+   <h3 class="play-regular omega-header">
      The Omega Games is a competition open to all students in Conroe High School.
      </h3>
-    <ul style="color:crimson; list-style: none;">
+    <ul style="color:white;" class="challenge-list">
         <li>Complete challenges to earn points</li>
         <li>Surpass your peers</li>
         <li>Prove that you alone are the Omega Games champion.</li>
     </ul>
-    <h3 style="color:crimson;" class="play-regular">The Omega Games are broken into two rounds.
-
-    </h4>
-    <h4 style="color:crimson;" class="play-regular">Round 1</h4>
-    <ul style="color:crimson; list-style: none;">
+    <h3 class="play-regular omega-header">The Omega Games are broken into two rounds.</h3>
+    <h4 class="play-regular omega-header">Round 1</h4>
+    <ul style="color:white;" class="challenge-list">
         <li>Virtual competition</li>
         <li>Open to anyone</li>
         <li>Complete challenges that open at regular intervals to earn points.</li>
     </ul>
-    <h4 style="color:crimson;" class="play-regular">Round 2</h4>
-    <ul style="color:crimson; list-style: none;">
+    <h4 class="play-regular omega-header">Round 2</h4>
+    <ul style="color: white;" class="challenge-list">
         <li>In-person competition</li>
         <li>Top 12 competitors from round 1 advance to round two</li>
         <li>Various elimination rounds are held until only one person remains.</li>
     </ul>
 
-    <h2 style="color:crimson;" class="play-regular">The grand prize? [placeholder] dollars</h2>
+    <h2 style="color:white;" class="play-regular omega-header">The grand prize? $100</h2>
 
-    <h3 style="color:crimson">FAQ:</h3>
-    <h4 style="color:crimson;" class="play-regular">Who all can participate?</h4>
-    <ul style="color:crimson; list-style: none;">
+    <h3 class="play-regular omega-header">FAQ:</h3>
+    <h4 class="play-regular omega-header">Who all can participate?</h4>
+    <ul style="color:white;" class="challenge-list">
         <li>Any student currently enrolled at Conroe High School can play.</li>
         <li>However, Freshmen students may find certain challenges very difficult unless they have classes at the main campus.</li>
-    </ul style="color:crimson">
-    <h4 style="color:crimson;" class="play-regular">What types of challenges are there?</h4>
-    <ul style="color:crimson; list-style: none;">
+    </ul>
+    <h4 class="play-regular omega-header">What types of challenges are there?</h4>
+    <ul style="color:white;" class="challenge-list">
         <li>Challenges will be released at regular intervals throughout the competition.</li>
         <li>Most challenges will require either submission of a code or photo proof of an action.</li>
         <li>Other challenges may involve completion of an embedded task, or participation in a live event.</li>
         <li>Photo submission challenges will require manual verification before the points are awarded.</li>
         <li>Challenges will award different amounts of points based on the difficulty of the task.</li>
     </ul>
+    <img src="{{ url_for('static', filename='img/omega_transparent.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 20vw;">
 {% endblock %}

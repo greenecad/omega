@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Messages{% endblock %}
+{% block title %}<h3 class="play-regular omega-header">Messages</h3>{% endblock %}
 
 {% block content %}
     {% if not user.umessage %}
@@ -10,7 +10,7 @@
             <input type="submit" value="Submit">
         </form>
     {% endif %}
-    <h2>Messages</h2>
+    <h2 class="play-regular omega-header">Messages</h2>
     <ul>
         {% for user_l in users %}
             {% if user_l.umessage %}

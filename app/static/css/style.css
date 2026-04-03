@@ -38,6 +38,7 @@ form {
   min-width: 300px;
   display: flex;
   flex-direction: column;
+  border-radius: 20px;
 }
 #regForm input{
   justify-self: left;
@@ -51,6 +52,7 @@ form {
   width: fit-content;
   min-width: 300px;
   font-family: Raleway;
+  border-radius: 5px;
 }
 
 .adminPanel{
@@ -103,7 +105,7 @@ button {
   font-size: 17px;
   font-family: Raleway;
   cursor: pointer;
-  width: min-content;
+  border-radius: 5px;
 }
 
 button:hover {
@@ -179,7 +181,7 @@ button:hover {
 }
 
 #navbar {
-  background-color: #740000;
+  background-color: #292929;
   color: white;
   padding: 1em;
   display: flex;
@@ -188,7 +190,7 @@ button:hover {
 }
 
 #footer {
-  background-color: #740000;
+  background-color: #292222;
   color: white;
   padding: 1em;
   display: flex;
@@ -431,7 +433,9 @@ ul{
 
 }
 
-h2{ text-align: center;
+h2{ 
+  text-align: center;
+}
 
 .profile-pic {
   width: 30vh;
@@ -470,7 +474,7 @@ h2{ text-align: center;
   list-style: none;
 }
 .omega-header{
-  color: #a40000; 
+  color: crimson; 
   justify-self: center;
 }
 
@@ -482,4 +486,17 @@ h2{ text-align: center;
 
 .foresight{
   opacity: .6;
+}
+
+.profile-banner{
+  background-color: #530000;
+  color: white;
+  padding: 1em;
+  margin-top: 20px;
+}
+
+.cool-button{
+  font-size: 2em;
+  text-decoration: none;
+  font-family: Play, sans-serif;
 }
