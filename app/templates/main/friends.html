@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Friends{% endblock %}</h1>
+  <h1 class="play-regular omega-header">{% block title %}Friends{% endblock %}</h1>
 {% endblock %}
 {% block content %}
-  <h3>{{ user.username }}'s friends</h3>
+  <h3 class="play-regular omega-header">{{ user.username }}'s friends</h3>
   <ul>
   {% if (json.loads(user.friends)['list'] | length)==0 %}
     <li>No friends to display. Go make some!</li>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Profile{% endblock %}</h1>
+  <h1 class="play-regular omega-header">{% block title %}Profile{% endblock %}</h1>
 {% endblock %}
 
 {% block js %}
@@ -31,27 +31,27 @@
       </span>
     </div>
   {% endfor %}
-
-  <p>Username: {{ user.username }}</p>
-  {% if user.pfp %}
-    <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
-    <p><a href ="{{ url_for('main.edit_pfp') }}">edit profile picture</a></p>
-  {% endif %}
-  {% if user.points %}
-  <p>Score: {{ user.points }}</p>
-  {% else %}
-    <p>Score: 0</p>
-  {% endif %}
-  <p>Email: {{ user.email }}</p>
-  <p>Grade: {{ user.grade }}</p>
-  <p>Gift: {{ user.gift }}</p>
-  {% if user.participating == 0%}
-    <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
-  {% endif %}
-  {% if user.participating == -1%}
-    <p>You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
-  {% endif %}
-
+  <div class="profile-banner">
+    <p>Username: {{ user.username }}</p>
+    {% if user.pfp %}
+      <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
+      <p><a href ="{{ url_for('main.edit_pfp') }}">edit profile picture</a></p>
+    {% endif %}
+    {% if user.points %}
+    <p>Score: {{ user.points }}</p>
+    {% else %}
+      <p>Score: 0</p>
+    {% endif %}
+    <p>Email: {{ user.email }}</p>
+    <p>Grade: {{ user.grade }}</p>
+    <p>Gift: {{ user.gift }}</p>
+    {% if user.participating == 0%}
+      <p>You are not currently participating in the Omega Games.  Your account may not yet be verified, or you may have been removed from the competition.</p>
+    {% endif %}
+    {% if user.participating == -1%}
+      <p>You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
+    {% endif %}
+  </div>
   {% if user.admin == 1 %}
     <!-- dont worry about styling this Katie -->
     <div class="adminPanel">
