@@ -32,14 +32,31 @@ function nextPrev(n) {
   // if you have reached the end of the form...
   if (currentTab >= x.length) {
     // ... the form gets submitted:
-    if (!document.getElementsByName("terms")[0].checked) {
-      alert("You must agree to the terms and conditions! I'm trying to not get in trouble here...");
+    username = document.getElementsByName("username")[0].value.trim();
+    if (username.length < 3) {
+      alert("Username must be at least 3 characters long!");
       currentTab = 5;
       showTab(currentTab);
       return false;
     }
+    if(username.includes(" ")) {
+      alert("Username cannot contain spaces!");
+      currentTab = 5;
+      showTab(currentTab);
+      return false;
+    }
+    document.getElementsByName("username")[0].value = username;
+    document.getElementsByName("email")[0].value = document.getElementsByName("email")[0].value.trim();
+    document.getElementsByName("fname")[0].value = document.getElementsByName("fname")[0].value.trim();
+    document.getElementsByName("lname")[0].value = document.getElementsByName("lname")[0].value.trim();
     if(document.getElementsByName("id_image")[0].value == "" && !document.getElementsByName("id_later")[0].checked) {
       alert("You must upload a student ID or select that you will upload it later!");
+      currentTab = 3;
+      showTab(currentTab);
+      return false;
+    }
+    if(document.getElementsByName("id_image")[0].value != "" && document.getElementsByName("id_later")[0].checked) {
+      alert("You must upload a student ID OR select that you will upload it later! Not both!");
       currentTab = 3;
       showTab(currentTab);
       return false;

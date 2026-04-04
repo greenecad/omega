@@ -163,6 +163,19 @@
         <input name="message" placeholder="message">
         <input type="hidden" name="admin_action" value="global_notification">
         <input type="submit" value="send notification">
+      </form>
+        <br class = "spacing">
+      <h3>Send individual notification</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="message">Message:</label>
+        <input name="message" placeholder="message">
+        <label for="username">User:</label>
+        <input name="username" placeholder="username">
+        <input type="hidden" name="admin_action" value="individual_notification">
+        <input type="submit" value="send notification">
+      </form>
+      <br class = "spacing">
+      <a href="{{ url_for('main.all_users') }}">See all users</a>
     </div>
   {% endif %}
 

@@ -267,6 +267,9 @@ def admin():
                 flash('User not found!')
                 return redirect(url_for('main.admin'))
             db.execute('DELETE FROM user WHERE username = ?;', (username,))
+            user_dir = os.path.join(current_app.root_path, "static", "img", "users", username)
+            if os.path.exists(user_dir):
+                os.removedirs(user_dir)
             db.commit()
             flash(f'Deleted user {username}')
         elif action == 'activate_live':
@@ -302,6 +305,19 @@ def admin():
                 flash('Sent global notification: ' + message)
             except Exception as e:
                 flash('Error sending global notification: ' + str(e))
+        elif action == 'individual_notification':
+            try:
+                username = request.form.get('username')
+                message = request.form.get('message')
+                user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+                if user:
+                    notifications = json.loads(user['notifications'])
+                    notifications["list"].append([message, 1])
+                    db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(notifications), user['id']))
+                db.commit()
+                flash('Sent individual notification: ' + message)
+            except Exception as e:
+                flash('Error sending individual notification: ' + str(e))
         elif action == 'update_challenge':
             try:
                 username = request.form.get('username')
@@ -446,6 +462,17 @@ def edit_pfp():
             except Exception as e:
                 flash('Error saving profile picture: ' + str(e))
     return render_template('main/edit_pfp.html', user=user, datetime=datetime)
+
+@main.route('/all_users', methods=['GET'])
+@login_required
+def all_users():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if not user or user['admin'] != 1:
+        flash('What are you doing? OMEGA would not be proud of you.')
+        return redirect(url_for('main.profile'))
+    users = db.execute('SELECT * FROM user;').fetchall()
+    return render_template('main/all_users.html', users=users, datetime=datetime)
 
 
 
