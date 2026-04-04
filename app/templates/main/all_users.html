@@ -9,6 +9,9 @@
         <thead>
             <tr>
                 <th>Username</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Email</th>
                 <th>Participating</th>
                 <th>Gift</th>
                 <th>Profile Picture</th>
@@ -21,6 +24,9 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.username }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.grade }}</td>
+                    <td>{{ user.email }}</td>
                     <td>{{ user.participating }}</td>
                     <td>{{ user.gift }}</td>
                     <td>
