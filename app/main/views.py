@@ -197,7 +197,7 @@ def submission(challenge_id):
     username = db.execute('SELECT username FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0]
     completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
     key = str(challenge_id)
-    if key in completed['challenges'] and (completed['challenges'][key][0] == 'completed' or completed['challenges'][key][0] == 'pending') and ("repeats" not in challenge or not challenge["repeats"] == True):
+    if key in completed['challenges'] and (("repeats" not in challenge or not challenge["repeats"]) and (len(completed['challenges'][key])>1) and (completed['challenges'][key][0][0] == 'completed' or completed['challenges'][key][0][0] == 'pending') or (challenge.get('submissions', 1) == len(completed['challenges'][key]))):
         flash('Challenge already completed!')
         return redirect(url_for('main.profile'))
     if request.method == 'POST':
@@ -213,7 +213,9 @@ def submission(challenge_id):
                 submission.save(save_path)
                 if not completed['challenges'].get(key):
                     completed['challenges'][key] = []
-                if len(completed['challenges'][key]) > 0 and (not challenge['repeats']) or (challenge['submissions']== len(completed['challenges'][key])):
+                allows_repeats = challenge.get('repeats', False)
+                max_submissions = challenge.get('submissions', 1)
+                if len(completed['challenges'][key]) > 0 and (not allows_repeats) or (max_submissions == len(completed['challenges'][key])):
                     flash('You have already submitted for this challenge the maximum number of times!')
                     return redirect(url_for('main.profile'))
                 completed['challenges'][key].append(['pending', "challenge_" + str(challenge_id) + "_" + username + "_" + str(i) + "." + submission.filename.split('.')[-1]])
@@ -490,8 +492,16 @@ def admin_pending():
                 db.commit()
                 flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
             elif action == 'reject':
-                if key in completed['challenges']:
-                    del completed['challenges'][key][submission_number]
+                if key in completed['challenges'] and submission_number < len(completed['challenges'][key]):
+                    try:
+                        submission_file = completed['challenges'][key][submission_number][1]
+                        file_path = os.path.join(current_app.root_path, "static", "img", "users", username, "submissions", submission_file)
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        del completed['challenges'][key][submission_number]
+                    except Exception as e:
+                        current_app.logger.exception('Error removing submission file for user %s challenge %d: %s', username, challenge_id, str(e))
+                        flash(f'Warning: Could not delete submission file, but rejection recorded.')
                 if isinstance(notifications, dict) and "list" in notifications:
                     notifications["list"].append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
                 else:
