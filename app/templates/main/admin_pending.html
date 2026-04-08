@@ -50,30 +50,33 @@
     </thead>
     <tbody>
       {% for user in users %}
-      {% for challenge_id, submission in json.loads(user.completed)['challenges'].items() %}
-      {% if submission[0] == 'pending' %}
-        <tr>
-          <td>{{ user.username }}</td>
-          <td>{{ challenge_id }}</td>
-          <td>
-            <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
-          </td>
-          <td>{{ submission[1] }}</td>
-          <td>
-          <form method="post" action="{{ url_for('main.admin_pending') }}">
-            <input type="hidden" name="type" value="challenge">
-            <input type="hidden" name="username" value="{{ user.username }}">
-            <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
-            {% if challenges[(challenge_id | int) - 1].points == -1 %}
-              <input name = "points_awarded" required placeholder="points...">
+        {% for challenge_id, challenge in json.loads(user.completed)['challenges'].items() %}
+          {% for submission in challenge %}
+            {% if submission[0] == 'pending' %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ challenge_id }}</td>
+                <td>
+                  <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
+                </td>
+                <td>{{ submission[1] }}</td>
+                <td>
+                <form method="post" action="{{ url_for('main.admin_pending') }}">
+                  <input type="hidden" name="type" value="challenge">
+                  <input type="hidden" name="username" value="{{ user.username }}">
+                  <input type="hidden" name="challenge_id" value="{{ challenge_id }}">
+                  <input type="hidden" name="submission_number" value="{{ loop.index }}">
+                  {% if challenges[(challenge_id | int) - 1].points == -1 %}
+                    <input name = "points_awarded" required placeholder="points...">
+                  {% endif %}
+                  <button type="submit" name="action" value="approve">Approve</button>
+                  <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+                </td>
+              </tr>
             {% endif %}
-            <button type="submit" name="action" value="approve">Approve</button>
-            <button type="submit" name="action" value="reject">Reject</button>
-          </form>
-          </td>
-        </tr>
-      {% endif %}
-      {% endfor %}
+          {% endfor %}
+        {% endfor %}
       {% endfor %}
     </tbody>
   </table>

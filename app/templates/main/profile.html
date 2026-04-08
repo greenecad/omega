@@ -182,14 +182,16 @@
 
   {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %}<!-- ensure this matches the first code challenge date -->
   <form method="post">
-    <label for="code">Submit code:</label>
+    <label for="code" class ="play-regular" style="color: white">Submit code:</label>
     <input name="code" placeholder="Enter code here">
     <button type="submit">Submit code</button>
   </form>
   {% endif %}
   {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the friend challenge date -->
     <br>
-    <button id="friend-button"><a href="{{ url_for('main.friends') }}">Manage friends</a></button>
+    <br>
+    <p style="color: white">Friends:</p>
+    <button class ="play-regular"><a href="{{ url_for('main.friends') }}"  style="color: white">Manage friends</a></button>
   {% endif %}
   <div class = "challenges-box">
   <h2 class ="omega-header">Challenge list:</h2>
@@ -198,6 +200,19 @@
     
     {% for challenge in challenges %}
       <div class="challenge-container">
+      {% set completed_data = json.loads(user.completed) %}
+      {% set completed_challenges = completed_data['challenges'] %}
+      {% set completed_codes = completed_data['codes'] %}
+      {% set challenge_key = challenge.id | string %}
+      {% set challenge_entry = completed_challenges.get(challenge_key) %}
+      {% set has_submission_entries = challenge_entry is sequence and challenge_entry is not string and (challenge_entry | length > 0) and (challenge_entry[0] is sequence) %}
+      {% set submission_status = challenge_entry[0][0] if has_submission_entries else '' %}
+      {% set is_code_completed = challenge.type == "code" and challenge.code in completed_codes %}
+      {% set is_challenge_completed = challenge_entry is sequence and challenge_entry is not string and (challenge_entry | length > 0) and challenge_entry[0] == 'completed' %}
+      {% set is_pending = submission_status == 'pending' %}
+      {% set is_completed = is_code_completed or is_challenge_completed or (submission_status == 'completed') %}
+      {% set submission_count = challenge_entry | length if has_submission_entries else 0 %}
+      {% set reached_repeat_limit = challenge.repeats and submission_count >= challenge.submissions %}
       {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
         {% if challenge.type == "code" %}
         <li class="challenge challenge-code">
@@ -220,18 +235,18 @@
             <p>Allows multiple submissions</p>
           {% endif %}
           <p>{{ challenge.description|safe }}</p>
-          {% if challenge.type == "submission" and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+          {% if challenge.type == "submission" and not ((not challenge.repeats and (is_completed or is_pending)) or is_code_completed or reached_repeat_limit) %}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
           {% endif %}
           {% if challenge.type == "live" and challenge.event_code != null %}
             <p>Event code: {{ challenge.event_code }}</p>
           {% endif %}
-          {% if challenge.img and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+          {% if challenge.img and not is_completed %}
             <div class="challenge-html">
               <img src="{{ url_for('static', filename=challenge.img) }}" alt="Challenge Image">
             </div>
           {% endif %}
-          {% if challenge.html and (challenge.keepHTML and challenge.keepHTML==1) or not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) %}
+          {% if challenge.html and (challenge.keepHTML and challenge.keepHTML==1 or not is_completed) %}
             <div class="challenge-html">
               {{ challenge.html|safe }}
             </div>
@@ -245,13 +260,13 @@
           {% if challenge.determination != null and user.gift == 'determination' %}
             <p>Determination: {{ challenge.determination }}</p>
           {% endif %}
-          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
+          {% if (not challenge.repeats and is_completed) or reached_repeat_limit %}
             <p>Completed!</p>
           {% endif %}
-          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
+          {% if is_pending %}
             <p>Submission pending review.</p>
           {% endif %}
-          {% if challenge.hint and not (((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes'])) and not (challenge.id in json.loads(user.hints_used)['list'])%}
+          {% if challenge.hint and not ((not challenge.repeats and is_completed) or is_code_completed) and not (challenge.id in json.loads(user.hints_used)['list'])%}
             <form method="post" action="{{ url_for('main.use_hint', challenge_id=challenge.id) }}">
               <button type="submit">Use hint ({{ user.hint_count }} remaining)</button>
             </form>

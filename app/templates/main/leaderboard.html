@@ -14,7 +14,14 @@
     {% for user in users %}
     <tr>
       <td>{{ loop.index}}</td>
-      <td><img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic-small"><p style="vertical-align: top; display: inline-block;">{{ user.username }}</p></td>
+      <td>
+        <a href="{{ url_for('main.view_profile', username=parse.quote(user.username)) }}" style="color: white;">
+          <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic-small"><p style="vertical-align: top; display: inline-block;">
+          <p>
+            {{ user.username }}
+          </p>
+        </a>
+      </td>
       <td>{{ user.points }}</td>
     </tr>
     {% endfor %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="play-regular omega-header">{% block title %}{{ user.username }}'s Profile{% endblock %}</h1>
+{% endblock %}
+
+
+{% block content %}
+  <div class="profile-banner">
+    <h2 class="play-regular" style="text-align: left; margin-top: 10px; margin-bottom: 40px">{{ user.username }}</h2>
+    <div class = "banner-div">
+      <div class="pfp-div">
+        {% if user.pfp %}
+          <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic">
+        {% else %}
+        <img src="{{ url_for('static', filename='img/placeholder-pfp.jpg') }}" alt="Profile Picture" class="profile-pic">
+        {% endif %}
+        
+      </div>
+        <div class="profile-info">
+        {% if user.points %}
+        <p class="play-regular" style="font-size:1.2em">Score: {{ user.points }}</p>
+        {% else %}
+          <p class="play-regular" style="font-size:1.2em">Score: 0</p>
+        {% endif %}
+        <p class="play-regular" style="font-size:1.2em">Grade: {{ user.grade }}</p>
+        <p class="play-regular" style="font-size:1.2em">Gift: {{ user.gift }}</p>
+        <p class="play-regular" style="font-size:1.2em">Hints remaining: {{ user.hint_count }}</p>
+        {% if user.participating != 1 %}
+          <p class="play-regular" style="font-size:1.2em">User not currently participating in the Omega Games.</p>
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div class = "challenges-box">
+  <h2 class ="omega-header">Challenge list:</h2>
+  <ul class="challenge-list">
+  {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() %} <!-- ensure this matches the first challenge release date -->
+    
+    {% for challenge in challenges %}
+      <div class="challenge-container">
+      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
+        {% if challenge.type == "code" %}
+        <li class="challenge challenge-code">
+        {% elif challenge.type == "live" %}
+        <li class="challenge challenge-live">
+        {% else %}
+        <li class="challenge challenge-other">
+        {% endif %}
+          <div class ="challenge-header">
+          {% if challenge.points != -1 %}
+            {{ challenge.name }} - {{ challenge.points }} points
+          {% else %}
+            {{ challenge.name }} - variable points
+          {% endif %}
+          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
+            <p>Completed!</p>
+          {% else %}
+            <p>Not completed yet.</p>
+          {% endif %}
+          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
+            <p>Submission pending review.</p>
+          {% endif %}
+          </div>
+        </li>
+        {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class = "text-container">
+      <img src = "{{ url_for('static', filename= 'img/icons8-lock-208.png') }}" alt = "locked" class="locked-img">
+      <p>Challenges will be released soon! see countdown on home page.</p>
+      <p>Remember: EARLYBIRD</p>
+    </div>
+  {% endif %}
+  </div>
+{% endblock %}

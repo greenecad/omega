@@ -1,10 +1,13 @@
 import csv
 from flask import render_template, Blueprint, session, url_for, current_app, request, redirect, flash
 import os
+
+from app.main.functions import set_challenge_completed
 from .db import get_db
 from .auth import login_required
 import json, csv
 from datetime import datetime
+from urllib import parse
 main = Blueprint(
     'main',
     __name__,
@@ -21,7 +24,7 @@ def index():
 def leaderboard():
     db = get_db()
     users = db.execute('SELECT username, points, pfp FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
-    return render_template('main/leaderboard.html', users=users, datetime=datetime)
+    return render_template('main/leaderboard.html', users=users, datetime=datetime, parse=parse)
 
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -29,6 +32,7 @@ def profile():
     db = get_db()
     if request.method == 'POST':
         if 'challenge_id' in request.form:
+            taken_points = -1
             #remember to change these when challenges are reordered
             if request.form.get('challenge_id') == '22':
                 user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
@@ -89,7 +93,12 @@ def profile():
             challenge_id = int(request.form.get('challenge_id'))
             task_completed = request.form.get('completed')
             with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-                challenge = json.load(f)['list'][challenge_id-1]
+                challenge_list = json.load(f)['list']
+                challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
+            if challenge is None:
+                current_app.logger.error('Profile POST requested unknown challenge_id=%s by user_id=%s', challenge_id, session.get('user_id'))
+                flash('Invalid challenge selected.')
+                return redirect(url_for('main.profile'))
             if challenge['type'] != 'challenge':
                 flash('This challenge cannot be completed in this way.')
                 return redirect(url_for('main.profile'))
@@ -105,13 +114,17 @@ def profile():
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
             if task_completed == '1':
-                completed['challenges'][key] = ['completed', '']
-                db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
-                if taken_points:
-                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (taken_points, session['user_id']))
+                challenge = set_challenge_completed(challenge_id, taken_points=taken_points)
+                if challenge is None:
+                    flash('An error occurred while completing the challenge. Please try again.')
+                    return redirect(url_for('main.profile'))
+                ##completed['challenges'][key] = ['completed', '']
+                ##db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
+                if taken_points != -1:
+                    ##db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (taken_points, session['user_id']))
                     flash('Challenge completed! Points awarded: ' + str(taken_points))
                 else:
-                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
+                    ##db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (challenge['points'], session['user_id']))
                     flash('Challenge completed! Points awarded: ' + str(challenge['points']))
                 db.commit()
             
@@ -160,6 +173,18 @@ def profile():
     
     return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups) 
 
+@main.route('/profile/<username>', methods=['GET'])
+def view_profile(username):
+    username = parse.unquote(username)
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
+    if not user:
+        flash('User not found!')
+        return redirect(url_for('main.profile'))
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+        challenges = json.load(f)
+    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime)
+
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required
 def submission(challenge_id):
@@ -168,22 +193,30 @@ def submission(challenge_id):
     if challenge['type'] != 'submission':
         flash('This challenge does not require a submission.')
         return redirect(url_for('main.profile'))
+    db=get_db()
+    username = db.execute('SELECT username FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0]
+    completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
+    key = str(challenge_id)
+    if key in completed['challenges'] and (completed['challenges'][key][0] == 'completed' or completed['challenges'][key][0] == 'pending') and ("repeats" not in challenge or not challenge["repeats"] == True):
+        flash('Challenge already completed!')
+        return redirect(url_for('main.profile'))
     if request.method == 'POST':
         submission = request.files['submission']
-        db=get_db()
-        username = db.execute('SELECT username FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0]
         if submission:
-            completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
-            key = str(challenge_id)
-            if key in completed['challenges'] and (completed['challenges'][key][0] == 'completed' or completed['challenges'][key][0] == 'pending') and ("repeats" not in challenge or not challenge["repeats"] == True):
-                flash('Challenge already completed!')
-                return redirect(url_for('main.profile'))
             try:
                 upload_dir = os.path.join(current_app.root_path, "static", "img", "users", username, "submissions")
                 os.makedirs(upload_dir, exist_ok=True)
-                save_path = os.path.join(upload_dir, "challenge_" + str(challenge_id) + "_" + username + "." + submission.filename.split('.')[-1])
+                i = 0
+                while os.path.exists(os.path.join(upload_dir, "challenge_" + str(challenge_id) + "_" + username + "_" + str(i) + "." + submission.filename.split('.')[-1])):
+                    i += 1
+                save_path = os.path.join(upload_dir, "challenge_" + str(challenge_id) + "_" + username + "_" + str(i) + "." + submission.filename.split('.')[-1])
                 submission.save(save_path)
-                completed['challenges'][key] = ['pending', "challenge_" + str(challenge_id) + "_" + username + "." + submission.filename.split('.')[-1]]
+                if not completed['challenges'].get(key):
+                    completed['challenges'][key] = []
+                if len(completed['challenges'][key]) > 0 and (not challenge['repeats']) or (challenge['submissions']== len(completed['challenges'][key])):
+                    flash('You have already submitted for this challenge the maximum number of times!')
+                    return redirect(url_for('main.profile'))
+                completed['challenges'][key].append(['pending', "challenge_" + str(challenge_id) + "_" + username + "_" + str(i) + "." + submission.filename.split('.')[-1]])
                 db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
                 db.commit()
                 flash('Submission received! It will be reviewed by OMEGA soon.')
@@ -254,13 +287,27 @@ def admin():
             except Exception as e:
                 flash('Error adding column: ' + str(e))
         elif action == 'reset_user':
-            username = request.form.get('username')
-            hint_count = 5
-            if db.execute('SELECT gift FROM user WHERE username = ?;', (username,)).fetchone()[0] == 'knowledge':
-                hint_count = 10
-            db.execute('UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ? WHERE username = ?;', (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username))
-            db.commit()
-            flash(f'Reset user {username}')
+            try:
+                username = (request.form.get('username') or '').strip()
+                if not username:
+                    flash('Please provide a username to reset.')
+                    return redirect(url_for('main.admin'))
+
+                target_user = db.execute('SELECT gift FROM user WHERE username = ?;', (username,)).fetchone()
+                if target_user is None:
+                    flash('User not found!')
+                    return redirect(url_for('main.admin'))
+
+                hint_count = 10 if target_user['gift'] == 'knowledge' else 5
+                db.execute(
+                    'UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ? WHERE username = ?;',
+                    (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username),
+                )
+                db.commit()
+                flash(f'Reset user {username}')
+            except Exception as e:
+                current_app.logger.exception('Error resetting user: %s', username if 'username' in locals() else 'unknown')
+                flash('Error resetting user: ' + str(e))
         elif action == 'delete_user':
             username = request.form.get('username')
             if(db.execute('SELECT username FROM user WHERE username = ?;', (username,)).fetchone() is None):
@@ -269,6 +316,11 @@ def admin():
             db.execute('DELETE FROM user WHERE username = ?;', (username,))
             user_dir = os.path.join(current_app.root_path, "static", "img", "users", username)
             if os.path.exists(user_dir):
+                for root, dirs, files in os.walk(user_dir, topdown=False):
+                    for name in files:
+                        os.remove(os.path.join(root, name))
+                    for name in dirs:
+                        os.rmdir(os.path.join(root, name))
                 os.removedirs(user_dir)
             db.commit()
             flash(f'Deleted user {username}')
@@ -326,30 +378,45 @@ def admin():
                 challenge_id = int(request.form.get('challenge_id'))
                 completed = json.loads(db.execute('SELECT completed FROM user WHERE username = ?;', (username,)).fetchone()[0])
                 key = str(challenge_id)
-                completed['challenges'][key] = ['completed', completed['challenges'][key][1] if key in completed['challenges'] else '']
+                points_awarded = None
                 with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-                    challenges = json.load(f)['list']
-                    for i in range(len(challenges)):
-                        if challenges[i]['id']==challenge_id:
-                            challenge_id = i
-                            break
+                    challenge_list = json.load(f)['list']
+                    challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
+                if challenge is None:
+                    flash('Challenge not found!')
+                    return redirect(url_for('main.admin'))
+                if challenge['points'] == -1:
+                    points_awarded_raw = (request.form.get('points_awarded') or '').strip()
+                    try:
+                        points_awarded = int(points_awarded_raw)
+                    except ValueError:
+                        flash('Invalid points awarded value.')
+                        return redirect(url_for('main.admin'))
 
-                    challenge = challenges[challenge_id]
+                challenge = set_challenge_completed(
+                    challenge_id,
+                    submission_number=0,
+                    username=username,
+                    taken_points=points_awarded if points_awarded is not None else -1,
+                )
+                if challenge is None:
+                    flash('Failed to update challenge status. Check logs for details.')
+                    return redirect(url_for('main.admin'))
+                completed['challenges'][key] = ['completed', completed['challenges'][key][1] if key in completed['challenges'] else '']
                 challenge_name = challenge['name'] if 'name' in challenge else f'ID {challenge_id}'
                 if challenge['points'] == -1:
-                    points_awarded = request.form.get('points_awarded')
                     if isinstance(notifications, dict) and "list" in notifications:
                         notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {points_awarded} points.', 1])
                     else:
                         notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {points_awarded} points.', 1])
-                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (points_awarded, username))
+                    ##db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (points_awarded, username))
                 else:
                     if isinstance(notifications, dict) and "list" in notifications:
                         notifications["list"].append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
                     else:
                         notifications.append([f'Challenge: {challenge_name} has been marked as completed by an admin. You have been awarded {challenge["points"]} points.', 1])
-                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
-                db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+                    ##db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+                ##db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
                 db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
                 db.commit()
                 flash(f'Updated challenge status for user {username}')
@@ -376,32 +443,55 @@ def admin_pending():
             user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
             completed = json.loads(user['completed'])
             notifications = json.loads(user['notifications'])
+            submission_number = int(request.form.get('submission_number'))-1
 
             if action == 'approve':
                 with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-                    challenge = json.load(f)['list'][challenge_id-1]
-                completed['challenges'][key][0] = 'completed'
-                if challenge['points']==-1:
-                    points_awarded = request.form.get('points_awarded')
-                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (points_awarded, username))
+                    challenge_list = json.load(f)['list']
+                    challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
+                if challenge is None:
+                    flash(f'Challenge {challenge_id} not found.')
+                    return redirect(url_for('main.admin_pending'))
+
+                points_awarded = challenge['points']
+                ##completed['challenges'][key][submission_number][0] = 'completed'
+                if challenge['points'] == -1:
+                    points_awarded_raw = (request.form.get('points_awarded') or '').strip()
+                    try:
+                        points_awarded = int(points_awarded_raw)
+                    except ValueError:
+                        flash('Invalid points awarded value.')
+                        return redirect(url_for('main.admin_pending'))
+
+                result = set_challenge_completed(
+                    challenge_id,
+                    taken_points=points_awarded,
+                    submission_number=submission_number,
+                    username=username,
+                )
+                if result is None:
+                    flash('Failed to approve submission. Check logs for details.')
+                    return redirect(url_for('main.admin_pending'))
+
+                if challenge['points'] == -1:
                     if isinstance(notifications, dict) and "list" in notifications:
                         notifications["list"].append([f'Your submission for challenge {challenge_id}: "{challenge["name"]}" has been approved! You have been awarded {points_awarded} points.', 1])
                     else:
                         notifications.append([f'Your submission for challenge {challenge_id}: "{challenge["name"]}" has been approved! You have been awarded {points_awarded} points.', 1])
                 else:
-                    db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
+                    ##db.execute('UPDATE user SET points = points + ? WHERE username = ?;', (challenge['points'], username))
                     if isinstance(notifications, dict) and "list" in notifications:
                         notifications["list"].append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge['points']} points.', 1])
                     else:
                         notifications.append([f'Your submission for challenge {challenge_id} has been approved! You have been awarded {challenge['points']} points.', 1])
 
-                db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
+                ##db.execute('UPDATE user SET completed = ? WHERE username = ?;', (json.dumps(completed), username))
                 db.execute('UPDATE user SET notifications = ? WHERE username = ?;', (json.dumps(notifications), username))
                 db.commit()
                 flash(f'Approved submission for user {user["username"]} on challenge {challenge["name"]}')
             elif action == 'reject':
                 if key in completed['challenges']:
-                    del completed['challenges'][key]
+                    del completed['challenges'][key][submission_number]
                 if isinstance(notifications, dict) and "list" in notifications:
                     notifications["list"].append([f'Your submission for challenge {challenge_id} has been rejected. Please try again.', 0])
                 else:
@@ -472,7 +562,7 @@ def all_users():
         flash('What are you doing? OMEGA would not be proud of you.')
         return redirect(url_for('main.profile'))
     users = db.execute('SELECT * FROM user;').fetchall()
-    return render_template('main/all_users.html', users=users, datetime=datetime)
+    return render_template('main/all_users.html', users=users, datetime=datetime, parse=parse)
 
 
 
