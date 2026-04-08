@@ -8,6 +8,8 @@ from .auth import login_required
 import json, csv
 from datetime import datetime
 from urllib import parse
+
+from werkzeug.security import generate_password_hash
 main = Blueprint(
     'main',
     __name__,
@@ -272,9 +274,14 @@ def admin():
                 username = request.form.get('username')
                 column = request.form.get('column')
                 value = request.form.get('points')
+                pvalue = None
+                if column == "password":
+                    pvalue = value
+                    value = generate_password_hash(value)
+
                 db.execute(f'UPDATE user SET {column} = ? WHERE username = ?;', (value, username))
                 db.commit()
-                flash(f'Updated {column} for user {username} to {value}')
+                flash(f'Updated {column} for user {username} to {pvalue if pvalue is not None else value}')
             except Exception as e:
                 flash('Error updating user: ' + str(e))
         elif action == 'add_column':
