@@ -482,7 +482,9 @@ h2{
   border:rgb(39, 38, 38) solid 2px;
   border-radius: 2px;
 }
-
+.challenge p{
+  font-size:larger;
+}
 .challenges-box {
   background-color: #383838;
   margin: 15px auto;

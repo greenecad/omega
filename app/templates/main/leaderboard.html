@@ -4,13 +4,12 @@
   <h1 class="play-regular omega-header">{% block title %}Leaderboard{% endblock %}</h1>
 {% endblock %}
 
-<body style="background-color: darkred;"
-class="play-regular;"
-style="color: aliceblue;"
-></body>
+
 
 {% block content %}
-  <table>
+  <table style="background-color: darkred;color: aliceblue;
+margin: 0px auto;"
+class="play-regular;">
     <tr>
       <th>Rank</th>
       <th>User</th>
@@ -21,10 +20,7 @@ style="color: aliceblue;"
       <td>{{ loop.index}}</td>
       <td>
         <a href="{{ url_for('main.view_profile', username=parse.quote(user.username)) }}" style="color: white;">
-          <img src="{{ url_for('static', filename=user.pfp) }}" alt="Profile Picture" class="profile-pic-small"><p style="vertical-align: top; display: inline-block;">
-          <p>
-            {{ user.username }}
-          </p>
+          <img src="{{ url_for('static', filename=(user.pfp or 'img/placeholder-pfp.png')) }}" alt="Profile Picture" class="profile-pic-small"><br><span style="vertical-align: middle; display: inline-block;">{{ user.username }}</span>
         </a>
       </td>
       <td>{{ user.points }}</td>
