@@ -180,14 +180,14 @@
   {% endif %}
 
 
-  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %}<!-- ensure this matches the first code challenge date -->
+  {% if datetime.fromisoformat("2026-04-13T12:00:00") < datetime.now() or user.admin == 1 %}
   <form method="post">
     <label for="code" class ="play-regular" style="color: white">Submit code:</label>
     <input name="code" placeholder="Enter code here">
     <button type="submit">Submit code</button>
   </form>
   {% endif %}
-  {% if datetime.fromisoformat("2026-04-20T00:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the friend challenge date -->
+  {% if datetime.fromisoformat("2026-04-15T12:00:00") < datetime.now() or user.admin == 1 %} 
     <br>
     <br>
     <p style="color: white">Friends:</p>
@@ -196,7 +196,7 @@
   <div class = "challenges-box">
   <h2 class ="omega-header">Challenge list:</h2>
   <ul class="challenge-list">
-    {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} <!-- ensure this matches the first challenge release date -->
+    {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} 
     
     {% for challenge in challenges %}
       <div class="challenge-container">
