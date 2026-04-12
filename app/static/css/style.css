@@ -482,6 +482,7 @@ h2{
   border:rgb(39, 38, 38) solid 2px;
   border-radius: 2px;
 }
+
 .challenge p{
   font-size:larger;
 }
@@ -496,6 +497,10 @@ h2{
 .challenge-list{
   padding-inline-start: 0px;
   list-style: none;
+}
+.challenge-header{
+  font-size:x-large;
+  text-decoration: bold;
 }
 .omega-header{
   color: crimson; 

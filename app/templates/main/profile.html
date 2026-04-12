@@ -225,9 +225,9 @@
         {% endif %}
           <div class ="challenge-header">
           {% if challenge.points != -1 %}
-            {{ challenge.name }} - {{ challenge.points }} points
+            <b>{{ challenge.name }} - {{ challenge.points }} points</b>
           {% else %}
-            {{ challenge.name }} - variable points
+            <b>{{ challenge.name }} - variable points</b>
           {% endif %}
           {% if user.admin == 1 %}
             challenge id: {{challenge.id}}
