@@ -52,6 +52,24 @@ def manual_edit_command(username, column, value):
     db.commit()
     click.echo(f"Updated {username}'s {column} to {value}.")
 
+
+def ensure_user_columns():
+    """Backfill columns added after initial deployment for existing databases."""
+    db = get_db()
+    columns = {row[1] for row in db.execute('PRAGMA table_info(user);').fetchall()}
+    required_columns = {
+        'click_points': 'INTEGER DEFAULT 0',
+        'target': 'TEXT',
+        'targeted_by': 'TEXT',
+        'target_pic': 'TEXT',
+    }
+
+    for column_name, column_def in required_columns.items():
+        if column_name not in columns:
+            db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_def};')
+
+    db.commit()
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)

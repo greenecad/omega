@@ -36,7 +36,7 @@ def profile():
         if 'challenge_id' in request.form:
             taken_points = -1
             #remember to change these when challenges are reordered
-            if request.form.get('challenge_id') == '22':
+            if request.form.get('challenge_id') == '22': #the button
                 user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
                 click_points = user['click_points']
                 print(request.form.to_dict(flat=False))
@@ -48,7 +48,7 @@ def profile():
                     db.commit()
                     flash(f'You earned {(int(new_click_points)-click_points) * 10} points!')
                 return redirect(url_for('main.profile'))
-            if request.form.get('challenge_id')=='24':
+            elif request.form.get('challenge_id')=='24': #give points
                 username = request.form.get('username')
                 send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
                 if send_user:
@@ -65,7 +65,7 @@ def profile():
                 else:
                     flash('User not found.')
                     return redirect(url_for('main.profile'))
-            if request.form.get('challenge_id')=='25':
+            elif request.form.get('challenge_id')=='25': #steal points
                 username = request.form.get('username')
                 send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
                 if send_user:
@@ -92,9 +92,68 @@ def profile():
                 else:
                     flash('User not found.')
                     return redirect(url_for('main.profile'))
+            elif request.form.get('challenge_id') == '28':  #Assassination
+                try:
+                    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+                    if user is None:
+                        flash('User not found.')
+                        return redirect(url_for('main.profile'))
+                    if user['participating'] != 1:
+                        flash('This challenge is only available to active participants. Verify your account first.')
+                        return redirect(url_for('main.profile'))
+                    if user['target'] is None:
+                        with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
+                            challenge_list = json.load(f)['list']
+
+                        school_spirit = next((c for c in challenge_list if c.get('name') == 'School spirit'), None)
+                        if school_spirit is None:
+                            current_app.logger.error('Assassination target assignment failed: School spirit challenge not found')
+                            flash('Challenge configuration error. Please contact an admin.')
+                            return redirect(url_for('main.profile'))
+
+                        school_spirit_id = str(school_spirit['id'])
+                        all_users = db.execute('SELECT * FROM user WHERE participating = 1;').fetchall()
+                        all_users = [u for u in all_users if u['id'] != user['id']]
+                        all_users = [u for u in all_users if u['targeted_by'] is None]
+                        all_users = [u for u in all_users if user['targeted_by'] != u['username']]
+                        all_users = [u for u in all_users if abs(u['grade'] - user['grade']) <= 1]
+                        all_users = [u for u in all_users if u['grade'] != 9 or user['grade']==u['grade']]
+                        friends_list = json.loads(user['friends'])['list']
+                        all_users = [u for u in all_users if u['username'] in friends_list]
+                        all_users = [
+                            u for u in all_users
+                            if json.loads(u['completed'])['challenges'].get(school_spirit_id, [['incomplete']])[0][0] == 'completed'
+                        ]
+
+                        if len(all_users) == 0:
+                            flash('No valid targets available at this time. Try again later!')
+                            return redirect(url_for('main.profile'))
+
+                        import random
+                        target = random.choice(all_users)
+                        target_completed_entry = json.loads(target['completed'])['challenges'].get(school_spirit_id, [['incomplete', '']])
+                        target_pic = target_completed_entry[0][1] if len(target_completed_entry[0]) > 1 else ''
+                        db.execute('UPDATE user SET target = ?, target_pic = ? WHERE id = ?;', (target['username'], target_pic, user['id']))
+                        u_notes = json.loads(user['notifications'])
+                        u_notes["list"].append([f'Your target is {target["username"]}. A picture of them has been provided in the challenge description. Find them.', 1])
+                        db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(u_notes), user['id']))
+                        db.execute('UPDATE user SET targeted_by = ? WHERE id = ?;', (user['username'], target['id']))
+                        t_notes = json.loads(target['notifications'])
+                        if target['gift'] == 'vigilance':
+                            t_notes["list"].append([f'You\'re overtaken by a terrible feeling... Someone is hunting you. Don\'t let them catch you.\n Vigilance: the name of your pursuer is {user["username"]}', 1])
+                        else:
+                            t_notes["list"].append([f'A terrible feeling comes over you... Someone is hunting you. Don\'t let them catch you.', 1])
+                        db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(t_notes), target['id']))
+                        db.commit()
+                    return redirect(url_for('main.profile'))
+                except Exception:
+                    current_app.logger.exception('Error handling assassination challenge for user_id=%s', session.get('user_id'))
+                    flash('An error occurred while assigning your target. Please try again.')
+                    return redirect(url_for('main.profile'))
+
             challenge_id = int(request.form.get('challenge_id'))
             task_completed = request.form.get('completed')
-            with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+            with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
                 challenge_list = json.load(f)['list']
                 challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
             if challenge is None:
@@ -136,7 +195,7 @@ def profile():
             return redirect(url_for('main.profile'))
         code = request.form['code']
         completed = json.loads(db.execute('SELECT completed FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0])
-        with open(os.path.join(current_app.static_folder, 'codes.csv'), 'r') as file:
+        with open(os.path.join(current_app.static_folder, 'codes.csv'), 'r', encoding='utf-8') as file:
             codes = list(csv.reader(file))
         if code not in completed['codes']:
             flag=False
@@ -170,7 +229,7 @@ def profile():
     notifications["list"] = []
     db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(notifications), session['user_id']))
     db.commit()
-    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
     
     return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups) 
@@ -183,15 +242,15 @@ def view_profile(username):
     if not user:
         flash('User not found!')
         return redirect(url_for('main.profile'))
-    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
     return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime)
 
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required
 def submission(challenge_id):
-    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
-        challenge = json.load(f)['list'][challenge_id-1]
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
+        challenge = next((item for item in json.load(f)['list'] if item.get('id') == challenge_id), None)
     if challenge['type'] != 'submission':
         flash('This challenge does not require a submission.')
         return redirect(url_for('main.profile'))
@@ -308,8 +367,14 @@ def admin():
                     return redirect(url_for('main.admin'))
 
                 hint_count = 10 if target_user['gift'] == 'knowledge' else 5
+                target = db.execute('SELECT target FROM user WHERE username = ?;', (username,)).fetchone()[0]
+                if target:
+                    db.execute('UPDATE user SET targeted_by = NULL WHERE username = ?;', (target,))
+                targeted_by = db.execute('SELECT targeted_by FROM user WHERE username = ?;', (username,)).fetchone()[0]
+                if targeted_by:
+                    db.execute('UPDATE user SET target = NULL WHERE username = ?;', (targeted_by,))
                 db.execute(
-                    'UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ? WHERE username = ?;',
+                    'UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ?, target= NULL, targeted_by = NULL, target_pic = NULL, click_points = 0 WHERE username = ?;',
                     (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username),
                 )
                 db.commit()
@@ -336,7 +401,7 @@ def admin():
         elif action == 'activate_live':
             try:
                 challenge_id = int(request.form.get('challenge_id'))
-                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
                     challenge_json = json.load(f)
                     challenges = challenge_json['list']
                     for i in range(len(challenges)):
@@ -349,7 +414,7 @@ def admin():
                     flash('Challenge is not a live event!')
                     return redirect(url_for('main.admin'))
                 challenge_json['list'][challenge_id]['event_code'] = request.form.get('event_code')
-                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'w') as f:
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'w', encoding='utf-8') as f:
                     f.write(json.dumps(challenge_json, indent=4))
                 flash(f'Activated live event for challenge {challenge["name"]} (ID {challenge["id"]}) with code: {challenge_json["list"][challenge_id]["event_code"]}')
             except Exception as e:
@@ -388,7 +453,7 @@ def admin():
                 completed = json.loads(db.execute('SELECT completed FROM user WHERE username = ?;', (username,)).fetchone()[0])
                 key = str(challenge_id)
                 points_awarded = None
-                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
                     challenge_list = json.load(f)['list']
                     challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
                 if challenge is None:
@@ -455,7 +520,7 @@ def admin_pending():
             submission_number = int(request.form.get('submission_number'))-1
 
             if action == 'approve':
-                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+                with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
                     challenge_list = json.load(f)['list']
                     challenge = next((item for item in challenge_list if item.get('id') == challenge_id), None)
                 if challenge is None:
@@ -463,7 +528,8 @@ def admin_pending():
                     return redirect(url_for('main.admin_pending'))
 
                 points_awarded = challenge['points']
-                ##completed['challenges'][key][submission_number][0] = 'completed'
+                if challenge['name']=="Assassination" and user['gift']=="competitiveness":
+                    points_awarded += 200
                 if challenge['points'] == -1:
                     points_awarded_raw = (request.form.get('points_awarded') or '').strip()
                     try:
@@ -542,7 +608,7 @@ def admin_pending():
                 flash(f'Rejected id for user {user["username"]}')
 
     users = db.execute('SELECT * FROM user;').fetchall()
-    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+    with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)['list']
     return render_template('main/admin_pending.html', users=users, os=os, current_app=current_app, json=json, url_for=url_for, challenges=challenges, datetime=datetime)
 

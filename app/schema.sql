@@ -20,5 +20,8 @@ CREATE TABLE user (
   friend_requests TEXT DEFAULT '{"list": []}',
   pfp TEXT DEFAULT 'img/placeholder-pfp.png',
   click_points INTEGER DEFAULT 0,
-  umessage TEXT
+  umessage TEXT,
+  target TEXT,
+  targeted_by TEXT,
+  target_pic TEXT
 );

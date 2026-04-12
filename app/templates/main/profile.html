@@ -212,8 +212,10 @@
       {% set is_pending = submission_status == 'pending' %}
       {% set is_completed = is_code_completed or is_challenge_completed or (submission_status == 'completed') %}
       {% set submission_count = challenge_entry | length if has_submission_entries else 0 %}
-      {% set reached_repeat_limit = challenge.repeats and submission_count >= challenge.submissions %}
-      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
+      {% set allows_repeats = challenge.get('repeats', false) %}
+      {% set max_submissions = challenge.get('submissions', 1) %}
+      {% set reached_repeat_limit = allows_repeats and submission_count >= max_submissions %}
+      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 3)  or user.admin%}
         {% if challenge.type == "code" %}
         <li class="challenge challenge-code">
         {% elif challenge.type == "live" %}
@@ -231,11 +233,11 @@
             challenge id: {{challenge.id}}
           {% endif %}
           </div>
-          {% if challenge.repeats %}
+          {% if allows_repeats %}
             <p>Allows multiple submissions</p>
           {% endif %}
           <p>{{ challenge.description|safe }}</p>
-          {% if challenge.type == "submission" and not ((not challenge.repeats and (is_completed or is_pending)) or is_code_completed or reached_repeat_limit) %}
+          {% if challenge.type == "submission" and not ((not allows_repeats and (is_completed or is_pending)) or is_code_completed or reached_repeat_limit) and challenge.name != "Assassination"%}
             <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
           {% endif %}
           {% if challenge.type == "live" and challenge.event_code != null %}
@@ -251,6 +253,24 @@
               {{ challenge.html|safe }}
             </div>
           {% endif %}
+          
+          {% if challenge.name == "Assassination"%}
+            {% if not user.target %}
+            <form method='post'> 
+              <input type='hidden' name='challenge_id' value='28'>
+              <input type='hidden' name='completed' value='0'>
+              <button type='submit'>Get Target</button>
+            </form>
+            {% else %}
+              <p>Your target: {{ user.target }}</p>
+              <img src="{{ url_for('static', filename='img/users/' + user.target + '/submissions/' + user.target_pic) }}" alt="Target Profile Picture" width="300"><br>
+              <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
+            {% endif %}
+            {% if challenge.targeted and user.gift == "vigilance" %}
+              <p>Vigilance: Your pursuer - {{user.targeted}}</p>
+            {% endif %}
+          {% endif %}
+          
           {% if challenge.competitiveness != null and user.gift == 'competitiveness' %}
             <p>Competitiveness: {{ challenge.competitiveness }}</p>
           {% endif %}
@@ -260,13 +280,13 @@
           {% if challenge.determination != null and user.gift == 'determination' %}
             <p>Determination: {{ challenge.determination }}</p>
           {% endif %}
-          {% if (not challenge.repeats and is_completed) or reached_repeat_limit %}
+          {% if (not allows_repeats and is_completed) or reached_repeat_limit %}
             <p>Completed!</p>
           {% endif %}
           {% if is_pending %}
             <p>Submission pending review.</p>
           {% endif %}
-          {% if challenge.hint and not ((not challenge.repeats and is_completed) or is_code_completed) and not (challenge.id in json.loads(user.hints_used)['list'])%}
+          {% if challenge.hint and not ((not allows_repeats and is_completed) or is_code_completed) and not (challenge.id in json.loads(user.hints_used)['list'])%}
             <form method="post" action="{{ url_for('main.use_hint', challenge_id=challenge.id) }}">
               <button type="submit">Use hint ({{ user.hint_count }} remaining)</button>
             </form>

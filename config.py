@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import render_template
+from flask import render_template, current_app
 
 
 # Custom error pages
@@ -9,6 +9,7 @@ def page_not_found(e):
 
 
 def internal_server_error(e):
+    current_app.logger.exception('Unhandled 500 error: %s', e)
     return render_template('error/500.html', datetime=datetime), 500
 
 

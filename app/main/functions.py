@@ -10,7 +10,7 @@ def set_challenge_completed(challenge_id, taken_points=-1, submission_number=0, 
     try:
         db = get_db()
         key = str(challenge_id)
-        with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r') as f:
+        with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
             challenges = json.load(f)['list']
             challenge_index = None
             for i in range(len(challenges)):

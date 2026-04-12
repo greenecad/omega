@@ -10,7 +10,8 @@
     <thead>
       <tr>
         <th>Username</th>
-        <th>image</th>
+        <th>Name</th>
+        <th>Image</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -19,6 +20,7 @@
       {% if user.participating == 0 and user.id_image %}
         <tr>
           <td>{{ user.username }}</td>
+          <td>{{ user.name }}</td>
           <td>
             <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username +'/'+ user.id_image )) }}" alt="Submission Image" width="200">
           </td>
@@ -58,6 +60,10 @@
                 <td>{{ challenge_id }}</td>
                 <td>
                   <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
+                  {% if challenge_id == 28 %} <!--remember to change    this system is not great...-->
+                    <p>Assassination target: {{user.target}}</p>
+                    <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + user.target_pic)) }}" alt="Target Image" width="200">
+                  {% endif %}
                 </td>
                 <td>{{ submission[1] }}</td>
                 <td>
