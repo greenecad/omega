@@ -41,8 +41,9 @@
   {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() %} <!-- ensure this matches the first challenge release date -->
     
     {% for challenge in challenges %}
+    {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
       <div class="challenge-container">
-      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 2) %}
+
         {% if challenge.type == "code" %}
         <li class="challenge challenge-code">
         {% elif challenge.type == "live" %}
@@ -67,6 +68,7 @@
           </div>
         </li>
         {% endif %}
+      </div>
     {% endfor %}
   {% else %}
     <div class = "text-container">

@@ -6,7 +6,7 @@ from app.main.functions import set_challenge_completed
 from .db import get_db
 from .auth import login_required
 import json, csv
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from urllib import parse
 
 from werkzeug.security import generate_password_hash
@@ -232,7 +232,7 @@ def profile():
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
     
-    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups) 
+    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups, timezone=timezone(timedelta(hours=-6))) 
 
 @main.route('/profile/<username>', methods=['GET'])
 def view_profile(username):
@@ -244,7 +244,7 @@ def view_profile(username):
         return redirect(url_for('main.profile'))
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
-    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime)
+    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, timezone=timezone(timedelta(hours=-6)))
 
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required

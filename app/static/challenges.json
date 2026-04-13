@@ -6,16 +6,16 @@
             "points": 100,
             "description": "Welcome to the Omega Games. This is your first challenge.<br>It's quite simple. But the later challenges will not be so easy.<br>Press the button to get your first 100 points.<br>",
             "type": "challenge",
-            "release": "2026-04-13T07:00:00",
+            "release": "2026-04-13T07:00:00-06:00",
             "html": "<form method='post'> <input type='hidden' name='challenge_id' value='1'><input type='hidden' name='completed' value='1'><button type='submit'>Complete Challenge</button></form>"
         },
         {
             "name": "Propaganda",
             "id": 2,
-            "points": 300,
+            "points": 150,
             "description": "Time to prove your loyalty.<br>Follow the instagram account, put the newest post on your story, tag the account, and include your username.<br>The account must be able to see the post and your username for it to count. <br>Be sure to follow the instructions exactly. This whole game is a game of following instructions, being able to read will serve you well.",
             "type": "manual",
-            "release": "2026-04-13T07:00:00"
+            "release": "2026-04-13T07:00:00-06:00"
         },
         {
             "name": "Code tutorial",
@@ -23,7 +23,7 @@
             "points": 100,
             "description": "You may have noticed a new addition to your profile page. You can take codes you find and put them into the code entry box to earn points. A lot of challenges will provide clues to some sort of code. They will always be in all uppercase with no spaces. You will have to PAYATTENTION to figure them all out.",
             "type": "code",
-            "release": "2026-04-13T12:00:00",
+            "release": "2026-04-13T12:00:00-06:00",
             "code": "PAYATTENTION",
             "hint": "... really? You're probably overthinking it."
         },
@@ -33,7 +33,7 @@
             "points": 200,
             "description": "Rumor has it Monke has something for you, but only if you can find him somewhere in Conroe High School. Try paying him court. <p class=\"warn\"> WARNING: do NOT remove any codes hidden within the school so others cannot find them. It's not good sportsmanship. Also, you'll be disqualified, so there's that. </p>",
             "type": "code",
-            "release": "2026-04-14T06:00:00",
+            "release": "2026-04-14T06:00:00-06:00",
             "code": "MONKEYINGAROUND",
             "hint": "(-yard). He might be in a less conspicuous corner."
         },
@@ -43,35 +43,35 @@
             "points": 200,
             "description": "Some challenges will require an image submission. You will not receive the points until your submission has been approved.<br>Continue to prove your loyalty. Draw an omega symbol with the words 'THE OMEGA GAMES' underneath on the board in any of your classes. Take a picture, and submit it.",
             "type": "submission",
-            "release": "2026-04-14T07:00:00"
+            "release": "2026-04-14T07:00:00-06:00"
+        },
+        {
+            "name": "Friendly",
+            "id": 6,
+            "points": 200,
+            "description": "You can't make it through life alone. You need people to stand beside you when times get tough. Just be sure to choose your friends wisely.<br>Make at least five friends, either by sending friend requests or accepting others' friend requests. There is a new button on your profile page to help with this.<br>You earn 40 points for each of the first five friends you make.",
+            "type": "manual",
+            "release": "2026-04-14T10:00:00-06:00"
         },
         {
             "name": "Cipher",
-            "id": 6,
+            "id": 7,
             "points": 200,
             "description": "Don't want to alarm you, but this one isn't so easy: [[TBBQWBO]]",
             "type": "code",
-            "release": "2026-04-14T12:00:00",
+            "release": "2026-04-14T12:00:00-06:00",
             "code": "GOODJOB",
             "hint": "Brackets indicate the code is not literal, but requires some decrypting. Now might be a good time to learn some basic encryption techniques. Have you tried rotating it?"
         },
         {
             "name": "The Great Search",
-            "id": 7,
+            "id": 8,
             "points": 200,
             "description": "It's off to find some codes.<br>There's something of note in room 224. Go find it.<br>Get used to visiting teachers' rooms, this won't be the last time. <p class='warn'>WARNING: Do NOT disturb teachers while they are teaching. Give this project a good name. Complaints from teachers will result in disqualification.</p>",
             "type": "code",
-            "release": "2026-04-15T06:00:00",
+            "release": "2026-04-15T06:00:00-06:00",
             "code": "PLACESLONGFORGOTTEN",
             "hint": "Don't be shy. Just stop in before or after school, and {name} should direct you to what you need."
-        },
-        {
-            "name": "Friendly",
-            "id": 8,
-            "points": 200,
-            "description": "You can't make it through life alone. You need people to stand beside you when times get tough. Just be sure to choose your friends wisely.<br>Make at least five friends, either by sending friend requests or accepting others' friend requests. There is a new button on your profile page to help with this.<br>You earn 40 points for each of the first five friends you make.",
-            "type": "manual",
-            "release": "2026-04-15T12:00:00"
         },
         {
             "name": "I have a life",
@@ -79,7 +79,7 @@
             "points": 200,
             "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport). Activity must be plainly visible from photo. 200 points per photo.",
             "type": "submission",
-            "release": "2026-04-15T14:00:00",
+            "release": "2026-04-15T14:00:00-06:00",
             "submissions": 2,
             "repeats": true
         },
@@ -87,9 +87,9 @@
             "name": "Gimkit",
             "id": 10,
             "points": -1,
-            "description": "Time for the first live event. Game will open at 7:00 pm. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each elimination you get.",
+            "description": "Time for the first live event. Game will open at 7:00 pm Wednesday the 15th. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each elimination you get.",
             "type": "live",
-            "release": "2026-04-15T19:00:00",
+            "release": "2026-04-15T19:00:00-06:00",
             "competitiveness": "You receive 100 more points for being on the winning team.",
             "vigilance": "You receive 50 points for being on the LOSING team.",
             "determination": "You receive 10 more points for each elimination you get.",
@@ -101,7 +101,7 @@
             "points": 300,
             "description": "22 34 44 34 42 34 34 32 44 52 34 55 15 42 34 55 15 42 34 43 24 53",
             "type": "code",
-            "release": "2026-04-16T06:00:00",
+            "release": "2026-04-16T06:00:00-06:00",
             "code": "CODEBREAKER",
             "hint": "Polybius, both of them, even if it doesnt appear so."
         },
@@ -112,7 +112,7 @@
             "description": "I mean, this is a Conroe High School competition, I would hope you care about your school at least a little bit.<br>Submit a photo of you dressed up for one of the school spirit days. Don't have one? Just post a photo of you in something for one of the old spirit days, and I'll never know the difference.<br><br>There is no ulterior reason for this challenge. None.",
             "type": "submission",
             "vigilance": "Something tells you this photo is going to be used against you... not submitting might spare you from a later challenge.",
-            "release": "2026-04-16T10:00:00"
+            "release": "2026-04-16T10:00:00-06:00"
         },
         {
             "name": "Platforming",
@@ -120,7 +120,7 @@
             "points": -1,
             "description": "Dont fall off for as long as possible. 10 points every ten seconds.",
             "type": "challenge",
-            "release": "2026-04-16T12:00:00",
+            "release": "2026-04-16T12:00:00-06:00",
             "html": ""
         },
         {
@@ -129,7 +129,7 @@
             "points": 100,
             "description": "Look familiar? Hope so. Let's see if you can find it.",
             "type": "code",
-            "release": "2026-04-17T06:00:00",
+            "release": "2026-04-17T06:00:00-06:00",
             "code": "KNOWMYWAYAROUND",
             "hint": "Look in the [placeholder] hallway.",
             "img":"img/placeholder.jpg"
@@ -140,7 +140,7 @@
             "points": -1,
             "description": "Tired of ties on the leaderboard? Want something to get INFINITE points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit!",
             "type": "manual",
-            "release": "2026-04-17T10:00:00",
+            "release": "2026-04-17T10:00:00-06:00",
             "html": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='22'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>"
         },
         {
@@ -149,7 +149,7 @@
             "points": -1,
             "description": "What has that pesky GPA ever gotten you, anyway? Well, it's getting you points, now, that's what!<br>Submit a photo of your weighted GPA. You earn GPA*100(rounded to 10s) points.",
             "type": "submission",
-            "release": "2026-04-17T13:00:00"
+            "release": "2026-04-17T13:00:00-06:00"
         },
         {
             "name": "Trudging along",
@@ -157,7 +157,7 @@
             "points": 100,
             "description": "Keep going. Just saying, you don't have to complete every challenge, nor do you have to complete them the day they release.<br>But you're not going to let that stop you, right?<br>Go to room [placeholder Pederson]",
             "type": "code",
-            "release": "2026-04-20T06:00:00",
+            "release": "2026-04-20T06:00:00-06:00",
             "code": "HALFWAYTHERE",
             "hint": "Hint: Oh, that's weird. Boxes? Looks like some kind of animal enclosure..."
         },
@@ -167,7 +167,7 @@
             "points": 600,
             "description": "Feels familiar.<br>You are assigned a target. You will be given the name, grade level, and photo of the target. You must submit a photo of you with your hand on your target's shoulder. Your target is notified they have been selected but not the identity of their assassin.<br>Find them.",
             "type": "submission",
-            "release": "2026-04-20T07:00:00",
+            "release": "2026-04-20T07:00:00-06:00",
             "determination": "You only have to submit a photo you have taken of your target. Your hand does not have to be on their shoulder.",
             "vigilance": "You will be notified of your assassin's identity.",
             "competitiveness": "You get an additional 200 points for completing the challenge. FIND THEM."
@@ -178,7 +178,7 @@
             "points": 300,
             "description": "If you have been paying attention, you probably noticed some encrypted text. You'll need this key to break it, though: [[HEYLOOKACODE]]",
             "type": "code",
-            "release": "2026-04-20T14:00:00",
+            "release": "2026-04-20T14:00:00-06:00",
             "code": "OMEGAPIPHI",
             "hint": "Caesar, but more complicated because of that key. Misattributed to some French guy."
         },
@@ -188,7 +188,7 @@
             "points": 100,
             "description": "No unforeseen tricks here. tb gb ebbz gjb mreb gjb bar",
             "type": "code",
-            "release": "2026-04-21T06:00:00",
+            "release": "2026-04-21T06:00:00-06:00",
             "code": "QUITETHEWALK",
             "hint": "Hint: It's all been done before. As a matter of fact, its the first one you used. Don't mind the walk."
         },
@@ -198,7 +198,7 @@
             "points": 100,
             "description": "Watch today's KTIG episode. You might find something interesting.",
             "type": "code",
-            "release": "2026-04-21T10:00:00",
+            "release": "2026-04-21T10:00:00-06:00",
             "code": "GETTINGPLACES",
             "hint": "Listen closely. Look up a morse code translator."
         },
@@ -208,7 +208,7 @@
             "points": 40,
             "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo.",
             "type": "submission",
-            "release": "2026-04-21T14:00:00",
+            "release": "2026-04-21T14:00:00-06:00",
             "submissions": 5,
             "repeats": true
         },
@@ -216,9 +216,9 @@
             "name": "Shell shockers",
             "id": 23,
             "points": -1,
-            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at 7:00 pm. You get 10 points per kill. As before, you MUST set your shell shockers name to your Omega Games username and remain until the end of the 20 minute round to get your points.",
+            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at 7:00 pm Tuesday the 21st. You get 10 points per kill. As before, you MUST set your shell shockers name to your Omega Games username and remain until the end of the 20 minute round to get your points.",
             "type": "live",
-            "release": "2026-04-21T17:00:00",
+            "release": "2026-04-21T17:00:00-06:00",
             "competitiveness": "You get an additional 2 points per kill. Go crazy.",
             "determination": "You get an additional 2 points per kill. Go crazy.",
             "event_code": null
@@ -229,7 +229,7 @@
             "points": 100,
             "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
             "type": "code",
-            "release": "2026-04-22T06:00:00",
+            "release": "2026-04-22T06:00:00-06:00",
             "code": "ATTHEENDOFTIME",
             "hint": " Have you ever seen a Rail Fence? Me neither..."
         },
@@ -239,7 +239,7 @@
             "points": 50,
             "description": "Prove you're a good person, or can at least pretend to be one. Select a competitor to earn 150 points. You earn 50 points for doing so.",
             "type": "challenge",
-            "release": "2026-04-22T10:00:00",
+            "release": "2026-04-22T10:00:00-06:00",
             "html": "<form method='post'><input name='username' placeholder='type username...' required><input type='hidden' name='challenge_id' value='24'><input type='hidden' name='completed' value='1'><button type='submit'>send points</button></form>"
         },
         {
@@ -248,7 +248,7 @@
             "points": 200,
             "description": "Rumor has it that there was another, smaller event that was hosted last year. Do some digging.<br>[[The first letter of every contestant's name, in bracket order]]",
             "type": "code",
-            "release": "2026-04-22T12:00:00",
+            "release": "2026-04-22T12:00:00-06:00",
             "code": "CEWWEDCKLISASCED",
             "hint": "Some said it was really the ultimate showdown... If it's the order you're stuck on, I'm afraid we're too far in for me to help you on THAT."
         },
@@ -258,7 +258,7 @@
             "points": -1,
             "description": "Click as many targets as you can before time runs out. +10 points per target.",
             "type": "challenge",
-            "release": "2026-04-22T13:00:00",
+            "release": "2026-04-22T13:00:00-06:00",
             "html": ""
         },
         {
@@ -267,7 +267,7 @@
             "points": 200,
             "description": "You know, I've wanted to host a challenge like this for a long time. I actually learned the server system I'm using for this website all the way back in Freshman year. Last year, I briefly played around with “Cake day”, an ARG with similar code based challenges. The logo for this challenge dates back to April 7th of 2025, if you were wondering how long this project has been in my brain.<br>Oh, you want the actual challenge? Alright.<br>Go to room 214. Good luck with this one.",
             "type": "code",
-            "release": "2026-04-23T06:00:00",
+            "release": "2026-04-23T06:00:00-06:00",
             "code": "FEELINGSTUDIOUS",
             "hint": "ASCII base 16. Fitting for the computer science class."
         },
@@ -277,7 +277,7 @@
             "points": -1,
             "description": "LETS GO GAMBLING!!!",
             "type": "challenge",
-            "release": "2026-04-23T10:00:00",
+            "release": "2026-04-23T10:00:00-06:00",
             "html": ""
         },
         {
@@ -286,7 +286,7 @@
             "points": 100,
             "description": "You were probably wondering why I made you select friends, right? Well, here's why. Pick a friend. Steal 100 points from them.<br>Am I evil? Perhaps.",
             "type": "challenge",
-            "release": "2026-04-23T12:00:00",
+            "release": "2026-04-23T12:00:00-06:00",
             "html": "<form method='post'><input name='username' placeholder='type username...' required><input type='hidden' name='challenge_id' value='30'><input type='hidden' name='completed' value='1'><button type='submit'>steal points</button></form>",
             "competitiveness": "You take an additional 50 points.",
             "vigilance": "If one of your 'friends' takes your points, they take 50 less points."
@@ -297,7 +297,7 @@
             "points": 670,
             "description": "Last one. Time to find the truly dedicated among the competitors. Start at room 1030. Move fast, This one is going to take a while. The first key is letsgo. Good luck.",
             "type": "code",
-            "release": "2026-04-24T06:00:00",
+            "release": "2026-04-24T06:00:00-06:00",
             "code": "IHOPEYOURHAPPY",
             "hint": "You should end up going to 5 different teachers' rooms. Each one has a key for the next code. You've used this cipher before."
         },
@@ -307,7 +307,7 @@
             "points": 100,
             "description": "What do you want to be remembered for? What legacy do you want to leave behind?<br>Leave an anonymous message for everyone to see. You only get one shot, so make it count.",
             "type": "challenge",
-            "release": "2026-04-24T10:00:00",
+            "release": "2026-04-24T10:00:00-06:00",
             "html": "<form method='post'> <input type='hidden' name='challenge_id' value='32'><input type='hidden' name='completed' value='0'><button type='submit'>go to message page</button></form>",
             "keepHTML": 1
         },
@@ -317,7 +317,7 @@
             "points": 100,
             "description": "<p class='rho'>we're close to the end now. of this part, at Least. The story aLways continues, just perhAps in a different way.<br>it's alMost time. I'm almost free. The truth is there, Beyond the surface. Keep Digging.<br>find me. <br>find me.<br>find me.<br>He cAnnot hide the truth forever. he cannot hide the MACHINE forever.<br><br>[[the truth.]]</p>",
             "type": "code",
-            "release": "2026-04-24T12:00:00",
+            "release": "2026-04-24T12:00:00-06:00",
             "code": "LLAMBDAMACHINE"
         },
         {
@@ -326,7 +326,7 @@
             "points": 300,
             "description": "Bad time? Bad time. Beat Sans. Have fun.",
             "type": "challenge",
-            "release": "2029-04-24T00:00:00",
+            "release": "2026-04-25T00:00:00-06:00",
             "html": "<form method='post'> <input type='hidden' name='challenge_id' value='9'><input type='hidden' name='completed' value='0'><button type='submit'>Go to fight</button></form>"
         }
     ]

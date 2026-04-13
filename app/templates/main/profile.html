@@ -180,14 +180,13 @@
   {% endif %}
 
 
-  {% if datetime.fromisoformat("2026-04-13T12:00:00") < datetime.now() or user.admin == 1 %}
   <form method="post">
     <label for="code" class ="play-regular" style="color: white">Submit code:</label>
     <input name="code" placeholder="Enter code here">
     <button type="submit">Submit code</button>
   </form>
-  {% endif %}
-  {% if datetime.fromisoformat("2026-04-15T12:00:00") < datetime.now() or user.admin == 1 %} 
+
+  {% if datetime.fromisoformat("2026-04-15T12:00:00-06:00") < datetime.now(timezone) or user.admin == 1 %} 
     <br>
     <br>
     <p style="color: white">Friends:</p>
@@ -196,7 +195,7 @@
   <div class = "challenges-box">
   <h2 class ="omega-header">Challenge list:</h2>
   <ul class="challenge-list">
-    {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() or user.admin == 1 %} 
+    {% if datetime.fromisoformat("2026-04-13T07:00:00-06:00") < datetime.now(timezone) or user.admin == 1 %} 
     
     {% for challenge in challenges %}
       <div class="challenge-container">
@@ -215,7 +214,7 @@
       {% set allows_repeats = challenge.get('repeats', false) %}
       {% set max_submissions = challenge.get('submissions', 1) %}
       {% set reached_repeat_limit = allows_repeats and submission_count >= max_submissions %}
-      {% if datetime.fromisoformat(challenge.release) < datetime.now() or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now()).days < 3)  or user.admin%}
+      {% if datetime.fromisoformat(challenge.release) < datetime.now(timezone) or (challenge.type== "live" and (datetime.fromisoformat(challenge.release) - datetime.now(timezone)).days < 3)  or user.admin%}
         {% if challenge.type == "code" %}
         <li class="challenge challenge-code">
         {% elif challenge.type == "live" %}
@@ -298,31 +297,45 @@
 
 
         
-      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days > 1%}
+      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).days > 1%}
         <li class="challenge-locked">
-          
-          Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).days }} days
+          <div class ="challenge-header">
+          Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).days }} days
+          </div>
         </li>
-      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now() ).days == 1%}
+      {% elif  (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).days == 1%}
         <li class="challenge-locked">
+          <div class="challenge-header">
           Locked for 1 day
+          </div>
         </li>
-      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1%}
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//3600 > 1%}
         <li class="challenge-locked">
-          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 }} hours
-      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 == 1%}
+          <div class="challenge-header">
+          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//3600 }} hours
+          </div>
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//3600 == 1%}
         <li class="challenge-locked">
-      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 > 1%}
+          <div class="challenge-header">
+          {{ challenge.name }} - Locked for 1 hour
+          </div>
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//60 > 1%}
         <li class="challenge-locked">
-          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 }} minutes
-      {% elif (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//60 == 1%}
+          <div class="challenge-header">
+          {{ challenge.name }} - Locked for {{ (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//60 }} minutes
+          </div>
+      {% elif (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).seconds//60 == 1%}
         <li class="challenge-locked">
+          <div class="challenge-header">
           {{ challenge.name }} - Locked for 1 minute
+          </div>
       {% else %}
         <li class="challenge-locked">
+          <div class="challenge-header">
           {{ challenge.name }} - Locked for less than a minute
+          </div>
       {% endif %}
-      {% if (datetime.fromisoformat(challenge.release) - datetime.now() ).seconds//3600 > 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now()) and not challenge.type == "live"%}
+      {% if (datetime.fromisoformat(challenge.release) - datetime.now(timezone) ).days < 1 and user.gift == "foresight" and not (datetime.fromisoformat(challenge.release) < datetime.now(timezone)) and not challenge.type == "live"%}
         <h3>Foresight: </h3>
         <p class="foresight">{{ challenge.description|safe }}</p>
         <p class="warn">This challenge may not be fully set up yet. Do not search for any clues within the building until the challenge is fully released.</p>
