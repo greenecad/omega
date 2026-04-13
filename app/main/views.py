@@ -18,6 +18,21 @@ main = Blueprint(
 )
 
 
+def parse_release_datetime(release_str, default_tz):
+    if not release_str:
+        return datetime.max.replace(tzinfo=default_tz)
+
+    normalized = release_str.strip()
+    if normalized.endswith('Z'):
+        normalized = normalized[:-1] + '+00:00'
+
+    parsed = datetime.fromisoformat(normalized)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=default_tz)
+
+    return parsed.astimezone(default_tz)
+
+
 @main.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('main/index.html', datetime=datetime)
@@ -31,6 +46,7 @@ def leaderboard():
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    app_timezone = timezone(timedelta(hours=-6))
     db = get_db()
     if request.method == 'POST':
         if 'challenge_id' in request.form:
@@ -231,11 +247,15 @@ def profile():
     db.commit()
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
+
+    for challenge in challenges['list']:
+        challenge['release_dt'] = parse_release_datetime(challenge.get('release'), app_timezone)
     
-    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups, timezone=timezone(timedelta(hours=-6))) 
+    return render_template('main/profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, popups=popups, timezone=app_timezone, current_time=datetime.now(app_timezone)) 
 
 @main.route('/profile/<username>', methods=['GET'])
 def view_profile(username):
+    app_timezone = timezone(timedelta(hours=-6))
     username = parse.unquote(username)
     db = get_db()
     user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
@@ -244,7 +264,11 @@ def view_profile(username):
         return redirect(url_for('main.profile'))
     with open(os.path.join(current_app.static_folder, 'challenges.json'), 'r', encoding='utf-8') as f:
         challenges = json.load(f)
-    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, timezone=timezone(timedelta(hours=-6)))
+
+    for challenge in challenges['list']:
+        challenge['release_dt'] = parse_release_datetime(challenge.get('release'), app_timezone)
+
+    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, timezone=app_timezone, current_time=datetime.now(app_timezone))
 
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required

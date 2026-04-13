@@ -38,10 +38,10 @@
   <div class = "challenges-box">
   <h2 class ="omega-header">Challenge list:</h2>
   <ul class="challenge-list">
-  {% if datetime.fromisoformat("2026-04-13T07:00:00") < datetime.now() %} <!-- ensure this matches the first challenge release date -->
+  {% if datetime.fromisoformat("2026-04-13T07:00:00-06:00") < current_time %} <!-- ensure this matches the first challenge release date -->
     
     {% for challenge in challenges %}
-    {% if datetime.fromisoformat(challenge.release) < datetime.now() %}
+    {% if challenge.release_dt < current_time %}
       <div class="challenge-container">
 
         {% if challenge.type == "code" %}
