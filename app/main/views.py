@@ -772,7 +772,14 @@ def reject_friend_request():
 @main.route('/sans', methods=['GET', 'POST'])
 @login_required
 def sans():
-    return render_template('main/bts/1/index.html')
+    return render_template('main/bts/index.html')
+
+@main.route('/platforming', methods=['GET', 'POST'])
+@login_required
+def platforming():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    return render_template('main/phaser/platforming/index.html', datetime=datetime, user=user)
 
 @main.route('/messages', methods=['GET', 'POST'])
 @login_required

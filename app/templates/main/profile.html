@@ -186,7 +186,7 @@
     <button type="submit">Submit code</button>
   </form>
 
-  {% if datetime.fromisoformat("2026-04-15T12:00:00-06:00") < current_time or user.admin == 1 %} 
+  {% if datetime.fromisoformat("2026-04-14T10:00:00-06:00") < current_time or user.admin == 1 %} 
     <br>
     <br>
     <p style="color: white">Friends:</p>
@@ -237,7 +237,7 @@
           {% endif %}
           <p>{{ challenge.description|safe }}</p>
           {% if challenge.type == "submission" and not ((not allows_repeats and (is_completed or is_pending)) or is_code_completed or reached_repeat_limit) and challenge.name != "Assassination"%}
-            <a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a>
+            <button><a href="{{ url_for('main.submission', challenge_id=challenge.id) }}">Submit here</a></button>
           {% endif %}
           {% if challenge.type == "live" and challenge.event_code != null %}
             <p>Event code: {{ challenge.event_code }}</p>

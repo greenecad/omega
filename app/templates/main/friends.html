@@ -4,10 +4,10 @@
   <h1 class="play-regular omega-header">{% block title %}Friends{% endblock %}</h1>
 {% endblock %}
 {% block content %}
-  <h3 class="play-regular omega-header">{{ user.username }}'s friends</h3>
-  <ul color="white">
+  <h3 class="play-regular omega-header" >{{ user.username }}'s friends</h3>
+  <ul style="color:aliceblue;" class="challenge-list">
   {% if (json.loads(user.friends)['list'] | length)==0 %}
-    <li>No friends to display. Go make some!</li>
+    <li >No friends to display. Go make some!</li>
   {% else %}
     {% for friend in json.loads(user.friends)['list'] %}
       <li>{{ friend }}</li>
@@ -18,8 +18,8 @@
     <input type="text" name="friend" placeholder="Add a friend...">
     <button type="submit">Submit friend request</button>
   </form>
-  <h3 class="play-regular omega-header">Friend Requests</h3>
-  <ul color="white">
+  <h3 class="play-regular omega-header" >Friend Requests</h3>
+  <ul style="color:aliceblue;" class="challenge-list">
   {% if (json.loads(user.friend_requests)['list'] | length )==0 %}
     <li>No friend requests to display.</li>
   {% else %}
@@ -37,4 +37,5 @@
       </li>
     {% endfor %}
   {% endif %}
+  </ul>
 {% endblock %}
