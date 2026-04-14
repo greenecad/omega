@@ -77,7 +77,7 @@
             "name": "I have a life",
             "id": 9,
             "points": 200,
-            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport). Activity must be plainly visible from photo. 200 points per photo.",
+            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport, etc.). Activity must be plainly visible from photo. 200 points per photo.",
             "type": "submission",
             "release": "2026-04-15T14:00:00-06:00",
             "submissions": 2,
@@ -121,7 +121,7 @@
             "description": "Dont fall off for as long as possible. 10 points every ten seconds.",
             "type": "challenge",
             "release": "2026-04-16T12:00:00-06:00",
-            "html": ""
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='13'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>"
         },
         {
             "name": "Wheres Waldo?",

@@ -52,7 +52,7 @@ def profile():
         if 'challenge_id' in request.form:
             taken_points = -1
             #remember to change these when challenges are reordered
-            if request.form.get('challenge_id') == '22': #the button
+            if request.form.get('challenge_id') == '15': #the button
                 user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
                 click_points = user['click_points']
                 print(request.form.to_dict(flat=False))
@@ -64,7 +64,7 @@ def profile():
                     db.commit()
                     flash(f'You earned {(int(new_click_points)-click_points) * 10} points!')
                 return redirect(url_for('main.profile'))
-            elif request.form.get('challenge_id')=='24': #give points
+            elif request.form.get('challenge_id')=='25': #give points
                 username = request.form.get('username')
                 send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
                 if send_user:
@@ -81,7 +81,7 @@ def profile():
                 else:
                     flash('User not found.')
                     return redirect(url_for('main.profile'))
-            elif request.form.get('challenge_id')=='25': #steal points
+            elif request.form.get('challenge_id')=='30': #steal points
                 username = request.form.get('username')
                 send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
                 if send_user:
@@ -108,7 +108,7 @@ def profile():
                 else:
                     flash('User not found.')
                     return redirect(url_for('main.profile'))
-            elif request.form.get('challenge_id') == '28':  #Assassination
+            elif request.form.get('challenge_id') == '18':  #Assassination
                 try:
                     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
                     if user is None:
@@ -183,10 +183,12 @@ def profile():
             user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
             completed = json.loads(user['completed'])
             key = str(challenge_id)
-            if challenge_id == 9 and task_completed == '0':
+            if challenge_id == 999 and task_completed == '0':
                 return redirect(url_for('main.sans'))
-            if challenge_id == 26 and task_completed == '0':
+            if challenge_id == 32 and task_completed == '0':
                 return redirect(url_for('main.messages'))
+            if challenge_id == 13 and task_completed == '0':
+                return redirect(url_for('main.platforming'))
             if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
@@ -791,7 +793,7 @@ def messages():
         if message:
             db.execute('UPDATE user SET umessage = ? WHERE id = ?;', (message, session['user_id']))
             completed = json.loads(user['completed'])
-            completed['challenges']['26'] = ['completed', ''] #change id when challenges are reordered
+            completed['challenges']['32'] = ['completed', ''] #change id when challenges are reordered
             db.execute('UPDATE user SET completed = ? WHERE id = ?;', (json.dumps(completed), session['user_id']))
             db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (100, session['user_id']))
             flash('Challenge completed! Points awarded: ' + str(100))
