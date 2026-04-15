@@ -87,12 +87,12 @@
             "name": "Gimkit",
             "id": 10,
             "points": -1,
-            "description": "Time for the first live event. Game will open at 7:00 pm Wednesday the 15th. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each elimination you get.",
+            "description": "Time for the first live event. Tag game mode. Max 60 people. Game will open at 7:00 pm Wednesday the 15th. Game code will be put here. You MUST join with your Omega Games username as your Gimkit name or you will NOT receive your points. You will get 150 points for being on the winning team, and 10 points for each tag you get.",
             "type": "live",
             "release": "2026-04-15T19:00:00-05:00",
             "competitiveness": "You receive 100 more points for being on the winning team.",
             "vigilance": "You receive 50 points for being on the LOSING team.",
-            "determination": "You receive 10 more points for each elimination you get.",
+            "determination": "You receive 2 more points for each elimination you get.",
             "event_code": null
         },
         {
