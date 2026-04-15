@@ -4,6 +4,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{{ url_for('static', filename='phaser/assets/style.css') }}" />
   <script src="{{ url_for('static', filename='phaser/assets/js/phaser.min.js') }}"></script>
+  <script>
+    determination = ("{{ user.gift }}" == 'determination');
+    console.log("Determination:", determination);
+  </script>
 {% endblock %}
 {% block header %}
   <h1 class="play-regular omega-header">{% block title %}Platforming{% endblock %}</h1>

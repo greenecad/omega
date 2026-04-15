@@ -1,13 +1,10 @@
 export const ASSET_KEYS = Object.freeze({
-  LOGO: 'LOGO',
   PLAYER: 'PLAYER',
+  PLATFORM_SHORT: 'PLATFORM_SHORT',
+  PLATFORM_LONG: 'PLATFORM_LONG'
 });
 
 export const IMAGE_ASSETS = [
-  {
-    assetKey: ASSET_KEYS.LOGO,
-    path: 'static/phaser/assets/images/logo.png',
-  },
   {
     assetKey: ASSET_KEYS.PLAYER,
     path: 'static/phaser/assets/images/slime-16x8.png',
@@ -15,6 +12,15 @@ export const IMAGE_ASSETS = [
       width: 128,
       height: 128
     }
+
+  },
+  {
+    assetKey: ASSET_KEYS.PLATFORM_SHORT,
+    path: 'static/phaser/assets/images/platform-short.png'
+  },
+  {
+    assetKey: ASSET_KEYS.PLATFORM_LONG,
+    path: 'static/phaser/assets/images/platform-long.png'
 
   }
 ];

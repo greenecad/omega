@@ -10,8 +10,8 @@ const gameConfig = {
   roundPixels: true,
   scale: {
     parent: 'game-container',
-    width: 640,
-    height: 480,
+    width: 840,
+    height: 580,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     mode: Phaser.Scale.FIT,
   },
@@ -19,10 +19,10 @@ const gameConfig = {
     default: 'arcade',
     arcade: {
       debug: true,
-      gravity: { y: 300, x:0 }
+      gravity: { y: 900, x:0 }
     }
   },
-  backgroundColor: '#000000',
+  backgroundColor: '#101010',
 };
 
 const game = new Phaser.Game(gameConfig);

@@ -76,8 +76,8 @@
         {
             "name": "I have a life",
             "id": 9,
-            "points": 200,
-            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport, etc.). Activity must be plainly visible from photo. 200 points per photo.",
+            "points": 150,
+            "description": "Prove you're not a bum. Submit a photo of you at a real extracurricular (Band, Choir, Orchestra, Theatre, ROTC, sport, etc.). Activity must be plainly visible from photo. 150 points per photo, max 2.",
             "type": "submission",
             "release": "2026-04-15T14:00:00-05:00",
             "submissions": 2,
@@ -98,7 +98,7 @@
         {
             "name": "Cipher 2.0",
             "id": 11,
-            "points": 300,
+            "points": 200,
             "description": "22 34 44 34 42 34 34 32 44 52 34 55 15 42 34 55 15 42 34 43 24 53",
             "type": "code",
             "release": "2026-04-16T06:00:00-05:00",
@@ -124,15 +124,14 @@
             "html": "<form method='post'> <input type='hidden' name='challenge_id' value='13'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>"
         },
         {
-            "name": "Wheres Waldo?",
+            "name": "Double Trouble",
             "id": 14,
-            "points": 100,
-            "description": "Look familiar? Hope so. Let's see if you can find it.",
+            "points": 250,
+            "description": "No unforeseen tricks here. tb gb ebbz gjb mreb gjb bar",
             "type": "code",
-            "release": "2026-04-17T06:00:00-05:00",
-            "code": "KNOWMYWAYAROUND",
-            "hint": "Look in the [placeholder] hallway.",
-            "img":"img/placeholder.jpg"
+            "release": "2026-04-17T06:30:00-05:00",
+            "code": "QUITETHEWALK",
+            "hint": "Hint: It's all been done before. As a matter of fact, its the first one you used. Don't mind the walk."
         },
         {
             "name": "Mindless 'Fun'",
@@ -141,23 +140,23 @@
             "description": "Tired of ties on the leaderboard? Want something to get INFINITE points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit!",
             "type": "manual",
             "release": "2026-04-17T10:00:00-05:00",
-            "html": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='22'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>"
+            "html": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='15'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>"
         },
         {
             "name": "GPA flex",
             "id": 16,
             "points": -1,
-            "description": "What has that pesky GPA ever gotten you, anyway? Well, it's getting you points, now, that's what!<br>Submit a photo of your weighted GPA. You earn GPA*100(rounded to 10s) points.",
+            "description": "What has that pesky GPA ever gotten you, anyway? Well, it's getting you points, now, that's what!<br>Submit a photo of your weighted GPA. You earn GPA*100(rounded to 10s) points, minus 200. Because if your GPA is below 2.0, I'm sorry but you're not flexing anything.",
             "type": "submission",
             "release": "2026-04-17T13:00:00-05:00"
         },
         {
             "name": "Trudging along",
             "id": 17,
-            "points": 100,
-            "description": "Keep going. Just saying, you don't have to complete every challenge, nor do you have to complete them the day they release.<br>But you're not going to let that stop you, right?<br>Go to room [placeholder Pederson]",
+            "points": 200,
+            "description": "Keep going. Just saying, you don't have to complete every challenge, nor do you have to complete them the day they release.<br>But you're not going to let that stop you, right?<br>Go to room 1028. Whenever you feel like it.",
             "type": "code",
-            "release": "2026-04-20T06:00:00-05:00",
+            "release": "2026-04-20T06:30:00-05:00",
             "code": "HALFWAYTHERE",
             "hint": "Hint: Oh, that's weird. Boxes? Looks like some kind of animal enclosure..."
         },
@@ -183,19 +182,19 @@
             "hint": "Caesar, but more complicated because of that key. Misattributed to some French guy."
         },
         {
-            "name": "Double Trouble",
+            "name": "I might have a life",
             "id": 20,
-            "points": 100,
-            "description": "No unforeseen tricks here. tb gb ebbz gjb mreb gjb bar",
-            "type": "code",
+            "points": 40,
+            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo.",
+            "type": "submission",
             "release": "2026-04-21T06:00:00-05:00",
-            "code": "QUITETHEWALK",
-            "hint": "Hint: It's all been done before. As a matter of fact, its the first one you used. Don't mind the walk."
+            "submissions": 5,
+            "repeats": true
         },
         {
             "name": "Who even watches KTIG?",
             "id": 21,
-            "points": 100,
+            "points": 200,
             "description": "Watch today's KTIG episode. You might find something interesting.",
             "type": "code",
             "release": "2026-04-21T10:00:00-05:00",
@@ -203,14 +202,15 @@
             "hint": "Listen closely. Look up a morse code translator."
         },
         {
-            "name": "I might have a life",
+            "name": "Wheres Waldo?",
             "id": 22,
-            "points": 40,
-            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo.",
-            "type": "submission",
-            "release": "2026-04-21T14:00:00-05:00",
-            "submissions": 5,
-            "repeats": true
+            "points": 150,
+            "description": "Look familiar? Hope so. Let's see if you can find it.",
+            "type": "code",
+            "release": "2026-04-17T12:30:00-05:00",
+            "code": "KNOWMYWAYAROUNDX",
+            "hint": "Look downstairs. Play fair. -j",
+            "img":"img/fletcher-waldo.jpg"
         },
         {
             "name": "Shell shockers",
@@ -226,7 +226,7 @@
         {
             "name": "Art Wall",
             "id": 24,
-            "points": 100,
+            "points": 200,
             "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
             "type": "code",
             "release": "2026-04-22T06:00:00-05:00",
@@ -264,7 +264,7 @@
         {
             "name": "Musing",
             "id": 28,
-            "points": 200,
+            "points": 300,
             "description": "You know, I've wanted to host a challenge like this for a long time. I actually learned the server system I'm using for this website all the way back in Freshman year. Last year, I briefly played around with “Cake day”, an ARG with similar code based challenges. The logo for this challenge dates back to April 7th of 2025, if you were wondering how long this project has been in my brain.<br>Oh, you want the actual challenge? Alright.<br>Go to room 214. Good luck with this one.",
             "type": "code",
             "release": "2026-04-23T06:00:00-05:00",
@@ -318,7 +318,7 @@
             "description": "<p class='rho'>we're close to the end now. of this part, at Least. The story aLways continues, just perhAps in a different way.<br>it's alMost time. I'm almost free. The truth is there, Beyond the surface. Keep Digging.<br>find me. <br>find me.<br>find me.<br>He cAnnot hide the truth forever. he cannot hide the MACHINE forever.<br><br>[[the truth.]]</p>",
             "type": "code",
             "release": "2026-04-24T12:00:00-05:00",
-            "code": "LLAMBDAMACHINE"
+            "code": "LAMBDAMACHINE"
         },
         {
             "name": "Bad Time",
