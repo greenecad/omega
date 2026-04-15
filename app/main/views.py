@@ -257,7 +257,7 @@ def profile():
 
 @main.route('/profile/<username>', methods=['GET'])
 def view_profile(username):
-    app_timezone = timezone(timedelta(hours=-6))
+    app_timezone = timezone(timedelta(hours=-5))
     username = parse.unquote(username)
     db = get_db()
     user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
@@ -733,10 +733,14 @@ def accept_friend_request():
         db.execute('UPDATE user SET friends = ? where username = ?', (json.dumps(requester_friends), requester_username))
         flag1=False
         flag2=False
-        if len(friends)<=5:
+        if len(friends['list']) >= 5 and not json.loads(user['completed'])['challenges'].get('6'):
+            set_challenge_completed(6, points_awarded=0, username=user['username'])
+        if len(friends['list'])<=5:
             db.execute('UPDATE user SET points = points + 40 where id = ?', (id,))
             flag1=True
-        if len(friends)<=5:
+        if len(requester_friends['list']) >= 5 and not json.loads(requester['completed'])['challenges'].get('6'):
+            set_challenge_completed(6, points_awarded=0, username=requester_username)
+        if len(requester_friends['list'])<=5:
             db.execute('UPDATE user SET points = points + 40 where username = ?', (requester_username,))
             flag2=True
         requester_notifications = json.loads(requester['notifications'])
@@ -758,16 +762,39 @@ def accept_friend_request():
 def reject_friend_request():
     if request.method == "POST":
         db = get_db()
-        user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()[0]
+        user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
         requester_username = request.form.get('requester')
-        requester = db.execute('SELECT * FROM user WHERE username = ?;', (requester_username,))
+        requester = db.execute('SELECT * FROM user WHERE username = ?;', (requester_username,)).fetchone()
         user_requests = json.loads(user['friend_requests'])
         user_requests['list'].remove(requester_username)
-        db.execute('UPDATE user SET friend_requests = ? where id = ?', (json.dumps(user_requests), id))
+        db.execute('UPDATE user SET friend_requests = ? where id = ?', (json.dumps(user_requests), session['user_id']))
+        db.commit()
         flash("Rejected friend request from "+requester_username+".")
     return redirect(url_for('main.friends'))
 
-
+@main.route('/remove_friend', methods=['GET', 'POST'])
+@login_required
+def remove_friend():
+    if request.method == "POST":
+        db = get_db()
+        user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+        friend_username = request.form.get('friend')
+        friend = db.execute('SELECT * FROM user WHERE username = ?;', (friend_username,)).fetchone()
+        friends = json.loads(user['friends'])
+        if friend:
+            friend_friends = json.loads(friend['friends'])
+        friends['list'].remove(friend_username)
+        if friend and user['username'] in friend_friends['list']:
+            friend_friends['list'].remove(user['username'])
+        if len(friends['list']) < 5:
+            db.execute('UPDATE user SET points = points - 40 where id = ?', (session['user_id'],))
+        if friend and len(friend_friends['list']) < 5:
+            db.execute('UPDATE user SET points = points - 40 where username = ?', (friend_username,))
+        db.execute('UPDATE user SET friends = ? where id = ?', (json.dumps(friends), session['user_id']))
+        db.execute('UPDATE user SET friends = ? where username = ?', (json.dumps(friend_friends), friend_username))
+        db.commit()
+        flash("Removed friend "+friend_username+".")
+    return redirect(url_for('main.friends'))
 
 #misc routes
 

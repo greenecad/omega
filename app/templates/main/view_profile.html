@@ -42,6 +42,21 @@
   {% if datetime.fromisoformat("2026-04-13T07:00:00-06:00") < current_time %} <!-- ensure this matches the first challenge release date -->
     
     {% for challenge in challenges %}
+    {% set completed_data = json.loads(user.completed) %}
+      {% set completed_challenges = completed_data['challenges'] %}
+      {% set completed_codes = completed_data['codes'] %}
+      {% set challenge_key = challenge.id | string %}
+      {% set challenge_entry = completed_challenges.get(challenge_key) %}
+      {% set has_submission_entries = challenge_entry is sequence and challenge_entry is not string and (challenge_entry | length > 0) and (challenge_entry[0] is sequence) %}
+      {% set submission_status = challenge_entry[0][0] if has_submission_entries else '' %}
+      {% set is_code_completed = challenge.type == "code" and challenge.code in completed_codes %}
+      {% set is_challenge_completed = challenge_entry is sequence and challenge_entry is not string and (challenge_entry | length > 0) and challenge_entry[0] == 'completed' %}
+      {% set is_pending = submission_status == 'pending' %}
+      {% set is_completed = is_code_completed or is_challenge_completed or (submission_status == 'completed') %}
+      {% set submission_count = challenge_entry | length if has_submission_entries else 0 %}
+      {% set allows_repeats = challenge.get('repeats', false) %}
+      {% set max_submissions = challenge.get('submissions', 1) %}
+      {% set reached_repeat_limit = allows_repeats and submission_count >= max_submissions %}
     {% if challenge.release_dt < current_time %}
       <div class="challenge-container">
 
@@ -58,13 +73,12 @@
           {% else %}
             {{ challenge.name }} - variable points
           {% endif %}
-          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'completed') or (challenge.type== "code" and challenge.code in json.loads(user.completed)['codes']) %}
+          {% if (not allows_repeats and is_completed) or reached_repeat_limit%}
             <p>Completed!</p>
+          {% elif is_pending %}
+            <p>Submission pending review.</p>
           {% else %}
             <p>Not completed yet.</p>
-          {% endif %}
-          {% if ((challenge.id | string) in json.loads(user.completed)['challenges'] and json.loads(user.completed)['challenges'][challenge.id | string][0] == 'pending') %}
-            <p>Submission pending review.</p>
           {% endif %}
           </div>
         </li>

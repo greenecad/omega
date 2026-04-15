@@ -10,7 +10,12 @@
     <li >No friends to display. Go make some!</li>
   {% else %}
     {% for friend in json.loads(user.friends)['list'] %}
-      <li>{{ friend }}</li>
+      <li>{{ friend }}
+        <form style="display:inline;" method="post" action="{{ url_for('main.remove_friend') }}">
+          <input type="hidden" name="friend" value="{{ friend }}">
+          <button type="submit">Remove</button>
+        </form>
+      </li>
     {% endfor %}
   {% endif %}
   </ul>
