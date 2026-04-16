@@ -1,7 +1,7 @@
 import Phaser from '../lib/phaser.js';
 import { SCENE_KEYS } from '../common/scene-keys.js';
 import { ASSET_KEYS } from '../common/assets.js';
-
+//let time_elapsed
 class CloudPlatform extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, group) {
     super(scene, x, y, texture);
@@ -84,7 +84,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.willJump = false;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
   } 
-
+ 
   update(time) {
 
     this.body.setVelocityX(0); 
@@ -193,6 +193,16 @@ export class GameScene extends Phaser.Scene {
       immovable: true,
       allowGravity: false
     });
+    this.killPlatform = this.physics.add.staticSprite(0, 578, ASSET_KEYS.PLATFORM_LONG).setScale(5).setOrigin(0, 0);
+    this.killPlatform.refreshBody();
+    this.physics.add.collider(this.player, this.killPlatform, () => {
+      //this.player.destroy();
+      this.scene.pause();
+      const submitButton = document.getElementById('submit-button');
+      if (submitButton) {
+        submitButton.style.display = 'block';
+      }
+    });
     let key;
     if (determination){
       key= ASSET_KEYS.PLATFORM_LONG;
@@ -204,8 +214,8 @@ export class GameScene extends Phaser.Scene {
     //startPlatform.setScale(5);
     this.tweens.add({
       targets: startPlatform,
-      x: -600,
-      duration: 6000,
+      x: -800,
+      duration: 8000,
       onUpdate: (tween, target) => {
         target.vx = target.body.position.x - target.previousX;
         target.previousX = target.body.position.x;     
@@ -226,7 +236,10 @@ export class GameScene extends Phaser.Scene {
       callback: () => {
         var y = Phaser.Math.Between(175, 500);
         var platform = new CloudPlatform(this, 800, y, key, this.platforms);
-        platform.setScale(.15);
+        platform.setScale(.10);
+        if (determination){
+          platform.setScale(.15);
+        }
         this.tweens.add({
           targets: platform,
           x: -200,
@@ -238,26 +251,28 @@ export class GameScene extends Phaser.Scene {
           onComplete: () => {
             platform.destroy();
             if (time > 1000) {
-              time -= 10;
+              time -= 55;
             }
             if (time < 3000 && time > 1000) {
-              delay -= 12;
+              delay -= 40;
             }
           }
         });
       },
       loop: true
     });
-    this.time_elapsed = 0;
+    window.time_elapsed = 0;
     this.time_text = this.add.text(10, 10, 'Time: 0', { font: '20px Arial', fill: '#ffffff' });
+    this.score_text = this.add.text(10, 40, 'Score: 0', { font: '20px Arial', fill: '#ffffff' }); 
     if(determination)
-      this.add.text(10, 40, 'you feel a sense of DETERMINATION.', { font: '20px Arial', fill: '#ffffff' });
+      this.add.text(10, 60, 'you feel a sense of DETERMINATION.', { font: '20px Arial', fill: '#ffffff' });
   }
   update(){
     this.player.update(this.time.now);
     this.player.preRender(this.time.now);
-    this.time_elapsed += this.game.loop.delta;
-    this.time_text.setText('Time: ' + Math.floor(this.time_elapsed / 1000));
+    window.time_elapsed += this.game.loop.delta;
+    this.time_text.setText('Time: ' + Math.floor(window.time_elapsed / 1000));
+    this.score_text?.setText('Score: ' + Math.floor(Math.floor(window.time_elapsed / 1000) / 10)*10);
   }
   genAnims(){
     this.anims.create({
@@ -274,3 +289,14 @@ export class GameScene extends Phaser.Scene {
     });
   }
 }
+
+let submitScore = () => {
+  let seconds = Math.floor(window.time_elapsed / 1000);
+  let score = Math.floor(seconds / 10)*10;
+  console.log('Submitting score:', score);
+  document.getElementById("score-input").value = score;
+  document.getElementById("score-form").submit();
+}
+
+// Make it available globally for the onclick handler
+window.submitScore = submitScore;

@@ -810,6 +810,27 @@ def platforming():
     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
     return render_template('main/phaser/platforming/index.html', datetime=datetime, user=user)
 
+@main.route('/submit-score', methods=['POST'])
+@login_required
+def submit_score():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    score_str = request.form.get('score', '0').strip()
+    print(f"Received score submission: '{score_str}' from user {user['username']}")
+    score = int(score_str) if score_str else 0
+    game = request.form.get('game')
+    if game == 'platforming':
+        hi_score = int(user['platform_hi'])
+        if hi_score is None or score > hi_score:
+            db.execute('UPDATE user SET platform_hi = ? WHERE id = ?;', (score, session['user_id']))
+            points_earned = score-hi_score
+            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (points_earned, session['user_id']))
+            flash("New high score! Points earned: " + str(points_earned))
+            db.commit()
+        else:
+            flash("You didn't beat your record. No new points earned. Current highest score: " + str(hi_score))
+    return redirect(url_for('main.platforming'))
+
 @main.route('/messages', methods=['GET', 'POST'])
 @login_required
 def messages():

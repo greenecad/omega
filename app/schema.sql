@@ -23,5 +23,6 @@ CREATE TABLE user (
   umessage TEXT,
   target TEXT,
   targeted_by TEXT,
-  target_pic TEXT
+  target_pic TEXT,
+  platform_hi INTEGER DEFAULT 0
 );

@@ -93,7 +93,7 @@
             "competitiveness": "You receive 100 more points for being on the winning team.",
             "vigilance": "You receive 50 points for being on the LOSING team.",
             "determination": "You receive 2 more points for each elimination you get.",
-            "event_code": null
+            "event_code": "XDHLAS"
         },
         {
             "name": "Cipher 2.0",
@@ -118,10 +118,11 @@
             "name": "Platforming",
             "id": 13,
             "points": -1,
-            "description": "Dont fall off for as long as possible. 10 points every ten seconds.",
+            "description": "Dont fall off for as long as possible. 10 points every ten seconds. Only your highest score counts.",
             "type": "challenge",
             "release": "2026-04-16T12:00:00-05:00",
-            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='13'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>"
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='13'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>",
+            "determination": "The platforms are larger."
         },
         {
             "name": "Double Trouble",
@@ -210,7 +211,7 @@
             "release": "2026-04-17T12:30:00-05:00",
             "code": "KNOWMYWAYAROUNDX",
             "hint": "Look downstairs. Play fair. -j",
-            "img":"img/fletcher-waldo.jpg"
+            "img": "img/fletcher-waldo.jpg"
         },
         {
             "name": "Shell shockers",
@@ -265,7 +266,7 @@
             "name": "Musing",
             "id": 28,
             "points": 300,
-            "description": "You know, I've wanted to host a challenge like this for a long time. I actually learned the server system I'm using for this website all the way back in Freshman year. Last year, I briefly played around with “Cake day”, an ARG with similar code based challenges. The logo for this challenge dates back to April 7th of 2025, if you were wondering how long this project has been in my brain.<br>Oh, you want the actual challenge? Alright.<br>Go to room 214. Good luck with this one.",
+            "description": "You know, I've wanted to host a challenge like this for a long time. I actually learned the server system I'm using for this website all the way back in Freshman year. Last year, I briefly played around with \u201cCake day\u201d, an ARG with similar code based challenges. The logo for this challenge dates back to April 7th of 2025, if you were wondering how long this project has been in my brain.<br>Oh, you want the actual challenge? Alright.<br>Go to room 214. Good luck with this one.",
             "type": "code",
             "release": "2026-04-23T06:00:00-05:00",
             "code": "FEELINGSTUDIOUS",

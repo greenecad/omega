@@ -13,7 +13,13 @@
   <h1 class="play-regular omega-header">{% block title %}Platforming{% endblock %}</h1>
 {% endblock %}
 {% block content %}
+  <p class='play-regular' style="color:aliceblue">Score to beat: {{ user.platform_hi }}</p>
   <div class="container" id="game-container"></div>
+  <form id="score-form" action="{{ url_for('main.submit_score') }}" method="post">
+    <input type="hidden" name="score" id="score-input">
+    <input type="hidden" name="game" value="platforming">
+    <button id="submit-button" class="play-regular" style="display:none;" onclick="submitScore()">Submit Score</button>
+  </form>
   <script src="{{ url_for('static', filename='phaser/src/main.js') }}" type="module"></script>
 {% endblock %}
 

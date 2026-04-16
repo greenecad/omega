@@ -73,7 +73,9 @@
           {% else %}
             {{ challenge.name }} - variable points
           {% endif %}
-          {% if (not allows_repeats and is_completed) or reached_repeat_limit%}
+          {% if challenge.name == "Platforming" %}
+            <p>High score: {{ user.platform_hi }}</p>
+          {% elif (not allows_repeats and is_completed) or reached_repeat_limit%}
             <p>Completed!</p>
           {% elif is_pending %}
             <p>Submission pending review.</p>

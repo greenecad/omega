@@ -242,6 +242,9 @@
           {% if challenge.type == "live" and challenge.event_code != null %}
             <p>Event code: {{ challenge.event_code }}</p>
           {% endif %}
+          {% if challenge.name == "Platforming" %}
+            <p>High score: {{ user.platform_hi }}</p>
+          {% endif %}
           {% if challenge.img and not is_completed %}
             <div class="challenge-html">
               <img src="{{ url_for('static', filename=challenge.img) }}" alt="Challenge Image" style="max-width:40vw; height:auto;">
