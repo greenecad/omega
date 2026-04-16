@@ -15,7 +15,7 @@ downloads/
 eggs/
 .eggs/
 lib/
-!phaser/src/lib/
+!app/static/phaser/src/lib/
 lib64/
 parts/
 sdist/
