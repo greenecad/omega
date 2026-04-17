@@ -234,9 +234,9 @@ export class GameScene extends Phaser.Scene {
     this.time.addEvent({
       delay: delay,
       callback: () => {
-        var y = Phaser.Math.Between(175, 500);
+        var y = Phaser.Math.Between(200, 500);
         var platform = new CloudPlatform(this, 800, y, key, this.platforms);
-        platform.setScale(.10);
+        platform.setScale(.12);
         if (determination){
           platform.setScale(.15);
         }
@@ -252,9 +252,7 @@ export class GameScene extends Phaser.Scene {
             platform.destroy();
             if (time > 1000) {
               time -= 55;
-            }
-            if (time < 3000 && time > 1000) {
-              delay -= 40;
+              delay -= 20;
             }
           }
         });

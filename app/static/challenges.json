@@ -98,7 +98,7 @@
         {
             "name": "Cipher 2.0",
             "id": 11,
-            "points": 200,
+            "points": 300,
             "description": "22 34 44 34 42 34 34 32 44 52 34 55 15 42 34 55 15 42 34 43 24 53",
             "type": "code",
             "release": "2026-04-16T06:00:00-05:00",
@@ -208,7 +208,7 @@
             "points": 150,
             "description": "Look familiar? Hope so. Let's see if you can find it.",
             "type": "code",
-            "release": "2026-04-17T12:30:00-05:00",
+            "release": "2026-04-21T12:30:00-05:00",
             "code": "KNOWMYWAYAROUNDX",
             "hint": "Look downstairs. Play fair. -j",
             "img": "img/fletcher-waldo.jpg"
