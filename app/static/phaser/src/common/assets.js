@@ -1,7 +1,8 @@
 export const ASSET_KEYS = Object.freeze({
   PLAYER: 'PLAYER',
   PLATFORM_SHORT: 'PLATFORM_SHORT',
-  PLATFORM_LONG: 'PLATFORM_LONG'
+  PLATFORM_LONG: 'PLATFORM_LONG',
+  TARGET: 'TARGET'
 });
 
 export const IMAGE_ASSETS = [
@@ -22,5 +23,9 @@ export const IMAGE_ASSETS = [
     assetKey: ASSET_KEYS.PLATFORM_LONG,
     path: 'static/phaser/assets/images/platform-long.png'
 
+  },
+  {
+    assetKey: ASSET_KEYS.TARGET,
+    path: 'static/phaser/assets/images/target.png'
   }
 ];

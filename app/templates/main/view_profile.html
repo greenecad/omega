@@ -31,7 +31,7 @@
           <p class="play-regular" style="font-size:1.2em">User not currently participating in the Omega Games.</p>
         {% endif %}
         <br>
-        <p>Slices of cake: 1</p>
+        <p class="play-regular">Slices of cake: 1</p>
       </div>
     </div>
   </div>
@@ -76,6 +76,8 @@
           {% endif %}
           {% if challenge.name == "Platforming" %}
             <p>High score: {{ user.platform_hi }}</p>
+          {% elif challenge.name == "Target Practice" %}
+            <p>High score: {{ user.target_hi }}</p>
           {% elif (not allows_repeats and is_completed) or reached_repeat_limit%}
             <p>Completed!</p>
           {% elif is_pending %}

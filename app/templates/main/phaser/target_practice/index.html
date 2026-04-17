@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block js %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='phaser/assets/style.css') }}" />
+  <script src="{{ url_for('static', filename='phaser/assets/js/phaser.min.js') }}"></script>
+  <script>
+    determination = ("{{ user.gift }}" == 'determination');
+    console.log("Determination:", determination);
+  </script>
+{% endblock %}
+{% block header %}
+  <h1 class="play-regular omega-header">{% block title %}Target Practice{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+  <p class='play-regular' style="color:aliceblue">Score to beat: {{ user.target_hi }}</p>
+  <div class="container" id="game-container"></div>
+  <form id="score-form" action="{{ url_for('main.submit_score') }}" method="post">
+    <input type="hidden" name="score" id="score-input">
+    <input type="hidden" name="game" value="target_practice">
+    <button id="submit-button" class="play-regular" style="display:none;" onclick="submitScore()">Submit Score</button>
+  </form>
+  <script src="{{ url_for('static', filename='phaser/src/main_t.js') }}" type="module"></script>
+{% endblock %}

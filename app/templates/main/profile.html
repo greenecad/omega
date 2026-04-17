@@ -62,7 +62,7 @@
           <p class="play-regular" style="font-size:1.2em">You have chosen not to participate in the Omega Games. Your account will not be visible on the leaderboard. If you wish to change this, please contact Omega directly.</p>
         {% endif %}
         <br>
-        <p>Slices of cake: 1</p>
+        <p class="play-regular">Slices of cake: 1</p>
       </div>
     </div>
   </div>
@@ -247,6 +247,9 @@
           {% if challenge.name == "Platforming" %}
             <p>High score: {{ user.platform_hi }}</p>
           {% endif %}
+          {% if challenge.name == "Target Practice" %}
+            <p>High score: {{ user.target_hi }}</p>
+          {% endif %}
           {% if challenge.img and not is_completed %}
             <div class="challenge-html">
               <img src="{{ url_for('static', filename=challenge.img) }}" alt="Challenge Image" style="max-width:40vw; height:auto;">
@@ -261,7 +264,7 @@
           {% if challenge.name == "Assassination"%}
             {% if not user.target %}
             <form method='post'> 
-              <input type='hidden' name='challenge_id' value='28'>
+              <input type='hidden' name='challenge_id' value='18'>
               <input type='hidden' name='completed' value='0'>
               <button type='submit'>Get Target</button>
             </form>

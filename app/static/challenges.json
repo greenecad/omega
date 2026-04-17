@@ -165,7 +165,7 @@
             "name": "Assassination",
             "id": 18,
             "points": 600,
-            "description": "Feels familiar.<br>You are assigned a target. You will be given the name, grade level, and photo of the target. You must submit a photo of you with your hand on your target's shoulder. Your target is notified they have been selected but not the identity of their assassin.<br>Find them.",
+            "description": "Feels familiar.<br>You are assigned a target. You will be given the name and a photo of your target. You must submit a photo of you with your hand on your target's shoulder, or at least close to it. Your target is notified they have been selected but not the identity of their assassin.<br>Find them.",
             "type": "submission",
             "release": "2026-04-20T07:00:00-05:00",
             "determination": "You only have to submit a photo you have taken of your target. Your hand does not have to be on their shoulder.",
@@ -260,7 +260,8 @@
             "description": "Click as many targets as you can before time runs out. +10 points per target.",
             "type": "challenge",
             "release": "2026-04-22T13:00:00-05:00",
-            "html": ""
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='27'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>",
+            "determination": "Targets are larger."
         },
         {
             "name": "Musing",

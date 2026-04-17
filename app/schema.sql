@@ -24,5 +24,6 @@ CREATE TABLE user (
   target TEXT,
   targeted_by TEXT,
   target_pic TEXT,
-  platform_hi INTEGER DEFAULT 0
+  platform_hi INTEGER DEFAULT 0,
+  target_hi INTEGER DEFAULT 0
 );

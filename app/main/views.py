@@ -189,6 +189,8 @@ def profile():
                 return redirect(url_for('main.messages'))
             if challenge_id == 13 and task_completed == '0':
                 return redirect(url_for('main.platforming'))
+            if challenge_id == 27 and task_completed == '0':
+                return redirect(url_for('main.target_practice'))
             if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
@@ -810,6 +812,12 @@ def platforming():
     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
     return render_template('main/phaser/platforming/index.html', datetime=datetime, user=user)
 
+@main.route('/target_practice', methods=['GET', 'POST'])
+@login_required
+def target_practice():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    return render_template('main/phaser/target_practice/index.html', datetime=datetime, user=user)
 @main.route('/submit-score', methods=['POST'])
 @login_required
 def submit_score():
@@ -829,7 +837,21 @@ def submit_score():
             db.commit()
         else:
             flash("You didn't beat your record. No new points earned. Current highest score: " + str(hi_score))
-    return redirect(url_for('main.platforming'))
+        return redirect(url_for('main.platforming'))
+    elif game == 'target_practice':
+        hi_score = int(user['target_hi'])
+        if hi_score is None or score > hi_score:
+            db.execute('UPDATE user SET target_hi = ? WHERE id = ?;', (score, session['user_id']))
+            points_earned = score-hi_score
+            db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (points_earned, session['user_id']))
+            flash("New high score! Points earned: " + str(points_earned))
+            db.commit()
+        else:
+            flash("You didn't beat your record. No new points earned. Current highest score: " + str(hi_score))
+        return redirect(url_for('main.target_practice'))
+    return redirect(url_for('main.profile'))
+
+
 
 @main.route('/messages', methods=['GET', 'POST'])
 @login_required
