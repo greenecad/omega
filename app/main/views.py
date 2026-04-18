@@ -53,6 +53,8 @@ def profile():
             taken_points = -1
             #remember to change these when challenges are reordered
             if request.form.get('challenge_id') == '15': #the button
+                flash('Challenge currently unavailable. Stay tuned for updates!')
+                return redirect(url_for('main.profile')) 
                 user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
                 click_points = user['click_points']
                 print(request.form.to_dict(flat=False))
