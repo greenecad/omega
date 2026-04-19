@@ -1,0 +1,10 @@
+{% extends "dark_base.html" %}
+
+{% block content %}
+    <img src="{{ url_for('static', filename='img/dark/eye.png') }}" alt="eye" class="eye-image">
+    <p class="w">[[NYJNLFJNGPUVAT]]</p>
+    <form method="post" action="{{url_for('dark.collect_tape')}}">
+        <input type="hidden" name="tape_id" value="0">
+        <button type="submit">get tape</button>
+    </form>
+{% endblock %}

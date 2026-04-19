@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title class="play-regular">Error retrieving title</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dark_style.css') }}">
+  {% block js %}{% endblock %}
+</head>
+<body style="background-color: rgb(0, 0, 0);">
+    <!--darker darker yet darker-->
+    <!--how nice of you to join me-->
+    {% block content %}{% endblock %}
+</body>

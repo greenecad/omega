@@ -25,5 +25,6 @@ CREATE TABLE user (
   targeted_by TEXT,
   target_pic TEXT,
   platform_hi INTEGER DEFAULT 0,
-  target_hi INTEGER DEFAULT 0
+  target_hi INTEGER DEFAULT 0,
+  tapes TEXT DEFAULT '{"list": []}'
 );

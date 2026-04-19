@@ -377,11 +377,15 @@ def admin():
             try:
                 column_name = request.form.get('column_name')
                 column_type = request.form.get('column_type')
-                db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type};')
+                if request.form.get('column_default') is None or request.form.get('column_default').strip() == '':
+                    db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type};')
+                    flash(f'Added column {column_name} of type {column_type} to user table.')
+
                 if column_default := request.form.get('column_default'):
-                    db.execute(f'UPDATE user SET {column_name} = ?;', (column_default,))
+                    db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type} DEFAULT ?;', (column_default,))
+                    flash(f'Added column {column_name} of type {column_type} to user table with default {column_default}.')
+
                 db.commit()
-                flash(f'Added column {column_name} of type {column_type} to user table.')
             except Exception as e:
                 flash('Error adding column: ' + str(e))
         elif action == 'reset_user':

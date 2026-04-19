@@ -1,0 +1,36 @@
+{% extends "dark_base.html"  %}
+{% block js %}
+<script>
+    function toggleTape(index) {
+        var tape = document.getElementById("tape-" + index);
+        if (tape.style.display === "none") {
+            tape.style.display = "block";
+            var button = document.getElementById("button-" + index);
+            button.textContent = "close log";
+        } else {
+            tape.style.display = "none";
+            var button = document.getElementById("button-" + index);
+            button.textContent = "open log";
+        }
+    }
+</script>
+{% endblock %}
+{% block content %}
+    <h3>tapes collected</h3>
+    <div class = "tape-collection">
+        {% if tapes|length > 0 %}
+        {% for tape in tapes %}
+            <div class="tape">
+                <p>tape {{ loop.index }}</p>
+                <button class="dark-button" id="button-{{ loop.index }}" onclick="toggleTape({{ loop.index }})">open log</button>
+                <div id = "tape-{{ loop.index }}" style="display: none;">
+                    {{ tape|safe }}
+                </div>
+                <br>
+            </div>
+        {% endfor %}
+        {% else %}
+            <p>you haven't collected any tapes yet. Find them.</p>
+        {% endif %}
+    </div>
+{% endblock %}

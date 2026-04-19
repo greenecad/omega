@@ -138,7 +138,7 @@
             "name": "Mindless 'Fun'",
             "id": 15,
             "points": -1,
-            "description": "Tired of ties on the leaderboard? Want something to get INFINITE points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit!",
+            "description": "Tired of ties on the leaderboard? Want something to get infinite* points? Have lots of time to waste? Well boy do I have the thing for you! Press the button! Get points! ????! Profit! <br><br>*points are not actually infinite.",
             "type": "manual",
             "release": "2026-04-17T10:00:00-05:00",
             "HTML": "<button id='clicker'>click me</button><p>Clicks: 0</p><p>clicks to next ten points: 1</p><p>points earned: 0</p><form method='post' id='clicker-form'><input type='hidden' name='challenge_id' value='15'><input type='hidden' name='completed' value='0'><button type='submit'>cash in points</button></form>",
@@ -215,10 +215,10 @@
             "img": "img/fletcher-waldo.jpg"
         },
         {
-            "name": "Shell shockers",
+            "name": "deadshot",
             "id": 23,
             "points": -1,
-            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at 7:00 pm Tuesday the 21st. You get 10 points per kill. As before, you MUST set your shell shockers name to your Omega Games username and remain until the end of the 20 minute round to get your points.",
+            "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at 7:00 pm Tuesday the 21st. You get 10 points per kill. As before, you MUST set your name to your Omega Games username and remain until the end of the 10 minute round to get your points. You can practice at deadshot.io. I would reccomend it.",
             "type": "live",
             "release": "2026-04-21T17:00:00-05:00",
             "competitiveness": "You get an additional 2 points per kill. Go crazy.",
@@ -281,7 +281,7 @@
             "description": "LETS GO GAMBLING!!!",
             "type": "challenge",
             "release": "2026-04-23T10:00:00-05:00",
-            "html": ""
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='29'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>"
         },
         {
             "name": "Burnt Bridges",

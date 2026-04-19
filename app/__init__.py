@@ -22,5 +22,7 @@ def create_app(config_name):
 
     from .main import auth
     app.register_blueprint(auth.bp)
+    from .main import dark_pages
+    app.register_blueprint(dark_pages.dark)
 
     return app
