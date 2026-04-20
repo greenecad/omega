@@ -1,4 +1,4 @@
-const endDate = '13 April 2026, 7:00 AM';
+const endDate = '27 April 2026, 3:00 PM';
     //Printing end time
     document.querySelector('.cd-end-time'). innerText = endDate;
     //selects all inputs 

@@ -1,4 +1,15 @@
 {% extends "dark_base.html" %}
-
+{% block js %}
+    <script>
+        rainsrc= "{{ url_for('static', filename='img/dark/rain.gif') }}"
+    </script>
+    <script defer src="{{ url_for('static', filename='js/god.js') }}"></script>
+{% endblock %}
 {% block content %}
+    <h2>GOD IS COMING</h2>
+    <h3 id="countdown">2:00</h3>
+    <form method="post" action="{{url_for('dark.collect_tape')}}">
+        <input type="hidden" name="tape_id" value="1">
+        <button type="submit" id="submit-button" style="display: none;">get tape</button>
+    </form>
 {% endblock %}
