@@ -26,5 +26,6 @@ CREATE TABLE user (
   target_pic TEXT,
   platform_hi INTEGER DEFAULT 0,
   target_hi INTEGER DEFAULT 0,
-  tapes TEXT DEFAULT '{"list": []}'
+  tapes TEXT DEFAULT '{"list": []}',
+  artifact_pieces TEXT DEFAULT '{"list": []}'
 );

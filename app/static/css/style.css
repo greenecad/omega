@@ -566,3 +566,8 @@ td {
   border: solid;
   border-width: 1px;
 }
+
+#piece:hover{
+  
+  cursor: pointer;
+}

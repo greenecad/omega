@@ -137,11 +137,28 @@ def profile():
                         all_users = [u for u in all_users if abs(u['grade'] - user['grade']) <= 1]
                         all_users = [u for u in all_users if u['grade'] != 9 or user['grade']==u['grade']]
                         friends_list = json.loads(user['friends'])['list']
-                        all_users = [u for u in all_users if u['username'] in friends_list]
-                        all_users = [
-                            u for u in all_users
-                            if json.loads(u['completed'])['challenges'].get(school_spirit_id, [['incomplete']])[0][0] == 'completed'
-                        ]
+                        all_users = [u for u in all_users if u['username'] not in friends_list]
+                        
+                        # Filter users who have completed school spirit challenge with nested error handling
+                        filtered_users = []
+                        for u in all_users:
+                            try:
+                                completed = json.loads(u['completed'])
+                                try:
+                                    challenge_data = completed['challenges'].get(school_spirit_id, [['incomplete']])
+                                    try:
+                                        if challenge_data[0][0] == 'completed':
+                                            filtered_users.append(u)
+                                    except (IndexError, TypeError):
+                                        # Data structure doesn't match expected format, skip user
+                                        pass
+                                except (KeyError, TypeError):
+                                    # 'challenges' key missing or not dict, skip user
+                                    pass
+                            except (json.JSONDecodeError, ValueError):
+                                # Invalid JSON in completed field, skip user
+                                pass
+                        all_users = filtered_users
 
                         if len(all_users) == 0:
                             flash('No valid targets available at this time. Try again later!')
@@ -358,6 +375,13 @@ def admin():
         action = request.form.get('admin_action')
         if action == "crash":
             raise Exception('Intentional Crash Triggered by Admin')
+        elif action == 'reset_targets':
+            try:
+                db.execute('UPDATE user SET target = NULL, target_pic = NULL, targeted_by = NULL;')
+                db.commit()
+                flash('All assassination targets have been reset.')
+            except Exception as e:
+                flash('Error resetting targets: ' + str(e))
         elif action == 'update_user':
             try:
                 username = request.form.get('username')
@@ -382,7 +406,10 @@ def admin():
                     flash(f'Added column {column_name} of type {column_type} to user table.')
 
                 if column_default := request.form.get('column_default'):
-                    db.execute(f'ALTER TABLE user ADD COLUMN {column_name} {column_type} DEFAULT ?;', (column_default,))
+                    escaped = column_default.replace("'", "''")
+                    db.execute(
+                        f"ALTER TABLE user ADD COLUMN {column_name} {column_type} DEFAULT '{escaped}';"
+                    )
                     flash(f'Added column {column_name} of type {column_type} to user table with default {column_default}.')
 
                 db.commit()

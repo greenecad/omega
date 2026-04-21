@@ -184,50 +184,41 @@
             "hint": "Caesar, but more complicated because of that key. Misattributed to some French guy."
         },
         {
-            "name": "I might have a life",
-            "id": 20,
-            "points": 40,
-            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed above, any honor society, weekly club, etc). 40 points per photo. As before, each photo must be a different club!",
-            "type": "submission",
-            "release": "2026-04-21T06:00:00-05:00",
-            "submissions": 5,
-            "repeats": true
-        },
-        {
-            "name": "Who even watches KTIG?",
-            "id": 21,
-            "points": 200,
-            "description": "Watch today's KTIG episode. You might find something interesting.",
-            "type": "code",
-            "release": "2026-04-21T10:00:00-05:00",
-            "code": "GETTINGPLACES",
-            "hint": "Listen closely. Look up a morse code translator."
-        },
-        {
             "name": "Wheres Waldo?",
-            "id": 22,
+            "id": 20,
             "points": 150,
             "description": "Look familiar? Hope so. Let's see if you can find it.",
             "type": "code",
-            "release": "2026-04-21T12:30:00-05:00",
+            "release": "2026-04-21T06:30:00-05:00",
             "code": "KNOWMYWAYAROUNDX",
             "hint": "Look downstairs. Play fair. -j",
             "img": "img/fletcher-waldo.jpg"
         },
         {
+            "name": "I might have a life",
+            "id": 21,
+            "points": 40,
+            "description": "Prove you at least do something with your time, besides this game of course. The bum status can be debated. Submit a photo of you at a minor club (Not the ones listed in the previous challenge, any honor society, weekly club, etc). 40 points per photo. As before, each photo must be a different club!",
+            "type": "submission",
+            "release": "2026-04-21T09:00:00-05:00",
+            "submissions": 5,
+            "repeats": true
+        },
+        {
             "name": "deadshot",
-            "id": 23,
+            "id": 22,
             "points": -1,
             "description": "Time for another live event. We're testing your FPS skills this time. Lobby opens at 7:00 pm Tuesday the 21st. You get 10 points per kill. As before, you MUST set your name to your Omega Games username and remain until the end of the 10 minute round to get your points. You can practice at deadshot.io. I would reccomend it.<br>If the max player limit is reached, another round will be hosted after the first one concludes.",
             "type": "live",
             "release": "2026-04-21T17:00:00-05:00",
-            "competitiveness": "You get an additional 2 points per kill. Go crazy.",
-            "determination": "You get an additional 2 points per kill. Go crazy.",
+            "competitiveness": "You get an additional 100 points for being in the top 3.",
+            "determination": "You get an additional 5 points per kill. Go crazy.",
+            "vigilance": "You get an additional 100 points for being in the BOTTOM 5.",
             "event_code": null
         },
         {
             "name": "Art Wall",
-            "id": 24,
+            "id": 23,
             "points": 200,
             "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
             "type": "code",
@@ -237,12 +228,22 @@
         },
         {
             "name": "Giving Spirit",
-            "id": 25,
+            "id": 24,
             "points": 50,
             "description": "Prove you're a good person, or can at least pretend to be one. Select a competitor to earn 150 points. You earn 50 points for doing so.",
             "type": "challenge",
             "release": "2026-04-22T10:00:00-05:00",
             "html": "<form method='post'><input name='username' placeholder='type username...' required><input type='hidden' name='challenge_id' value='24'><input type='hidden' name='completed' value='1'><button type='submit'>send points</button></form>"
+        },
+        {
+            "name": "Who even watches KTIG?",
+            "id": 25,
+            "points": 200,
+            "description": "Watch today's KTIG episode. You might find something interesting.",
+            "type": "code",
+            "release": "2026-04-21T10:00:00-05:00",
+            "code": "GETTINGPLACES",
+            "hint": "Listen closely. Look up a morse code translator."
         },
         {
             "name": "Olden Days",

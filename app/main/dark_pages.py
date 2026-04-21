@@ -15,7 +15,9 @@ dark = Blueprint(
 @login_required
 def dark_main():
     user= get_db().execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
-    return render_template("dark_pages/index.html", user = user)
+    artifact_pieces = json.loads(user['artifact_pieces']) if user['artifact_pieces'] else {"list": []}
+    piece_count = str(len(artifact_pieces["list"]))
+    return render_template("dark_pages/index.html", user = user, piece_count = piece_count)
 
 @dark.route('/tapes', methods= ['GET', 'POST'])
 @login_required
@@ -72,3 +74,27 @@ def god():
 @login_required
 def thing():
     return render_template("dark_pages/thing.html")
+
+@dark.route('/collect_artifact_piece', methods= ['POST', 'GET'])
+@login_required
+def collect_artifact_piece():
+    if request.method == 'POST':
+        piece_id = request.form.get('piece_id')
+        db = get_db()
+        user= db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+        if user["artifact_pieces"] == None:
+            pieces = {"list": []}
+        else:
+            try:
+                pieces = json.loads(user['artifact_pieces'])
+            except json.JSONDecodeError:
+                pieces = {"list": []}
+        if piece_id not in pieces["list"]:
+            pieces["list"].append(piece_id)
+            db.execute('UPDATE user SET artifact_pieces = ? WHERE id = ?;', (json.dumps(pieces), session['user_id']))
+            db.commit()
+            flash("You find a strange artifact piece. You put it somewhere safe for later.")
+        return_url = request.form.get('return_url')
+        if return_url:
+            return redirect(url_for(return_url))
+    return redirect(url_for('main.profile'))

@@ -21,5 +21,33 @@
     </div>
     <div class="center-container">
         <button class="dark-button"><a href="{{ url_for('dark.tapes') }}">See tape collection</a></button>
+        
+        </div>
+    <br>
+    <br>
+    <br>
+    <br style = "line-height: 2;">
+    <div style="text-align: center;">
+        <a id="open-artifact" style="color: black; cursor: pointer;">A dark passage</a>
+        <div id="artifact" style="display: none;">
+            {% if piece_count == "4" %}
+                <a href ="{{ url_for('dark.eye') }}" style="color: black; cursor: pointer;">
+            {% endif %}
+            <img src="{{ url_for('static', filename='img/dark/artifact-' + piece_count+'.png') }}" alt="Artifact" style = "width: 100px; height: 100px; margin: auto; display: block;">
+            {% if piece_count == "4" %}
+                    The item shimmers in the darkness...
+                </a>
+                {% endif %}
+            <script>
+                document.getElementById("open-artifact").addEventListener("click", function() {
+                    var artifact = document.getElementById("artifact");
+                    if (artifact.style.display === "none") {
+                        artifact.style.display = "block";
+                    } else {
+                        artifact.style.display = "none";
+                    }
+                });
+            </script>
+        </div>
     </div>
 {% endblock %}

@@ -60,7 +60,7 @@
                 <td>{{ challenge_id }}</td>
                 <td>
                   <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + submission[1])) }}" alt="Submission Image" width="200">
-                  {% if challenge_id == 28 %} <!--remember to change    this system is not great...-->
+                  {% if challenge_id == 18 %} <!--remember to change    this system is not great...-->
                     <p>Assassination target: {{user.target}}</p>
                     <img src="{{ url_for('static', filename=('img/' + 'users/' + user.username + '/submissions/' + user.target_pic)) }}" alt="Target Image" width="200">
                   {% endif %}

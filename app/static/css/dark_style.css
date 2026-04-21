@@ -26,6 +26,17 @@ body{
     border-radius: 5px;
 }
 
+.tape-button{
+    background-color: white;
+    border-color: rgb(10, 10, 10);
+    border-style: solid;
+    border-width: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 a{
     color: black;
     text-decoration: none;
