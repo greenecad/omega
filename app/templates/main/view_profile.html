@@ -36,7 +36,14 @@
     </div>
   </div>
 
-
+ {% if current_user.admin == 1 %}
+  <div style="text-align: center; margin-top: 20px;">
+    <h3 class="play-regular" style="color: #ffffff;">completed codes</h3>
+    {% for code in json.loads(user.completed)['codes'] %}
+      <p class="play-regular" style="color: white;">{{ code }}</p>
+    {% endfor %}
+  </div>
+ {% endif %}
   <div class = "challenges-box">
   <h2 class ="omega-header">Challenge list:</h2>
   <ul class="challenge-list">

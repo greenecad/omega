@@ -292,8 +292,10 @@ def view_profile(username):
 
     for challenge in challenges['list']:
         challenge['release_dt'] = parse_release_datetime(challenge.get('release'), app_timezone)
-
-    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, timezone=app_timezone, current_time=datetime.now(app_timezone))
+    current_user = None
+    if session.get('user_id'):
+        current_user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    return render_template('main/view_profile.html', user=user, challenges=challenges['list'], datetime=datetime, json=json, timezone=app_timezone, current_time=datetime.now(app_timezone), current_user=current_user)
 
 @main.route('/submission/<int:challenge_id>', methods=['GET', 'POST'])
 @login_required

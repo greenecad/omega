@@ -241,7 +241,7 @@
             "points": 200,
             "description": "Watch today's KTIG episode. You might find something interesting.",
             "type": "code",
-            "release": "2026-04-21T10:00:00-05:00",
+            "release": "2026-04-22T10:00:00-05:00",
             "code": "GETTINGPLACES",
             "hint": "Listen closely. Look up a morse code translator."
         },
