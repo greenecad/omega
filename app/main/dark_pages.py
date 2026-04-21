@@ -29,7 +29,12 @@ def tapes():
         db.execute('UPDATE user SET tapes = ? WHERE id = ?;', (json.dumps(tapes), session['user_id']))
         db.commit()
     else:
-        tapes = json.loads(user['tapes'])
+        try:
+            tapes = json.loads(user['tapes'])
+        except json.JSONDecodeError:
+            tapes = {"list": []}
+            db.execute('UPDATE user SET tapes = ? WHERE id = ?;', (json.dumps(tapes), session['user_id']))
+            db.commit()
     with open(current_app.static_folder + "/all_tapes.json", "r") as f:
         all_tapes = json.load(f)
     collected_tapes = []
@@ -48,7 +53,10 @@ def collect_tape():
         if user["tapes"] == None:
             tapes = {"list": []}
         else:
-            tapes = json.loads(user['tapes'])
+            try:
+                tapes = json.loads(user['tapes'])
+            except json.JSONDecodeError:
+                tapes = {"list": []}
         if tape_id not in tapes["list"]:
             tapes["list"].append(tape_id)
             db.execute('UPDATE user SET tapes = ? WHERE id = ?;', (json.dumps(tapes), session['user_id']))
