@@ -21,5 +21,16 @@
     <button id="submit-button" class="play-regular" style="display:none;" onclick="submitScore()">Submit Score</button>
   </form>
   <script src="{{ url_for('static', filename='phaser/src/main.js') }}" type="module"></script>
+  {% if "3" not in json.loads(user.artifact_pieces)['list'] %}
+  <form method="post" action="{{ url_for('dark.collect_artifact_piece') }}">
+    <input type="hidden" name="piece_id" value="3">
+    <img id="piece" src="{{url_for('static', filename='img/dark/artifact-shard.png')}}" alt="Artifact Piece" style="width: 20px; height: 20px;">
+    <script>
+      document.getElementById("piece").addEventListener("click", function() {
+        this.parentElement.submit();
+      });
+    </script>
+  </form>
+  {% endif %}
 {% endblock %}
 

@@ -7,6 +7,17 @@
 
 
 {% block content %}
+{% if current_user and "2" not in json.loads(current_user.artifact_pieces)['list'] %}
+  <form method="post" action="{{ url_for('dark.collect_artifact_piece') }}">
+    <input type="hidden" name="piece_id" value="2">
+    <img id="piece" src="{{url_for('static', filename='img/dark/artifact-shard.png')}}" alt="Artifact Piece" style="width: 20px; height: 20px;">
+    <script>
+      document.getElementById("piece").addEventListener("click", function() {
+        this.parentElement.submit();
+      });
+    </script>
+  </form>
+  {% endif %}
   <table style="background-color: darkred;color: aliceblue;
 margin: 0px auto;"
 class="play-regular;">

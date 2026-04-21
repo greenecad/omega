@@ -41,7 +41,9 @@ def index():
 def leaderboard():
     db = get_db()
     users = db.execute('SELECT username, points, pfp FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
-    return render_template('main/leaderboard.html', users=users, datetime=datetime, parse=parse)
+    if session.get('user_id'):
+        current_user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    return render_template('main/leaderboard.html', users=users, datetime=datetime, parse=parse, json=json, current_user=current_user if session.get('user_id') else None)
 
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -843,7 +845,7 @@ def sans():
 def platforming():
     db = get_db()
     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
-    return render_template('main/phaser/platforming/index.html', datetime=datetime, user=user)
+    return render_template('main/phaser/platforming/index.html', datetime=datetime, user=user, json=json)
 
 @main.route('/target_practice', methods=['GET', 'POST'])
 @login_required

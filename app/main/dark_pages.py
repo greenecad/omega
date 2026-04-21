@@ -63,22 +63,22 @@ def collect_tape():
             db.commit()
     return redirect(url_for('dark.tapes'))
 
-@dark.route('/eye', methods= ['GET', 'POST'])
+@dark.route('/657965', methods= ['GET', 'POST'])
 @login_required
 def eye():
     return render_template("dark_pages/eye.html")
 
-@dark.route('/maze', methods= ['GET', 'POST'])
+@dark.route('/6C6F7374', methods= ['GET', 'POST'])
 @login_required
 def maze():
     return render_template("dark_pages/maze.html")
 
-@dark.route('/god', methods= ['GET', 'POST'])
+@dark.route('/676F64', methods= ['GET', 'POST'])
 @login_required
 def god():
     return render_template("dark_pages/god.html")
 
-@dark.route('/thing', methods= ['GET', 'POST'])
+@dark.route('/7468696E67', methods= ['GET', 'POST'])
 @login_required
 def thing():
     return render_template("dark_pages/thing.html")

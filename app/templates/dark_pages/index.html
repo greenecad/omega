@@ -31,7 +31,7 @@
         <a id="open-artifact" style="color: black; cursor: pointer;">A dark passage</a>
         <div id="artifact" style="display: none;">
             {% if piece_count == "4" %}
-                <a href ="{{ url_for('dark.eye') }}" style="color: black; cursor: pointer;">
+                <a href ="{{ url_for('dark.eye') }}" style="color: rgb(28, 27, 27); cursor: pointer;">
             {% endif %}
             <img src="{{ url_for('static', filename='img/dark/artifact-' + piece_count+'.png') }}" alt="Artifact" style = "width: 100px; height: 100px; margin: auto; display: block;">
             {% if piece_count == "4" %}

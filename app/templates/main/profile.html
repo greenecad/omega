@@ -368,11 +368,11 @@
     </div>
   {% endif %}
   </div>
-  {#
+
   {% if "0" not in json.loads(user.artifact_pieces)['list'] %}
   <form method="post" action="{{ url_for('dark.collect_artifact_piece') }}">
     <input type="hidden" name="piece_id" value="0">
-    <img id="piece" src="{{url_for('static', 'img/dark/artifact-piece')}}" alt="Artifact Piece">
+    <img id="piece" src="{{url_for('static', filename='img/dark/artifact-shard.png')}}" alt="Artifact Piece" style="width: 20px; height: 20px;">
     <script>
       document.getElementById("piece").addEventListener("click", function() {
         this.parentElement.submit();
@@ -380,6 +380,6 @@
     </script>
   </form>
   {% endif %}
-  #}
+  
   
 {% endblock %}
