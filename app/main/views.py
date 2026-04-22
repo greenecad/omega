@@ -75,6 +75,9 @@ def profile():
                     if send_user['id'] == session['user_id']:
                         flash('You cannot give points to yourself!')
                         return redirect(url_for('main.profile'))
+                    if user['participating'] != 1:
+                        flash('You must be an active participant to give points!')
+                        return redirect(url_for('main.profile'))
                     if send_user['participating'] != 1:
                         flash('You cannot give points to a user who is not participating!')
                         return redirect(url_for('main.profile'))
@@ -896,6 +899,17 @@ def messages():
     db= get_db()
     user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
     if request.method == 'POST':
+        action= request.form.get('action')
+        if action == 'delete_message':
+            user_id = request.form.get('user_id')
+            notifications = json.loads(db.execute('SELECT notifications FROM user WHERE id = ?;', (user_id,)).fetchone()[0])
+            notifications['list'].append(['Your message on the message board has been deleted by an admin. You have been deducted 100 points. If it happens again, you may face further consequences.', 1])
+            db.execute('UPDATE user SET notifications = ? WHERE id = ?;', (json.dumps(notifications), user_id))
+            db.execute('UPDATE user SET umessage = NULL WHERE id = ?;', (user_id,))
+            db.execute('UPDATE user SET points = points - ? WHERE id = ?;', (100, user_id))
+            db.commit()
+            flash('Message deleted!')
+            return redirect(url_for('main.messages'))
         message = request.form.get('message')
         if message:
             db.execute('UPDATE user SET umessage = ? WHERE id = ?;', (message, session['user_id']))
@@ -910,6 +924,6 @@ def messages():
         else:
             flash('Message cannot be empty!')
         return redirect(url_for('main.messages'))
-    users = db.execute('SELECT umessage FROM user;').fetchall()
+    users = db.execute('SELECT umessage, username, id FROM user;').fetchall()
 
     return render_template('main/messages.html', datetime=datetime, users=users, user=user)

@@ -1,4 +1,16 @@
 {% extends "dark_base.html" %}
-
+{% block js %}
+    <script src="{{ url_for('static', filename='js/dark/maze.js') }}"></script>
+{% endblock %}
 {% block content %}
+    <div style="height: 100%; vertical-align: middle;">
+        <img id="0" src="{{ url_for('static', filename='img/dark/maze0.jpg') }}" alt="Maze" style="display: block; margin: auto; max-width: 100%; height: auto;">
+        <img id="1" src="{{ url_for('static', filename='img/dark/maze1.png') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+        <img id="2" src="{{ url_for('static', filename='img/dark/maze2.png') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+        <img id="3" src="{{ url_for('static', filename='img/dark/maze3.webp') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+        <img id="4" src="{{ url_for('static', filename='img/dark/maze4.jpg') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+        <img id="5" src="{{ url_for('static', filename='img/dark/maze5.jpg') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+        <img id="6" src="{{ url_for('static', filename='img/dark/maze6.jpg') }}" alt="Maze" style="display: none; margin: auto; max-width: 100%; height: auto;">
+
+    </div>
 {% endblock %}

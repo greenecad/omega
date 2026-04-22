@@ -1,20 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}<h3 class="play-regular omega-header">Messages</h3>{% endblock %}
+{% block header %}
+  <h1 class="play-regular omega-header">{% block title %}Messages{% endblock %}</h1>
+{% endblock %}
 
 {% block content %}
     {% if not user.umessage %}
-        <form method="post">
+        <form method="post" style="color: aliceblue">
+            <input type="hidden" name="action" value="submit_message">
             <label for="message">type your message:</label>
             <input type="text" id="message" name="message" placeholder="leave your mark..." required><br>
             <input type="submit" value="Submit">
         </form>
+    {% else %}
+        <p style="color: aliceblue">You have already submitted a message.</p>
     {% endif %}
-    <h2 class="play-regular omega-header">Messages</h2>
+    <h2 class="play-regular omega-header">message wall</h2>
     <ul>
         {% for user_l in users %}
             {% if user_l.umessage %}
-                <li>{{ user_l.umessage }}</li>
+                <li class= "challenge-container play-regular" style = "color: rgb(0, 0, 0); margin-bottom: 10px; list-style: none;">
+                    {{ user_l.umessage }}
+                    {% if user.admin == 1 %}
+                        : {{ user_l.username }} - {{ user_l.id }}
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="user_id" value="{{ user_l.id }}">
+                            <input type="hidden" name="action" value="delete_message">
+                            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this message?');">
+                        </form>
+                    {% endif %}
+                </li>
             {% endif %}
         {% endfor %}
     </ul>
