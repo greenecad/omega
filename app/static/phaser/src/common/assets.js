@@ -2,13 +2,15 @@ export const ASSET_KEYS = Object.freeze({
   PLAYER: 'PLAYER',
   PLATFORM_SHORT: 'PLATFORM_SHORT',
   PLATFORM_LONG: 'PLATFORM_LONG',
-  TARGET: 'TARGET'
+  TARGET: 'TARGET',
+  TARGET2: 'TARGET2',
+  THING: 'THING',
 });
 
 export const IMAGE_ASSETS = [
   {
     assetKey: ASSET_KEYS.PLAYER,
-    path: 'static/phaser/assets/images/slime-16x8.png',
+    path: '/static/phaser/assets/images/slime-16x8.png',
     spritesheet: {
       width: 128,
       height: 128
@@ -17,15 +19,31 @@ export const IMAGE_ASSETS = [
   },
   {
     assetKey: ASSET_KEYS.PLATFORM_SHORT,
-    path: 'static/phaser/assets/images/platform-short.png'
+    path: '/static/phaser/assets/images/platform-short.png'
   },
   {
     assetKey: ASSET_KEYS.PLATFORM_LONG,
-    path: 'static/phaser/assets/images/platform-long.png'
+    path: '/static/phaser/assets/images/platform-long.png'
 
   },
   {
     assetKey: ASSET_KEYS.TARGET,
-    path: 'static/phaser/assets/images/target.png'
+    path: '/static/phaser/assets/images/target.png'
+  },
+  {
+    assetKey: ASSET_KEYS.TARGET2,
+    path: '/static/phaser/assets/images/target-2.png',
+    spritesheet:{
+      width: 175,
+            height: 175
+    }
+  },
+  {
+    assetKey: ASSET_KEYS.THING,
+    path: '/static/phaser/assets/images/thing.png',
+    spritesheet:{
+      width: 224,
+      height: 224
+    }
   }
 ];

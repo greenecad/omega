@@ -1,4 +1,5 @@
 import csv
+import random
 from flask import render_template, Blueprint, session, url_for, current_app, request, redirect, flash
 import os
 
@@ -68,7 +69,7 @@ def profile():
                     db.commit()
                     flash(f'You earned {(int(new_click_points)-click_points) * 10} points!')
                 return redirect(url_for('main.profile'))
-            elif request.form.get('challenge_id')=='25': #give points
+            elif request.form.get('challenge_id')=='24': #give points
                 username = request.form.get('username')
                 send_user = db.execute('SELECT * FROM user WHERE username = ?;', (username,)).fetchone()
                 if send_user:
@@ -215,6 +216,8 @@ def profile():
                 return redirect(url_for('main.platforming'))
             if challenge_id == 27 and task_completed == '0':
                 return redirect(url_for('main.target_practice'))
+            if challenge_id == 29 and task_completed == '0':
+                return redirect(url_for('main.gambling'))
             if key in completed['challenges'] and completed['challenges'][key][0] == 'completed':
                 flash('Challenge already completed!')
                 return redirect(url_for('main.profile'))
@@ -382,6 +385,21 @@ def admin():
         action = request.form.get('admin_action')
         if action == "crash":
             raise Exception('Intentional Crash Triggered by Admin')
+        elif action == 'reset_target':
+            try:
+                target_username = request.form.get('target_username')
+                target_user = db.execute('SELECT * FROM user WHERE username = ?;', (target_username,)).fetchone()
+                if target_user is None:
+                    flash('Target user not found!')
+                    return redirect(url_for('main.profile'))
+                target= db.execute('SELECT target FROM user WHERE username = ?;', (target_username,)).fetchone()[0]
+                if target:
+                    db.execute('UPDATE user SET targeted_by = NULL WHERE username = ?;', (target,))
+                db.execute('UPDATE user SET target = NULL, target_pic = NULL WHERE username = ?;', (target_username,))
+                db.commit()
+                flash(f'Assassination target reset for {target_username}.')
+            except Exception as e:
+                flash('Error resetting target: ' + str(e))
         elif action == 'reset_targets':
             try:
                 db.execute('UPDATE user SET target = NULL, target_pic = NULL, targeted_by = NULL;')
@@ -442,7 +460,7 @@ def admin():
                 if targeted_by:
                     db.execute('UPDATE user SET target = NULL WHERE username = ?;', (targeted_by,))
                 db.execute(
-                    'UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ?, target= NULL, targeted_by = NULL, target_pic = NULL, click_points = 0 WHERE username = ?;',
+                    "UPDATE user SET hint_count = ?, points = 0, completed = ?, hints_used = ?, target= NULL, targeted_by = NULL, target_pic = NULL, click_points = 0, percentage = NULL, artifact_pieces = '{\"list\": []}', friends = '{\"list\": []}', friend_requests = '{\"list\": []}', hints_used = '{\"list\": []}', tapes = '{\"list\": []}', platform_hi = 0, target_hi = 0 WHERE username = ?;",
                     (hint_count, json.dumps({'challenges': {}, 'codes': []}), json.dumps({'list': []}), username),
                 )
                 db.commit()
@@ -844,6 +862,79 @@ def remove_friend():
 @login_required
 def sans():
     return render_template('main/bts/index.html')
+
+@main.route('/gambling', methods=['GET', 'POST'])
+@login_required
+def gambling():
+    db = get_db()
+    user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    if user['percentage'] == 1:
+        flash('You have already completed the gambling challenge and cannot gamble anymore! You only get one attempt!')
+        return redirect(url_for('main.profile'))
+    if request.method == 'POST':
+        if request.form.get('action') == 'place_bet':
+            bet_str = request.form.get('bet', '0').strip()
+            if not bet_str.isdigit():
+                flash('Invalid bet amount!')
+                return redirect(url_for('main.gambling'))
+            bet = int(bet_str)
+            if bet <= 0:
+                flash('Bet must be a positive integer!')
+                return redirect(url_for('main.gambling'))
+            if bet > user['points']:
+                flash('You cannot bet more points than you have!')
+                return redirect(url_for('main.gambling'))
+            user_percentage = .05
+            db.execute('UPDATE user SET percentage = ? WHERE id = ?;', (user_percentage, session['user_id']))
+            db.commit()
+            db.execute('UPDATE user SET points = points - ? WHERE id = ?;', (bet, session['user_id']))
+            db.commit()
+            flash(f'You placed a bet of {bet} points! The button has a {int(user_percentage*100)}% chance to break. If it breaks, you lose your bet. If it doesnt, you win points based on the current percentage and can choose to withdraw or risk it all again with a higher chance of losing everything. The points have been taken out of your total. If you go away from this page before finishing, you may completely lose your points, so be careful.')
+            session['bet'] = bet
+            user = db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+            return render_template('main/gambling.html', user=user, datetime=datetime, bet=bet)
+        if request.form.get('withdraw') == '1':
+            points = session.get('bet', 0)
+            if points > 0:
+                db.execute('UPDATE user SET points = points + ?, percentage = 1 WHERE id = ?;', (points, session['user_id']))
+                db.commit()
+                flash(f'You withdrew with {points} points! They have been added to your total points.')
+                return redirect(url_for('main.profile'))
+            pass
+        if request.form.get('withdraw') == '0':
+            percent = user['percentage']
+            points = session.get('bet', 0)
+            win = random.random() > percent
+            if win:
+                if user['gift'] == 'competitiveness':
+                    points_won = int(points * ((percent)+1))
+                else:
+                    points_won = int(points * ((percent*.5)+1))
+                points_won = points_won - points_won%10
+                session['bet'] = points_won
+                flash(f'The button didnt break. You are up to {points_won} points! You can choose to withdraw or risk it all again with a higher chance of losing everything.')
+                if user['gift'] == 'determination':
+                    percentage_increase = 0.025
+                else:
+                    percentage_increase = 0.05
+                new_percentage = min(percent + percentage_increase, .6)
+                db.execute('UPDATE user SET percentage = ? WHERE id = ?;', (new_percentage, session['user_id']))
+                db.commit()
+            else:
+                if user['gift'] == 'vigilance':
+                    points_retained = int(points * 0.2)
+                    points_retained = points_retained - points_retained%10
+                    db.execute('UPDATE user SET points = points + ? WHERE id = ?;', (points_retained, session['user_id']))
+                    flash(f'The button broke! However, due to your vigilance gift, you were able to retain {points_retained} of your points.')
+                else:
+                    flash('The button broke! You lost all the points you risked.')
+                session['bet'] = None
+                db.execute('UPDATE user SET percentage = 1 WHERE id = ?;', (session['user_id'],))
+                db.commit()
+                return redirect(url_for('main.profile'))
+    if 'bet' not in session:
+        session['bet'] = None
+    return render_template('main/gambling.html', user=user, datetime=datetime, bet=session['bet'])
 
 @main.route('/platforming', methods=['GET', 'POST'])
 @login_required

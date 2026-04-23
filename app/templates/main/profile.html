@@ -183,6 +183,14 @@
         <input type="submit" value="reset all targets">
       </form>
       <br class = "spacing">
+      <h3>reset assassin target</h3>
+      <form method="post" action="{{ url_for('main.admin') }}">
+        <label for="target_username">Target Username:</label>
+        <input name="target_username" placeholder="target username">
+        <input type="hidden" name="admin_action" value="reset_target">
+        <input type="submit" value="reset target">
+      </form>
+      <br class = "spacing">
       <a href="{{ url_for('main.all_users') }}">See all users</a>
     </div>
   {% endif %}

@@ -81,7 +81,9 @@ def god():
 @dark.route('/7468696E67', methods= ['GET', 'POST'])
 @login_required
 def thing():
-    return render_template("dark_pages/thing.html")
+    db = get_db()
+    user= db.execute('SELECT * FROM user WHERE id = ?;', (session['user_id'],)).fetchone()
+    return render_template("dark_pages/thing.html", user= user)
 
 @dark.route('/collect_artifact_piece', methods= ['POST', 'GET'])
 @login_required

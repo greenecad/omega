@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block js %}
+    <script defer src="{{ url_for('static', filename='js/gambling.js') }}"></script>
+    <script>
+        
+    </script>
+{% endblock %}
+
+{% block header %}
+  <h1 class="play-regular omega-header">{% block title %}Gambling{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class = "text-container play-regular" style="text-align: center;">
+        <h3>You can press the button as many times as you want. Each time you press it, there is a chance that you lose the points you have bet.</h3>
+        <h3>Each successful bet will give a payout equivalent to the percent chance of the button breaking. You must withdraw your winnings to keep the points.</h3>
+        <h3>YOU ONLY GET ONE ATTEMPT. make it count.</h3>
+        <form method="post">
+            {% if bet == none or bet == 0 %}
+                <input type = "hidden" name="action" value="place_bet">
+                <input type="radio" name="bet" value="100">
+                <label for="100">bet 100 points</label><br>
+                <input type="radio" name="bet" value="200">
+                <label for="200">bet 200 points</label><br>
+                <input type="radio" name="bet" value="400">
+                <label for="400">bet 400 points</label><br>
+                <input type="hidden" name="challenge_id" value="29">
+                <input type="hidden" name="completed" value="0">
+                <button type="submit">Place bet.</button>
+            {% else %}
+                <p>You have {{ bet }} points bet.</p>
+                {% if user['gift'] == 'competitiveness' %}
+                <p> The button has a {{(user['percentage'] * 100) | round(2) }}% chance of breaking. You will earn {{ (user['percentage'] * 100) | round(2) }}% of your current bet if it doesn't break.</p>
+                {% else %}
+                <p> The button has a {{(user['percentage'] * 100) | round(2) }}% chance of breaking. You will earn {{ (user['percentage'] * 50) | round(2) }}% of your current bet if it doesn't break.</p>
+                {% endif %}
+                <button type="submit" name="withdraw" value="1">Withdraw winnings.</button>
+                <button type="submit" name="withdraw" value="0">Press button again.</button>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

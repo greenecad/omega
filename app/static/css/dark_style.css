@@ -67,3 +67,18 @@ a{
     margin: 0 auto;
     width: 75%;
 }
+
+.frame:before{
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.game-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+}

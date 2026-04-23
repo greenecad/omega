@@ -220,7 +220,7 @@
             "name": "Art Wall",
             "id": 23,
             "points": 200,
-            "description": "Rumor has it that there are some truly inspiring works hidden in room [number]...",
+            "description": "Rumor has it that there are some truly inspiring works hidden in room 2003...",
             "type": "code",
             "release": "2026-04-22T06:00:00-05:00",
             "code": "ATTHEENDOFTIME",
@@ -282,7 +282,11 @@
             "description": "LETS GO GAMBLING!!!",
             "type": "challenge",
             "release": "2026-04-23T10:00:00-05:00",
-            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='29'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>"
+            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='29'><input type='hidden' name='completed' value='0'><button type='submit'>Go to game</button></form>",
+            "determination": "the odds are better.",
+            "competitiveness": "You earn more points for each successful button press.",
+            "vigilance": "You keep 20% of your total earned points if you lose."
+            
         },
         {
             "name": "Burnt Bridges",
@@ -323,15 +327,6 @@
             "type": "code",
             "release": "2026-04-24T12:00:00-05:00",
             "code": "LAMBDAMACHINE"
-        },
-        {
-            "name": "Bad Time",
-            "id": 999,
-            "points": 300,
-            "description": "Bad time? Bad time. Beat Sans. Have fun.",
-            "type": "challenge",
-            "release": "2026-04-25T00:00:00-05:00",
-            "html": "<form method='post'> <input type='hidden' name='challenge_id' value='9'><input type='hidden' name='completed' value='0'><button type='submit'>Go to fight</button></form>"
         }
     ]
 }

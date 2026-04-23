@@ -252,7 +252,7 @@ export class GameScene extends Phaser.Scene {
             platform.destroy();
             if (time > 1000) {
               time -= 55;
-              delay -= 20;
+              delay -= 50;
             }
           }
         });
