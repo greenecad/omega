@@ -359,8 +359,12 @@
       {% endif %}
       {% if (challenge.release_dt - current_time).days < 1 and user.gift == "foresight" and not (challenge.release_dt < current_time) and not challenge.type == "live" and (user.participating == 1 or user.admin == 1)%}
         <h3>Foresight: </h3>
+        {% if challenge.id == 33 %}
+          But there was nothing to see.
+        {% else %}
         <p class="foresight">{{ challenge.description|safe }}</p>
         <p class="warn">This challenge may not be fully set up yet. Do not search for any clues within the building until the challenge is fully released.</p>
+        {% endif %}
         </li>
       {% else %}
         </li>
