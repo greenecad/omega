@@ -30,6 +30,7 @@ export class FightScene extends Phaser.Scene {
             })
 
             this.thing.anims.play('thing_0');
+            
             this.time.delayedCall(
                 1000,
                 ()=>{
@@ -41,10 +42,27 @@ export class FightScene extends Phaser.Scene {
             this.time.delayedCall(
                 7000,
                 ()=>{
-                    window.scene.createTargets(0)
-                    this.started = true
-                    window.scene.music=  window.scene.sound.add(ASSET_KEYS.MUSIC, {loop: true});
-                    window.scene.music.play()
+                    if (determination){
+                        window.scene.text= window.scene.add.text(520, 420, "You are filled with a sense of DETERMINATION.", {fontSize: 20}).setOrigin(.5, .5)
+                        window.scene.time.delayedCall(
+                            1500,
+                            ()=>{
+                                window.scene.text.destroy()
+                                this.started = true;
+                                window.scene.music=  window.scene.sound.add(ASSET_KEYS.MUSIC, {loop: true});
+                                
+                                window.scene.music.play()
+                                window.scene.hurtThing(2)
+                                window.scene.createTargets(0)
+                            }
+                        )
+                    }
+                    else{
+                        window.scene.createTargets(0)
+                        this.started = true
+                        window.scene.music=  window.scene.sound.add(ASSET_KEYS.MUSIC, {loop: true});
+                        window.scene.music.play()
+                    }
                 }
             )
 
@@ -55,16 +73,7 @@ export class FightScene extends Phaser.Scene {
                 ease: 'Linear',
                 repeat: 0,
                 onComplete(){
-                    if (determination){
-                        window.scene.text= window.scene.add.text(520, 420, "You are filled with a sense of DETERMINATION.", {fontSize: 20}).setOrigin(.5, .5)
-                        window.scene.time.delayedCall(
-                            1500,
-                            ()=>{
-                                window.scene.text.destroy()
-                                window.scene.hurtThing(2)
-                            }
-                        )
-                    }
+                    
                 }
             })
         })
