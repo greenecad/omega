@@ -20,5 +20,6 @@
     <input type="hidden" name="game" value="target_practice">
     <button id="submit-button" class="play-regular" style="display:none;" onclick="submitScore()">Submit Score</button>
   </form>
+   <a href="{{ url_for('dark.thing') }}" style="color: rgb(120, 120, 120); margin-top: 40px; text-decoration: none; font-size: large;">ρ</a>
   <script src="{{ url_for('static', filename='phaser/src/main_t.js') }}" type="module"></script>
 {% endblock %}

@@ -5,6 +5,9 @@ export const ASSET_KEYS = Object.freeze({
   TARGET: 'TARGET',
   TARGET2: 'TARGET2',
   THING: 'THING',
+  CRY1: 'CRY1',
+  CRY2: 'CRY2',
+  MUSIC: 'MUSIC'
 });
 
 export const IMAGE_ASSETS = [
@@ -45,5 +48,20 @@ export const IMAGE_ASSETS = [
       width: 224,
       height: 224
     }
+  },
+  {
+    assetKey: ASSET_KEYS.CRY1,
+    path: '/static/phaser/assets/images/cry1.mp3',
+    audio: true
+  },
+  {
+    assetKey: ASSET_KEYS.CRY2,
+    path: '/static/phaser/assets/images/cry2.mp3',
+    audio: true
+  },
+  {
+    assetKey: ASSET_KEYS.MUSIC,
+    path: '/static/phaser/assets/images/WOTW.mp3',
+    audio: true
   }
 ];

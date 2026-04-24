@@ -11,6 +11,10 @@ export class PreloadScene extends Phaser.Scene {
 
   preload() {
     IMAGE_ASSETS.forEach((asset) => {
+      if(asset.audio){
+        this.load.audio(asset.assetKey, asset.path);
+        return;
+      }
       if(asset.spritesheet){
         this.load.spritesheet(asset.assetKey, asset.path, {
           frameWidth: asset.spritesheet.width,

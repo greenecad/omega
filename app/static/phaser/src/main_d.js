@@ -10,7 +10,7 @@ const gameConfig = {
   roundPixels: true,
   scale: {
     parent: 'game-container',
-    width: 840,
+    width: 1040,
     height: 680,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     mode: Phaser.Scale.FIT,
@@ -18,7 +18,7 @@ const gameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
+      debug: false,
     }
   },
   backgroundColor: '#000000',

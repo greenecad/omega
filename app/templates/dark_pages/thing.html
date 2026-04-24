@@ -10,6 +10,14 @@
 {% endblock %}
 
 {% block content %}
+  <!--My pet-->
   <div class="container" id="game-container"></div>
   <script src="{{ url_for('static', filename='phaser/src/main_d.js') }}" type="module"></script>
+  <div id = "complete" style="display: none">
+        <p id = 'code' class="w"></p>
+        <form method="post" action="{{url_for('dark.collect_tape')}}">
+            <input type="hidden" name="tape_id" value="3">
+            <button type="submit" class="tape-button">get tape</button>
+        </form>
+  </div>
 {% endblock %}
