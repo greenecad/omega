@@ -5,7 +5,7 @@ import os
 
 from app.main.functions import set_challenge_completed
 from .db import get_db
-from .auth import login_required
+from .auth import login_required, check_takeover
 import json, csv
 from datetime import datetime, timezone, timedelta
 from urllib import parse
@@ -35,10 +35,12 @@ def parse_release_datetime(release_str, default_tz):
 
 
 @main.route('/', methods=['GET', 'POST'])
+@check_takeover
 def index():
     return render_template('main/index.html', datetime=datetime)
 
 @main.route('/leaderboard', methods=['GET', 'POST'])
+@check_takeover
 def leaderboard():
     db = get_db()
     users = db.execute('SELECT username, points, pfp FROM user WHERE participating = 1 ORDER BY points DESC;').fetchall()
@@ -47,6 +49,7 @@ def leaderboard():
     return render_template('main/leaderboard.html', users=users, datetime=datetime, parse=parse, json=json, current_user=current_user if session.get('user_id') else None)
 
 @main.route('/profile', methods=['GET', 'POST'])
+@check_takeover
 @login_required
 def profile():
     app_timezone = timezone(timedelta(hours=-6))
@@ -1018,3 +1021,9 @@ def messages():
     users = db.execute('SELECT umessage, username, id FROM user;').fetchall()
 
     return render_template('main/messages.html', datetime=datetime, users=users, user=user)
+
+
+
+@main.route('/last_challenge_video')
+def last_video():
+    return render_template('main/last.html')

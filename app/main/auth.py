@@ -1,6 +1,5 @@
 from datetime import datetime
 import functools, os
-
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -9,8 +8,17 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+def check_takeover(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if datetime.now() >= datetime.fromisoformat("2026-05-07T03:00:00"):
+            return redirect(url_for("dark.dark_apocalypse"))
 
+        return view(**kwargs)
+
+    return wrapped_view
 @bp.route('/register', methods=('GET', 'POST'))
+@check_takeover
 def register():
     if session.get('user_id'):
         return redirect(url_for('main.profile'))
@@ -70,6 +78,7 @@ def register():
     return render_template('auth/register.html', datetime=datetime)
 
 @bp.route('/login', methods=('GET', 'POST'))
+@check_takeover
 def login():
     if session.get('user_id'):
         return redirect(url_for('main.profile'))

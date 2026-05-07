@@ -7,7 +7,11 @@ export const ASSET_KEYS = Object.freeze({
   THING: 'THING',
   CRY1: 'CRY1',
   CRY2: 'CRY2',
-  MUSIC: 'MUSIC'
+  MUSIC: 'MUSIC',
+  RHO: "RHO",
+  GLITCH: "GLITCH",
+  BTFL: "BTFL",
+  VOICE_1:"VOICE_1"
 });
 
 export const IMAGE_ASSETS = [
@@ -62,6 +66,20 @@ export const IMAGE_ASSETS = [
   {
     assetKey: ASSET_KEYS.MUSIC,
     path: '/static/phaser/assets/images/WOTW.mp3',
+    audio: true
+  },
+  {
+    assetKey: ASSET_KEYS.RHO,
+    path: '/static/phaser/assets/images/rho.png'
+  },
+  {
+    assetKey: ASSET_KEYS.BTFL,
+    path: '/static/phaser/assets/images/BTFL.mp3',
+    audio: true
+  },
+  {
+    assetKey: ASSET_KEYS.VOICE_1,
+    path: '/static/phaser/assets/images/talk1.wav',
     audio: true
   }
 ];

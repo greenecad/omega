@@ -1,0 +1,14 @@
+{% extends "dark_base.html" %}
+
+{% block js %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='phaser/assets/style.css') }}" />
+  <script src="{{ url_for('static', filename='phaser/assets/js/phaser.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  <!--why are you here?-->
+  <div class="container" id="game-container"></div>
+  <script src="{{ url_for('static', filename='phaser/src/main_l.js') }}" type="module"></script>
+  
+{% endblock %}

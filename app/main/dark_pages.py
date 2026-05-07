@@ -108,3 +108,8 @@ def collect_artifact_piece():
         if return_url:
             return redirect(url_for(return_url))
     return redirect(url_for('main.profile'))
+
+@dark.route('/61706f63616c79707365')
+def dark_apocalypse():
+    return render_template('dark_pages/apocalypse.html')
+
