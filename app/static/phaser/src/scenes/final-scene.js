@@ -23,15 +23,21 @@ export class FinalScene extends Phaser.Scene {
     this.input.on('pointerdown', ()=>{
         if (!this.started){
             this.started = true
+            let speech = this.sound.add(ASSET_KEYS.VOICE_1)
+            speech.on('complete', this.startCountdown)
+            let glitch = this.sound.add(ASSET_KEYS.GLITCHSOUND, {loop: false})
+            glitch.once('complete', ()=>{
+                glitch.stop()
+                speech.play()
+            })
+            glitch.play()
             this.tweens.add({
                 targets: this.rho,
                 alpha: 1,
                 ease: 'Sine.easeIn',
                 repeat: 0,
                 onComplete: ()=>{
-                    let speech = window.scene.sound.add(ASSET_KEYS.VOICE_1)
-                    speech.on('complete', window.scene.startCountdown)
-                    speech.play()
+                    
                 }
             })
         }
